@@ -17,15 +17,12 @@ const paths = ref([])
 const loading = ref(false)
 const generated = ref(false)
 
-// 可选的路径目标节点（电机控制、电力电子等核心应用节点）
+// 所有 L3 节点均可作为路径目标
 const targets = computed(() =>
   graphStore.nodes
-    .filter(
-      (n) =>
-        n.level === 'L3' &&
-        ['电机控制', '电力电子', '电力系统'].includes(n.category)
-    )
+    .filter((n) => n.level === 'L3')
     .map((n) => ({ id: n.id, name: n.name, category: n.category }))
+    .sort((a, b) => a.category.localeCompare(b.category, 'zh'))
 )
 
 async function generate() {
