@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGraphStore } from '@/stores/graphStore'
 import GraphCanvas from '@/components/GraphCanvas.vue'
@@ -17,6 +17,11 @@ const drawerVisible = ref(false)
 const detailNodeId = ref('')
 const detailVisible = ref(false)
 const plannerVisible = ref(false)
+
+// 节点聚焦时自动打开面板
+watch(() => graphStore.focusNodeId, (id) => {
+  drawerVisible.value = !!id
+})
 
 function openDetail(nodeId) {
   detailNodeId.value = nodeId
@@ -88,18 +93,16 @@ function goToReview() {
       <GraphCanvas />
     </main>
 
-    <el-drawer
-      v-model="drawerVisible"
-      direction="rtl"
-      size="380px"
-      :close-on-click-modal="true"
-      :with-header="false"
-    >
-      <ContextPanel
-        @open-detail="openDetail"
-        @open-planner="openPlanner"
-      />
-    </el-drawer>
+    <!-- 右侧面板：用 transition 替代 el-drawer，从图谱右侧飞入 -->
+    <transition name="panel-slide">
+      <div v-if="drawerVisible" class="side-panel">
+        <button class="panel-close" @click="drawerVisible = false; graphStore.clearFocus()">×</button>
+        <ContextPanel
+          @open-detail="openDetail"
+          @open-planner="openPlanner"
+        />
+      </div>
+    </transition>
 
     <DetailOverlay
       :node-id="detailNodeId"

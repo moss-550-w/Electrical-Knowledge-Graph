@@ -48,20 +48,23 @@ function initChart() {
 // ── 运镜聚焦 ─────────────────────────────────────────
 function focusCamera(nodeId) {
   if (!chartInstance) return
-  const option = chartInstance.getOption()
-  const series = option?.series?.[0]
-  if (!series?.nodes) return
+  const model = chartInstance.getModel()
+  const seriesModel = model?.getSeriesByIndex(0)
+  if (!seriesModel) return
 
-  const node = series.nodes.find((n) => n.id === nodeId)
-  if (!node) return
+  const nodeIdx = graphStore.visibleNodes.findIndex((n) => n.id === nodeId)
+  if (nodeIdx < 0) return
 
-  // ECharts Graph 节点有内部坐标，通过 convertToPixel 转为屏幕坐标再 roam 平移
-  // 使用 dispatchAction 平滑聚焦
-  chartInstance.dispatchAction({
-    type: 'focusNodeAdjacency',
-    seriesIndex: 0,
-    dataIndex: series.nodes.indexOf(node),
-  })
+  const layout = seriesModel.getData().getItemLayout(nodeIdx)
+  if (!layout) return
+
+  // 平滑缩放并平移视口中心到焦点节点
+  chartInstance.setOption({
+    series: [{
+      zoom: 2.0,
+      center: layout,
+    }]
+  }, { replaceMerge: [] })
 }
 
 // ── 图谱渲染 ──────────────────────────────────────────

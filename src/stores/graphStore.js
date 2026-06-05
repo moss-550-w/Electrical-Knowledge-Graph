@@ -133,12 +133,49 @@ export const useGraphStore = defineStore('graph', () => {
     if (level === 'L3') showL3Nodes.value = !showL3Nodes.value
   }
 
+  /**
+   * 返回与 nodeId 跨学科的隐性关联节点（二度邻居，不同学科，权重最高的前3个）
+   */
+  function getCrossFieldNodes(nodeId) {
+    const srcNode = nodes.value.find((n) => n.id === nodeId)
+    if (!srcNode) return []
+    const srcCategory = srcNode.category
+
+    // 一度邻居 id 集合
+    const directNeighborIds = new Set(
+      edges.value
+        .filter((e) => e.source === nodeId || e.target === nodeId)
+        .map((e) => (e.source === nodeId ? e.target : e.source))
+    )
+    directNeighborIds.add(nodeId)
+
+    // 二度邻居（邻居的邻居），过滤掉同学科和已知直接关联
+    const candidates = new Map() // id -> 累计权重
+    directNeighborIds.forEach((nid) => {
+      edges.value
+        .filter((e) => e.source === nid || e.target === nid)
+        .forEach((e) => {
+          const otherId = e.source === nid ? e.target : e.source
+          if (directNeighborIds.has(otherId)) return
+          const otherNode = nodes.value.find((n) => n.id === otherId)
+          if (!otherNode || otherNode.category === srcCategory) return
+          candidates.set(otherId, (candidates.get(otherId) || 0) + e.weight)
+        })
+    })
+
+    return [...candidates.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([id]) => nodes.value.find((n) => n.id === id))
+      .filter(Boolean)
+  }
+
   return {
     nodes, edges, focusNodeId, highlightedPathIds, traceMode,
     graphInstance, graphReady, selectedPath, savedPaths,
     showL1Nodes, showL2Nodes, showL3Nodes,
     focusNode, visibleNodes, visibleNodeIds, visibleEdges, nodeAdjacency,
     loadData, setFocusNode, clearFocus, updateHighlightedPath,
-    toggleTraceMode, setSelectedPath, toggleLevel,
+    toggleTraceMode, setSelectedPath, toggleLevel, getCrossFieldNodes,
   }
 })

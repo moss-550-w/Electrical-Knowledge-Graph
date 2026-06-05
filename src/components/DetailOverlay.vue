@@ -138,6 +138,11 @@ const relatedNodes = computed(() => {
       config: getRelationConfig(r.type),
     }))
 })
+
+// 跨学科隐性关联节点
+const crossFieldNodes = computed(() =>
+  nodeData.value ? graphStore.getCrossFieldNodes(nodeData.value.id) : []
+)
 </script>
 
 <template>
@@ -219,6 +224,26 @@ const relatedNodes = computed(() => {
 
         <div v-if="!detail && nodeData?.level !== 'L3'" class="detail-empty">
           <p>该节点为{{ getMaturityConfig(nodeData?.level).label }}，尚未编写详细说明。</p>
+        </div>
+
+        <!-- 跨学科隐性关联 -->
+        <div v-if="crossFieldNodes.length" class="detail-section cross-section">
+          <h4>💡 你可能没想到</h4>
+          <p class="cross-intro">「{{ nodeData?.name }}」与以下来自不同学科的知识点存在隐性关联——</p>
+          <div class="cross-grid">
+            <div
+              v-for="cn in crossFieldNodes"
+              :key="cn.id"
+              class="cross-card"
+              @click="emit('navigate', cn.id)"
+            >
+              <div class="cross-card-top">
+                <span class="cross-name">{{ cn.name }}</span>
+                <span class="cross-cat">{{ cn.category }}</span>
+              </div>
+              <p v-if="cn.summary" class="cross-summary">{{ cn.summary.slice(0, 50) }}…</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -315,4 +340,19 @@ const relatedNodes = computed(() => {
 .related-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
 .related-lvl { font-size: 11px; font-weight: 600; }
 .related-rel { font-size: 11px; }
+
+/* 跨学科关联区块 */
+.cross-section h4 { color: #E6A817; border-bottom-color: rgba(230,168,23,0.3); }
+.cross-intro { font-size: 13px; color: var(--text-secondary); margin: 0 0 12px; }
+.cross-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.cross-card {
+  padding: 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+  border: 1px solid rgba(230,168,23,0.25);
+  background: rgba(230,168,23,0.05);
+}
+.cross-card:hover { border-color: var(--gold); background: rgba(230,168,23,0.1); }
+.cross-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.cross-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.cross-cat { font-size: 10px; padding: 1px 6px; background: rgba(230,168,23,0.15); color: var(--gold); border-radius: 3px; }
+.cross-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
 </style>

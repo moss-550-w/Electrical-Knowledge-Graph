@@ -58,44 +58,55 @@ export function buildGraphOption(nodes, edges, state = {}) {
   const highlightSet = new Set(highlightedPathIds)
   const highlightActive = highlightSet.size > 0
 
-  // 构建 ECharts 节点
+  // 计算焦点节点的直接邻居（一度关联）
+  const directNeighbors = new Set()
+  if (focusNodeId) {
+    edges.forEach((e) => {
+      if (e.source === focusNodeId) directNeighbors.add(e.target)
+      if (e.target === focusNodeId) directNeighbors.add(e.source)
+    })
+  }
+
   const graphNodes = nodes.map((n) => {
     const cfg = getMaturityConfig(n.level)
-    const isHighlight = highlightSet.has(n.id)
     const isFocus = n.id === focusNodeId
-    const dimmed = highlightActive && !isHighlight
+    const isNeighbor = directNeighbors.has(n.id)
+    const isHighlight = highlightSet.has(n.id)
+    // 有焦点时：直接邻居次级高亮，其余深度淡出
+    const dimmed = focusNodeId
+      ? !isFocus && !isNeighbor
+      : highlightActive && !isHighlight
+
+    // 焦点节点大幅放大；直接邻居中幅放大；其余正常
+    const sizeMultiplier = isFocus ? 2.0 : isNeighbor ? 1.3 : 1.0
+    const symbolSize = Math.round(cfg.symbolSize * sizeMultiplier)
 
     return {
       id: n.id,
       name: n.name,
-      symbolSize: isFocus ? cfg.symbolSize + 12 : cfg.symbolSize,
+      symbolSize,
       category: n.category || 0,
       itemStyle: {
         color: cfg.nodeColor,
-        borderColor: isFocus ? '#FF4444' : cfg.nodeBorderColor,
-        borderWidth: isFocus ? 4 : 2,
-        opacity: dimmed ? 0.25 : 1.0,
-        shadowBlur: isFocus ? 20 : 0,
-        shadowColor: 'rgba(255, 68, 68, 0.6)',
+        borderColor: isFocus ? '#FF6B35' : isNeighbor ? '#409EFF' : cfg.nodeBorderColor,
+        borderWidth: isFocus ? 4 : isNeighbor ? 2.5 : 1.5,
+        opacity: dimmed ? 0.08 : 1.0,
+        shadowBlur: isFocus ? 30 : isNeighbor ? 12 : 0,
+        shadowColor: isFocus ? 'rgba(255,107,53,0.8)' : 'rgba(64,158,255,0.5)',
       },
       label: {
-        show: isFocus || cfg.symbolSize >= 36,
-        fontSize: isFocus ? 14 : 11,
-        fontWeight: isFocus ? 'bold' : 'normal',
-        color: dimmed ? '#484f58' : '#e6edf3',
-        formatter: (p) => {
-          if (isFocus) return `★ ${n.name}`
-          return cfg.symbolSize >= 36 ? n.name : ''
-        },
+        show: isFocus || isNeighbor || cfg.symbolSize >= 36,
+        fontSize: isFocus ? 15 : isNeighbor ? 12 : 11,
+        fontWeight: isFocus || isNeighbor ? 'bold' : 'normal',
+        color: dimmed ? '#484f58' : isFocus ? '#FF6B35' : '#e6edf3',
+        formatter: () => isFocus ? `★ ${n.name}` : n.name,
       },
       tooltip: {
         formatter: () => {
           const tag = getMaturityConfig(n.level).label
-          return `<b>${n.name}</b><br/>${n.summary || ''}<br/><span style="color:${getMaturityConfig(n.level).color}">${tag}</span>${n.isGold ? ' 🔶金线' : ''}`
+          return `<b>${n.name}</b><br/>${n.summary || ''}<br/><span style="color:${cfg.color}">${tag}</span>${n.isGold ? ' 🔶金线' : ''}`
         },
       },
-      // 自定义数据
-      _data: n,
     }
   })
 
@@ -203,16 +214,38 @@ function buildCategories(nodes) {
   const catMap = new Map()
   nodes.forEach((n) => {
     const cat = n.category || '未分类'
-    if (!catMap.has(cat)) {
-      catMap.set(cat, { name: cat })
-    }
+    if (!catMap.has(cat)) catMap.set(cat, { name: cat })
   })
   return [...catMap.values()]
 }
 
 /**
- * 将节点和边加载到 graphStore
+ * BFS 计算每个节点的拓扑深度（从无入边节点出发）
  */
+function computeDepth(nodes, edges) {
+  const inDeg = new Map(nodes.map((n) => [n.id, 0]))
+  const children = new Map(nodes.map((n) => [n.id, []]))
+  edges.forEach((e) => {
+    if (e.type === 'depends_on') {
+      inDeg.set(e.target, (inDeg.get(e.target) || 0) + 1)
+      children.get(e.source)?.push(e.target)
+    }
+  })
+  const depth = new Map()
+  const queue = []
+  inDeg.forEach((d, id) => { if (d === 0) { depth.set(id, 0); queue.push(id) } })
+  while (queue.length) {
+    const id = queue.shift()
+    const d = depth.get(id) || 0
+    children.get(id)?.forEach((child) => {
+      if (!depth.has(child)) { depth.set(child, d + 1); queue.push(child) }
+    })
+  }
+  // 未覆盖到的节点赋最大深度
+  nodes.forEach((n) => { if (!depth.has(n.id)) depth.set(n.id, 5) })
+  return depth
+}
+
 export function loadGraphToStore(store) {
   const { nodes, edges } = loadGraphData()
   store.loadData(nodes, edges)
