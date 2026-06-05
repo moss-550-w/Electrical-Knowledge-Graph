@@ -14,11 +14,31 @@
       ]
     },
     "relations": [
-      { "target": "svpwm", "type": "depends_on", "weight": 1.0 },
-      { "target": "current_loop", "type": "depends_on", "weight": 1.0 },
-      { "target": "speed_loop", "type": "depends_on", "weight": 0.9 },
-      { "target": "dq_transform", "type": "depends_on", "weight": 1.0 },
-      { "target": "pmsm_math_model", "type": "depends_on", "weight": 1.0 }
+      {
+        "target": "svpwm",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "current_loop",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "speed_loop",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "dq_transform",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "pmsm_math_model",
+        "type": "depends_on",
+        "weight": 1
+      }
     ]
   },
   {
@@ -34,12 +54,55 @@
         "T_1 = \\frac{\\sqrt{3} |\\vec{V}_{ref}| T_s}{V_{dc}} \\sin(60^\\circ - \\gamma)",
         "T_2 = \\frac{\\sqrt{3} |\\vec{V}_{ref}| T_s}{V_{dc}} \\sin(\\gamma)",
         "m_{max} = \\frac{V_{dc}}{\\sqrt{3}} \\quad \\text{(SVPWM)} \\quad \\text{vs} \\quad \\frac{V_{dc}}{2} \\quad \\text{(SPWM)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "T_1 = \frac{sqrt{3}|\u000bec{V}_{ref}|T_s}{V_{dc}}sin(60^circ-gamma)",
+          "steps": [
+            {
+              "latex": "\text{参考矢量在第 I 扇区，由} \u000bec{V}_1(100) \text{ 和 } \u000bec{V}_2(110) \text{ 合成}",
+              "note": "六个扇区情况类似，仅矢量编号不同"
+            },
+            {
+              "latex": "\text{伏秒平衡：} T_scdot\u000bec{V}_{ref} = T_1\u000bec{V}_1 + T_2\u000bec{V}_2 + T_0\u000bec{V}_0",
+              "note": "一个开关周期内面积（伏秒积）等效"
+            },
+            {
+              "latex": "|\u000bec{V}_1| = |\u000bec{V}_2| = \frac{2}{3}V_{dc}",
+              "note": "所有非零矢量幅值相同"
+            },
+            {
+              "latex": "alpha \text{ 轴投影：} |\u000bec{V}_{ref}|cosgamma = \frac{2V_{dc}}{3}cdot\frac{T_1+T_2cos60^circ}{T_s}",
+              "note": ""
+            },
+            {
+              "latex": "\beta \text{ 轴投影：} |\u000bec{V}_{ref}|singamma = \frac{2V_{dc}}{3}cdot\frac{T_2sin60^circ}{T_s}",
+              "note": ""
+            },
+            {
+              "latex": "\text{联立解得：} T_1 = \frac{sqrt{3}T_s|\u000bec{V}_{ref}|}{V_{dc}}sin(60^circ-gamma),quad T_2 = \frac{sqrt{3}T_s|\u000bec{V}_{ref}|}{V_{dc}}singamma",
+              "note": "γ 为参考矢量与扇区起始边的夹角"
+            }
+          ]
+        }
       ]
     },
     "relations": [
-      { "target": "three_phase_inverter", "type": "depends_on", "weight": 1.0 },
-      { "target": "space_vector", "type": "depends_on", "weight": 0.9 },
-      { "target": "dq_transform", "type": "strong_related", "weight": 0.8 }
+      {
+        "target": "three_phase_inverter",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "space_vector",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "dq_transform",
+        "type": "strong_related",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -56,9 +119,21 @@
       ]
     },
     "relations": [
-      { "target": "igbt_mosfet", "type": "depends_on", "weight": 1.0 },
-      { "target": "pwm_generation", "type": "depends_on", "weight": 0.9 },
-      { "target": "power_electronics_basics", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "igbt_mosfet",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "pwm_generation",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "power_electronics_basics",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -75,9 +150,21 @@
       ]
     },
     "relations": [
-      { "target": "gate_drive", "type": "depends_on", "weight": 1.0 },
-      { "target": "semiconductor_physics", "type": "depends_on", "weight": 0.7 },
-      { "target": "power_electronics_basics", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "gate_drive",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "semiconductor_physics",
+        "type": "depends_on",
+        "weight": 0.7
+      },
+      {
+        "target": "power_electronics_basics",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -95,9 +182,21 @@
       ]
     },
     "relations": [
-      { "target": "opamp_comparator", "type": "strong_related", "weight": 0.8 },
-      { "target": "pwm_generation", "type": "depends_on", "weight": 0.8 },
-      { "target": "three_phase_inverter", "type": "maps_to", "weight": 0.7 }
+      {
+        "target": "opamp_comparator",
+        "type": "strong_related",
+        "weight": 0.8
+      },
+      {
+        "target": "pwm_generation",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "three_phase_inverter",
+        "type": "maps_to",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -115,8 +214,16 @@
       ]
     },
     "relations": [
-      { "target": "electronics_basics", "type": "depends_on", "weight": 0.8 },
-      { "target": "pwm_generation", "type": "strong_related", "weight": 0.5 }
+      {
+        "target": "electronics_basics",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "pwm_generation",
+        "type": "strong_related",
+        "weight": 0.5
+      }
     ]
   },
   {
@@ -134,8 +241,16 @@
       ]
     },
     "relations": [
-      { "target": "digital_electronics_basics", "type": "depends_on", "weight": 0.8 },
-      { "target": "power_electronics_basics", "type": "strong_related", "weight": 0.6 }
+      {
+        "target": "digital_electronics_basics",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "power_electronics_basics",
+        "type": "strong_related",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -153,8 +268,16 @@
       ]
     },
     "relations": [
-      { "target": "circuit_theory", "type": "depends_on", "weight": 0.8 },
-      { "target": "semiconductor_physics", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "circuit_theory",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "semiconductor_physics",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -172,9 +295,21 @@
       ]
     },
     "relations": [
-      { "target": "dq_transform", "type": "depends_on", "weight": 1.0 },
-      { "target": "ac_motor_principles", "type": "depends_on", "weight": 0.9 },
-      { "target": "matrix_calculus", "type": "strong_related", "weight": 0.7 }
+      {
+        "target": "dq_transform",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "ac_motor_principles",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "matrix_calculus",
+        "type": "strong_related",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -189,14 +324,86 @@
         "\\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} = \\frac{2}{3}\\begin{bmatrix} 1 & -\\frac{1}{2} & -\\frac{1}{2} \\\\ 0 & \\frac{\\sqrt{3}}{2} & -\\frac{\\sqrt{3}}{2} \\end{bmatrix} \\begin{bmatrix} i_a \\\\ i_b \\\\ i_c \\end{bmatrix} \\quad \\text{(Clarke)}",
         "\\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & \\sin\\theta \\\\ -\\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} \\quad \\text{(Park)}",
         "\\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} \\quad \\text{(逆Park)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\begin{bmatrix}i_alpha \\ i_\betaend{bmatrix} = \frac{2}{3}\begin{bmatrix}1&-\tfrac{1}{2}&-\tfrac{1}{2}\\ 0&\tfrac{sqrt{3}}{2}&-\tfrac{sqrt{3}}{2}end{bmatrix}\begin{bmatrix}i_a\\i_b\\i_cend{bmatrix}",
+          "steps": [
+            {
+              "latex": "\text{目标：用两相正交量 } (i_alpha, i_\beta) \text{ 等效三相量，保持合成磁动势不变}",
+              "note": "α轴与 a 相轴线重合"
+            },
+            {
+              "latex": "F_alpha = i_acdot 1 + i_bcos120^circ + i_ccos240^circ = i_a - \tfrac{1}{2}i_b - \tfrac{1}{2}i_c",
+              "note": "各相磁动势在 α 轴投影之和"
+            },
+            {
+              "latex": "F_\beta = i_bsin120^circ + i_csin240^circ = \tfrac{sqrt{3}}{2}i_b - \tfrac{sqrt{3}}{2}i_c",
+              "note": "利用 ia+ib+ic=0 可进一步化简"
+            },
+            {
+              "latex": "\text{等幅值原则引入系数 } \tfrac{2}{3}\text{，使 } |\u000bec{i}_s|_{alpha\beta} = |\u000bec{i}_s|_{abc}",
+              "note": ""
+            },
+            {
+              "latex": "Rightarrow \text{Clarke 变换矩阵} = \frac{2}{3}\begin{bmatrix}1&-\tfrac{1}{2}&-\tfrac{1}{2}\\ 0&\tfrac{sqrt{3}}{2}&-\tfrac{sqrt{3}}{2}end{bmatrix}",
+              "note": "这就是为什么矩阵第一行是 [1, -1/2, -1/2]"
+            }
+          ]
+        },
+        {
+          "formula": "\begin{bmatrix}i_d\\i_qend{bmatrix} = \begin{bmatrix}cos\theta&sin\theta\\ -sin\theta&cos\thetaend{bmatrix}\begin{bmatrix}i_alpha\\i_\betaend{bmatrix}",
+          "steps": [
+            {
+              "latex": "\text{问题：} (i_alpha, i_\beta) \text{ 仍是交流量，PI 控制器无法无静差跟踪正弦指令}",
+              "note": "需要变换到随转子同步旋转的坐标系"
+            },
+            {
+              "latex": "\text{引入 dq 坐标系，d 轴与转子永磁体 N 极重合，以电角速度 } omega_e \text{ 旋转}",
+              "note": "θ = ∫ωe dt，由编码器/观测器实时获取"
+            },
+            {
+              "latex": "\text{将矢量从静止} (alpha\beta) \text{投影到旋转} (dq)\text{：等同于坐标系逆时针旋转 } \theta \text{ 角}",
+              "note": "旋转变换矩阵本质是二维旋转矩阵"
+            },
+            {
+              "latex": "i_d = i_alphacos\theta + i_\betasin\theta,quad i_q = -i_alphasin\theta + i_\betacos\theta",
+              "note": ""
+            },
+            {
+              "latex": "\text{结果：正弦 } i_a,i_b,i_c \rightarrow \text{直流 } i_d, i_q\text{，可用 PI 无静差控制}",
+              "note": "id=0 对应最大转矩/安培比控制（MTPA）"
+            }
+          ]
+        }
       ]
     },
     "relations": [
-      { "target": "clark_transform", "type": "depends_on", "weight": 1.0 },
-      { "target": "park_transform", "type": "depends_on", "weight": 1.0 },
-      { "target": "space_vector", "type": "strong_related", "weight": 0.9 },
-      { "target": "matrix_calculus", "type": "depends_on", "weight": 0.8 },
-      { "target": "complex_numbers", "type": "strong_related", "weight": 0.7 }
+      {
+        "target": "clark_transform",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "park_transform",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "space_vector",
+        "type": "strong_related",
+        "weight": 0.9
+      },
+      {
+        "target": "matrix_calculus",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "complex_numbers",
+        "type": "strong_related",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -212,8 +419,16 @@
       ]
     },
     "relations": [
-      { "target": "three_phase_ac", "type": "depends_on", "weight": 0.8 },
-      { "target": "matrix_calculus", "type": "depends_on", "weight": 0.7 }
+      {
+        "target": "three_phase_ac",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "matrix_calculus",
+        "type": "depends_on",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -230,9 +445,21 @@
       ]
     },
     "relations": [
-      { "target": "clark_transform", "type": "depends_on", "weight": 0.9 },
-      { "target": "rotating_magnetic_field", "type": "depends_on", "weight": 0.9 },
-      { "target": "complex_numbers", "type": "strong_related", "weight": 0.8 }
+      {
+        "target": "clark_transform",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "rotating_magnetic_field",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "complex_numbers",
+        "type": "strong_related",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -249,9 +476,21 @@
       ]
     },
     "relations": [
-      { "target": "complex_numbers", "type": "depends_on", "weight": 0.9 },
-      { "target": "three_phase_ac", "type": "depends_on", "weight": 0.8 },
-      { "target": "rotating_magnetic_field", "type": "strong_related", "weight": 0.9 }
+      {
+        "target": "complex_numbers",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "three_phase_ac",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "rotating_magnetic_field",
+        "type": "strong_related",
+        "weight": 0.9
+      }
     ]
   },
   {
@@ -269,9 +508,21 @@
       ]
     },
     "relations": [
-      { "target": "pi_controller", "type": "depends_on", "weight": 1.0 },
-      { "target": "pmsm_math_model", "type": "depends_on", "weight": 0.9 },
-      { "target": "laplace_transform", "type": "depends_on", "weight": 0.7 }
+      {
+        "target": "pi_controller",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "pmsm_math_model",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "laplace_transform",
+        "type": "depends_on",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -288,9 +539,21 @@
       ]
     },
     "relations": [
-      { "target": "pi_controller", "type": "depends_on", "weight": 1.0 },
-      { "target": "current_loop", "type": "depends_on", "weight": 1.0 },
-      { "target": "control_theory_basics", "type": "depends_on", "weight": 0.8 }
+      {
+        "target": "pi_controller",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "current_loop",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "control_theory_basics",
+        "type": "depends_on",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -305,11 +568,46 @@
         "u(t) = K_p e(t) + K_i \\int_0^t e(\\tau)\\,d\\tau",
         "G_c(s) = K_p + \\frac{K_i}{s} = K_p\\left(1 + \\frac{1}{T_i s}\\right)",
         "u[k] = K_p e[k] + K_i T_s \\sum_{n=0}^{k} e[n] \\quad \\text{(数字PI)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "u(t) = K_p e(t) + K_i int_0^t e(\tau),d\tau",
+          "steps": [
+            {
+              "latex": "\text{纯 P 控制：} u = K_p e\text{，稳态时} e = \frac{\text{扰动量}}{K_p} \neq 0",
+              "note": "Kp 越大超调越大，无法两全"
+            },
+            {
+              "latex": "\text{积分项的作用：只要 } e \neq 0 \text{，积分不断累加，直到 } e = 0 \text{ 才停止}",
+              "note": "这是消除稳态误差的本质"
+            },
+            {
+              "latex": "G_c(s) = K_p + \frac{K_i}{s} = K_p\frac{s+omega_i}{s},quad omega_i = \frac{K_i}{K_p}",
+              "note": "分母有 s=0 极点 → I 型系统"
+            },
+            {
+              "latex": "\text{I 型系统对阶跃输入稳态误差} = 0\text{（终值定理可证）}",
+              "note": "这是 PI 能无静差的频域解释"
+            },
+            {
+              "latex": "\text{数字实现：} u[k] = K_p e[k] + K_i T_s sum_{n=0}^{k} e[n]",
+              "note": "Ts 为采样周期；注意积分饱和需加限幅"
+            }
+          ]
+        }
       ]
     },
     "relations": [
-      { "target": "control_theory_basics", "type": "depends_on", "weight": 0.9 },
-      { "target": "laplace_transform", "type": "depends_on", "weight": 0.8 }
+      {
+        "target": "control_theory_basics",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "laplace_transform",
+        "type": "depends_on",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -327,8 +625,16 @@
       ]
     },
     "relations": [
-      { "target": "rotating_magnetic_field", "type": "depends_on", "weight": 1.0 },
-      { "target": "three_phase_ac", "type": "depends_on", "weight": 0.8 }
+      {
+        "target": "rotating_magnetic_field",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "three_phase_ac",
+        "type": "depends_on",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -346,9 +652,21 @@
       ]
     },
     "relations": [
-      { "target": "faraday_law", "type": "depends_on", "weight": 0.9 },
-      { "target": "three_phase_ac", "type": "depends_on", "weight": 0.9 },
-      { "target": "magnetic_circuit", "type": "depends_on", "weight": 0.7 }
+      {
+        "target": "faraday_law",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "three_phase_ac",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "magnetic_circuit",
+        "type": "depends_on",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -363,11 +681,42 @@
         "\\mathcal{E} = -\\frac{d\\Phi}{dt} = -N\\frac{d\\phi}{dt}",
         "\\mathcal{E} = Blv \\quad \\text{(导体切割磁力线)}",
         "\\oint_C \\mathbf{E} \\cdot d\\mathbf{l} = -\\frac{d}{dt}\\iint_S \\mathbf{B} \\cdot d\\mathbf{S}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "mathcal{E} = -\frac{dPhi}{dt}",
+          "steps": [
+            {
+              "latex": "Phi = iint_S \u000bec{B}cdot d\u000bec{S}quad \text{——穿过闭合回路的磁通量（磁力线数）}",
+              "note": "单位：Wb（韦伯）= V·s"
+            },
+            {
+              "latex": "\text{Faraday 实验：} |mathcal{E}| propto \frac{DeltaPhi}{Delta t}\text{，方向由 Lenz 定律决定}",
+              "note": "感应电流总阻碍引起它的磁通变化"
+            },
+            {
+              "latex": "\text{负号来源——能量守恒：若 } mathcal{E} \text{ 方向使磁通进一步增大，将无限自激（违反守恒）}",
+              "note": "负号是 Lenz 定律的数学表达"
+            },
+            {
+              "latex": "\text{在电机中} ①\text{ 变压器电动势：绕组静止，} \frac{dPhi}{dt} \neq 0quad ②\text{ 运动电动势：} mathcal{E}=Blv",
+              "note": "PMSM 中 q 轴反电动势 = ωe·ψf，与转速成正比"
+            }
+          ]
+        }
       ]
     },
     "relations": [
-      { "target": "maxwell_equations", "type": "depends_on", "weight": 1.0 },
-      { "target": "magnetic_circuit", "type": "strong_related", "weight": 0.8 }
+      {
+        "target": "maxwell_equations",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "magnetic_circuit",
+        "type": "strong_related",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -386,8 +735,16 @@
       ]
     },
     "relations": [
-      { "target": "vector_calculus", "type": "depends_on", "weight": 0.9 },
-      { "target": "faraday_law", "type": "maps_to", "weight": 1.0 }
+      {
+        "target": "vector_calculus",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "faraday_law",
+        "type": "maps_to",
+        "weight": 1
+      }
     ]
   },
   {
@@ -405,8 +762,16 @@
       ]
     },
     "relations": [
-      { "target": "complex_numbers", "type": "depends_on", "weight": 0.8 },
-      { "target": "laplace_transform", "type": "strong_related", "weight": 0.9 }
+      {
+        "target": "complex_numbers",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "laplace_transform",
+        "type": "strong_related",
+        "weight": 0.9
+      }
     ]
   },
   {
@@ -424,7 +789,11 @@
       ]
     },
     "relations": [
-      { "target": "linear_algebra", "type": "depends_on", "weight": 0.9 }
+      {
+        "target": "linear_algebra",
+        "type": "depends_on",
+        "weight": 0.9
+      }
     ]
   },
   {
@@ -442,7 +811,11 @@
       ]
     },
     "relations": [
-      { "target": "three_phase_ac", "type": "maps_to", "weight": 0.9 }
+      {
+        "target": "three_phase_ac",
+        "type": "maps_to",
+        "weight": 0.9
+      }
     ]
   },
   {
@@ -460,9 +833,21 @@
       ]
     },
     "relations": [
-      { "target": "control_theory_basics", "type": "maps_to", "weight": 0.9 },
-      { "target": "fourier_analysis", "type": "strong_related", "weight": 0.9 },
-      { "target": "complex_numbers", "type": "depends_on", "weight": 0.8 }
+      {
+        "target": "control_theory_basics",
+        "type": "maps_to",
+        "weight": 0.9
+      },
+      {
+        "target": "fourier_analysis",
+        "type": "strong_related",
+        "weight": 0.9
+      },
+      {
+        "target": "complex_numbers",
+        "type": "depends_on",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -480,8 +865,16 @@
       ]
     },
     "relations": [
-      { "target": "circuit_theory", "type": "depends_on", "weight": 0.8 },
-      { "target": "complex_numbers", "type": "strong_related", "weight": 0.8 }
+      {
+        "target": "circuit_theory",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "complex_numbers",
+        "type": "strong_related",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -499,7 +892,11 @@
       ]
     },
     "relations": [
-      { "target": "solid_state_physics", "type": "depends_on", "weight": 0.7 }
+      {
+        "target": "solid_state_physics",
+        "type": "depends_on",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -517,8 +914,16 @@
       ]
     },
     "relations": [
-      { "target": "maxwell_equations", "type": "depends_on", "weight": 0.8 },
-      { "target": "circuit_theory", "type": "maps_to", "weight": 0.7 }
+      {
+        "target": "maxwell_equations",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "circuit_theory",
+        "type": "maps_to",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -536,8 +941,16 @@
       ]
     },
     "relations": [
-      { "target": "laplace_transform", "type": "depends_on", "weight": 1.0 },
-      { "target": "matrix_calculus", "type": "maps_to", "weight": 0.8 }
+      {
+        "target": "laplace_transform",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "matrix_calculus",
+        "type": "maps_to",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -555,8 +968,16 @@
       ]
     },
     "relations": [
-      { "target": "maxwell_equations", "type": "maps_to", "weight": 0.7 },
-      { "target": "complex_numbers", "type": "strong_related", "weight": 0.8 }
+      {
+        "target": "maxwell_equations",
+        "type": "maps_to",
+        "weight": 0.7
+      },
+      {
+        "target": "complex_numbers",
+        "type": "strong_related",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -574,7 +995,11 @@
       ]
     },
     "relations": [
-      { "target": "matrix_calculus", "type": "maps_to", "weight": 0.9 }
+      {
+        "target": "matrix_calculus",
+        "type": "maps_to",
+        "weight": 0.9
+      }
     ]
   },
   {
@@ -592,8 +1017,16 @@
       ]
     },
     "relations": [
-      { "target": "circuit_theory", "type": "depends_on", "weight": 0.8 },
-      { "target": "semiconductor_physics", "type": "depends_on", "weight": 0.7 }
+      {
+        "target": "circuit_theory",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "semiconductor_physics",
+        "type": "depends_on",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -611,7 +1044,11 @@
       ]
     },
     "relations": [
-      { "target": "electronics_basics", "type": "strong_related", "weight": 0.7 }
+      {
+        "target": "electronics_basics",
+        "type": "strong_related",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -628,7 +1065,11 @@
       ]
     },
     "relations": [
-      { "target": "semiconductor_physics", "type": "maps_to", "weight": 0.8 }
+      {
+        "target": "semiconductor_physics",
+        "type": "maps_to",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -645,8 +1086,16 @@
       ]
     },
     "relations": [
-      { "target": "linear_algebra", "type": "depends_on", "weight": 0.8 },
-      { "target": "maxwell_equations", "type": "maps_to", "weight": 1.0 }
+      {
+        "target": "linear_algebra",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "maxwell_equations",
+        "type": "maps_to",
+        "weight": 1
+      }
     ]
   }
 ]

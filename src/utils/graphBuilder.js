@@ -110,30 +110,48 @@ export function buildGraphOption(nodes, edges, state = {}) {
     }
   })
 
-  // 构建 ECharts 边
+  // 构建 ECharts 边 — 语义形状语言
   const graphEdges = edges.map((e) => {
-    const relCfg = getRelationConfig(e.type)
-    const sourceHL = highlightSet.has(e.source)
-    const targetHL = highlightSet.has(e.target)
-    const onPath = sourceHL && targetHL
+    const onPath = highlightSet.has(e.source) && highlightSet.has(e.target)
+    const dimmedEdge = (highlightActive || !!focusNodeId) && !onPath
+
+    // 每种关系类型独立视觉语言
+    const EDGE_STYLE = {
+      depends_on:    { color: '#E83333', width: 2.5, type: 'solid',  curveness: 0.15, opacity: 0.85 },
+      strong_related:{ color: '#409EFF', width: 1.5, type: 'solid',  curveness: 0.2,  opacity: 0.6  },
+      maps_to:       { color: '#67C23A', width: 2,   type: 'dashed', curveness: 0.28, opacity: 0.75 },
+      suggest_sync:  { color: '#E6A817', width: 1.5, type: 'dotted', curveness: 0.35, opacity: 0.45 },
+    }
+    const s = EDGE_STYLE[e.type] || EDGE_STYLE.strong_related
+
+    // 箭头：depends_on 和 maps_to 用较大箭头，其余无箭头
+    const hasArrow = e.type === 'depends_on' || e.type === 'maps_to'
 
     return {
       source: e.source,
       target: e.target,
+      symbol: ['none', hasArrow ? 'arrow' : 'none'],
+      symbolSize: e.type === 'depends_on' ? [0, 10] : [0, 7],
       lineStyle: {
-        color: onPath
-          ? '#FF4444'
-          : relCfg.lineStyle.color,
-        width: onPath ? 3 : relCfg.lineStyle.width,
-        type: relCfg.lineStyle.type,
-        curveness: relCfg.lineStyle.curveness,
-        opacity: highlightActive && !onPath ? 0.1 : 0.6,
+        color: onPath ? (e.type === 'depends_on' ? '#FF6B35' : '#66ffcc') : s.color,
+        width: onPath ? s.width + 1.5 : s.width,
+        type: s.type,
+        curveness: s.curveness,
+        opacity: dimmedEdge ? 0.06 : s.opacity,
+        shadowBlur: onPath ? 8 : 0,
+        shadowColor: onPath ? s.color : 'transparent',
       },
       label: {
-        show: onPath,
-        formatter: relCfg.label,
+        show: onPath && e.type !== 'suggest_sync',
+        formatter: () => {
+          const labels = { depends_on: '依赖', maps_to: '映射', strong_related: '关联', suggest_sync: '同步' }
+          return labels[e.type] || ''
+        },
         fontSize: 10,
-        color: '#FF4444',
+        color: '#aaa',
+        backgroundColor: 'rgba(13,17,23,0.7)',
+        padding: [2, 4],
+        borderRadius: 3,
       },
       _type: e.type,
     }

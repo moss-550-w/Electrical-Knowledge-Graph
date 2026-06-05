@@ -121,12 +121,34 @@ function initParticles() {
 }
 
 // ── KaTeX 渲染 ────────────────────────────────────────
+function renderLatex(tex, displayMode = true) {
+  try { return katex.renderToString(tex, { displayMode, throwOnError: false }) }
+  catch { return `<code>${tex}</code>` }
+}
+
 const renderedFormulas = computed(() =>
-  (detail.value?.formulas || []).map((f) => {
-    try { return katex.renderToString(f, { displayMode: true, throwOnError: false }) }
-    catch { return `<code>${f}</code>` }
-  })
+  (detail.value?.formulas || []).map((f) => renderLatex(f))
 )
+
+// formulas_steps：每个公式配套的推导步骤（如有）
+const formulasWithSteps = computed(() => {
+  const steps = detail.value?.formulas_steps || []
+  return (detail.value?.formulas || []).map((f, i) => ({
+    html: renderLatex(f),
+    steps: (steps[i]?.steps || []).map((s) => ({
+      latex: renderLatex(s.latex),
+      note: s.note,
+    })),
+  }))
+})
+
+const openSteps = ref(new Set())  // 记录哪些公式的推导已展开
+
+function toggleSteps(idx) {
+  const s = new Set(openSteps.value)
+  s.has(idx) ? s.delete(idx) : s.add(idx)
+  openSteps.value = s
+}
 
 const relatedNodes = computed(() => {
   if (!nodeData.value?.relations) return []
@@ -188,16 +210,37 @@ const crossFieldNodes = computed(() =>
           <p>{{ detail?.description || nodeData?.summary }}</p>
         </div>
 
-        <div v-if="renderedFormulas.length" class="detail-section">
+        <div v-if="formulasWithSteps.length" class="detail-section">
           <h4>核心公式</h4>
-          <!-- 每条公式独立入场：由 visibleCount 控制 -->
           <div
-            v-for="(html, idx) in renderedFormulas"
+            v-for="(item, idx) in formulasWithSteps"
             :key="idx"
             class="formula-block"
             :class="{ 'formula-in': idx < visibleCount }"
-            v-html="html"
-          />
+          >
+            <!-- 公式本体 -->
+            <div class="formula-math" v-html="item.html" />
+
+            <!-- 推导步骤折叠（有 steps 才显示按钮） -->
+            <div v-if="item.steps.length" class="steps-toggle">
+              <button class="steps-btn" @click="toggleSteps(idx)">
+                {{ openSteps.has(idx) ? '▲ 收起推导' : '▼ 展开推导步骤' }}
+              </button>
+              <transition name="steps-expand">
+                <ol v-if="openSteps.has(idx)" class="steps-list">
+                  <li
+                    v-for="(step, si) in item.steps"
+                    :key="si"
+                    class="step-item"
+                    :style="{ animationDelay: `${si * 60}ms` }"
+                  >
+                    <div class="step-latex" v-html="step.latex" />
+                    <span v-if="step.note" class="step-note">💬 {{ step.note }}</span>
+                  </li>
+                </ol>
+              </transition>
+            </div>
+          </div>
         </div>
 
         <div v-if="relatedNodes.length" class="detail-section">
@@ -355,4 +398,45 @@ const crossFieldNodes = computed(() =>
 .cross-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
 .cross-cat { font-size: 10px; padding: 1px 6px; background: rgba(230,168,23,0.15); color: var(--gold); border-radius: 3px; }
 .cross-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+
+/* 推导折叠块 */
+.formula-math { margin-bottom: 8px; }
+
+.steps-toggle { margin-top: 4px; }
+
+.steps-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--accent); font-size: 12px;
+  padding: 3px 10px; border-radius: 4px;
+  cursor: pointer; transition: all 0.15s;
+}
+.steps-btn:hover { background: var(--glow-blue); border-color: var(--accent); }
+
+.steps-list {
+  list-style: none; padding: 0;
+  margin: 10px 0 0;
+  border-left: 2px solid rgba(64,158,255,0.3);
+  padding-left: 16px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+.step-item {
+  animation: step-in 0.3s ease both;
+}
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.step-latex { font-size: 14px; overflow-x: auto; }
+.step-note {
+  display: block; margin-top: 4px;
+  font-size: 12px; color: var(--text-muted);
+  font-style: italic;
+}
+
+/* 展开/收起过渡 */
+.steps-expand-enter-active { transition: opacity 0.25s ease; }
+.steps-expand-leave-active { transition: opacity 0.15s ease; }
+.steps-expand-enter-from, .steps-expand-leave-to { opacity: 0; }
 </style>
