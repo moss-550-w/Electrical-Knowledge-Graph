@@ -82,7 +82,7 @@ export function buildGraphOption(nodes, edges, state = {}) {
         show: isFocus || cfg.symbolSize >= 36,
         fontSize: isFocus ? 14 : 11,
         fontWeight: isFocus ? 'bold' : 'normal',
-        color: dimmed ? '#ccc' : '#333',
+        color: dimmed ? '#484f58' : '#e6edf3',
         formatter: (p) => {
           if (isFocus) return `★ ${n.name}`
           return cfg.symbolSize >= 36 ? n.name : ''
@@ -130,19 +130,27 @@ export function buildGraphOption(nodes, edges, state = {}) {
 
   const categories = buildCategories(nodes)
 
+  // 计算拓扑深度，用于入场动画延迟
+  const depthMap = computeDepth(nodes, edges)
+
   return {
+    backgroundColor: '#0d1117',
     tooltip: {
       show: true,
       trigger: 'item',
-      backgroundColor: 'rgba(255,255,255,0.95)',
-      borderColor: '#ddd',
-      textStyle: { color: '#333', fontSize: 13 },
+      backgroundColor: 'rgba(22,27,34,0.95)',
+      borderColor: 'rgba(48,54,61,0.8)',
+      textStyle: { color: '#e6edf3', fontSize: 13 },
     },
     legend: {
       show: true,
       bottom: 10,
       data: categories.map((c) => c.name),
-      textStyle: { fontSize: 12 },
+      textStyle: { fontSize: 11, color: '#8b949e' },
+      backgroundColor: 'rgba(13,17,23,0.6)',
+      borderColor: 'rgba(48,54,61,0.5)',
+      borderWidth: 1,
+      borderRadius: 6,
     },
     series: [
       {
@@ -153,7 +161,14 @@ export function buildGraphOption(nodes, edges, state = {}) {
         zoom: 1.2,
         scaleLimit: { min: 0.3, max: 5 },
         categories,
-        nodes: graphNodes,
+        nodes: graphNodes.map((n, i) => {
+          const depth = depthMap.get(n.id) || 0
+          return {
+            ...n,
+            // 金线节点最后高亮爆发（delay 更长），其余按深度分层依次出现
+            animationDelay: nodes[i]?.isGold ? depth * 60 + 400 : depth * 60,
+          }
+        }),
         edges: graphEdges,
         force: {
           repulsion: 600,
@@ -168,17 +183,16 @@ export function buildGraphOption(nodes, edges, state = {}) {
         },
         edgeSymbol: ['none', 'arrow'],
         edgeSymbolSize: [0, 8],
-        itemStyle: {
-          borderWidth: 1.5,
-        },
-        lineStyle: {
-          opacity: 0.5,
-          curveness: 0.2,
-        },
+        itemStyle: { borderWidth: 1.5 },
+        lineStyle: { opacity: 0.5, curveness: 0.2 },
       },
     ],
-    animationDuration: 800,
+    animationDuration: 1200,
+    animationDurationUpdate: 600,
+    animationEasing: 'cubicOut',
     animationEasingUpdate: 'cubicInOut',
+    // 节点入场：从 symbolSize=0 缩放出现
+    animationDelayUpdate: (idx) => idx * 5,
   }
 }
 

@@ -288,8 +288,8 @@ const relatedNodes = computed(() => {
 
 /* ── 公式逐条入场 ───────────────────── */
 .formula-block {
-  background: #fafbfc;
-  border: 1px solid #ebeef5;
+  background: rgba(22,27,34,0.8);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px 24px;
   margin-bottom: 12px;
@@ -299,45 +299,20 @@ const relatedNodes = computed(() => {
   transform: translateX(-16px);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
-.formula-block.formula-in {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* ── 其他样式 ───────────────────────── */
+.formula-block.formula-in { opacity: 1; transform: translateX(0); }
 .detail-loading { padding: 40px; }
-.level-badge {
-  font-size: 12px; padding: 3px 10px;
-  border-radius: 5px; font-weight: 600; border: 1px solid;
-}
+.level-badge { font-size: 12px; padding: 3px 10px; border-radius: 5px; font-weight: 600; border: 1px solid; }
 .gold-badge { font-size: 13px; font-weight: 500; }
-.category-tag {
-  font-size: 12px; padding: 2px 10px;
-  background: #f0f2f5; border-radius: 4px; color: #606266;
-}
+.category-tag { font-size: 12px; padding: 2px 10px; background: rgba(48,54,61,0.6); border-radius: 4px; color: var(--text-secondary); }
 .detail-section { margin-bottom: 28px; }
-.detail-section h4 {
-  font-size: 16px; color: #303133;
-  margin: 0 0 12px; padding-bottom: 8px;
-  border-bottom: 2px solid #ebeef5;
-}
-.detail-section p { font-size: 15px; color: #606266; line-height: 1.9; }
-.detail-empty { text-align: center; padding: 60px 20px; color: #909399; font-size: 14px; }
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px;
-}
-.related-card {
-  padding: 12px; border: 1px solid #ebeef5;
-  border-radius: 8px; cursor: pointer; transition: all 0.2s;
-}
-.related-card:hover { border-color: #409EFF; background: #ecf5ff; }
-.related-card-header {
-  display: flex; justify-content: space-between;
-  align-items: center; margin-bottom: 6px;
-}
-.related-name { font-size: 13px; font-weight: 500; color: #303133; }
+.detail-section h4 { font-size: 16px; color: var(--text-primary); margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.detail-section p { font-size: 15px; color: var(--text-secondary); line-height: 1.9; }
+.detail-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.related-card { padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; background: rgba(22,27,34,0.5); }
+.related-card:hover { border-color: var(--accent); background: var(--glow-blue); }
+.related-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.related-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
 .related-lvl { font-size: 11px; font-weight: 600; }
 .related-rel { font-size: 11px; }
 </style>

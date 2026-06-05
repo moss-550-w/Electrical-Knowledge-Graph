@@ -123,7 +123,7 @@ function goToReview() {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #f5f7fa;
+  background: var(--bg-primary);
 }
 
 .topbar {
@@ -131,24 +131,26 @@ function goToReview() {
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #ebeef5;
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
   z-index: 50;
   gap: 16px;
   flex-shrink: 0;
 }
 
-.topbar-left {
-  display: flex;
-  align-items: center;
-}
+.topbar-left { display: flex; align-items: center; }
 
 .logo {
   font-size: 18px;
   font-weight: 700;
-  color: #303133;
+  color: var(--text-primary);
   white-space: nowrap;
+  background: linear-gradient(90deg, #409EFF, #E6A817);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .topbar-right {
@@ -158,9 +160,7 @@ function goToReview() {
   flex-shrink: 0;
 }
 
-.trace-switch {
-  --el-switch-on-color: #E83333;
-}
+.trace-switch { --el-switch-on-color: #E83333; }
 
 .main-area {
   flex: 1;

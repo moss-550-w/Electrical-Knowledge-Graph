@@ -131,7 +131,8 @@ function clearFocus() {
   height: 100%;
   padding: 20px;
   overflow-y: auto;
-  background: #fff;
+  background: transparent;
+  color: var(--text-primary);
 }
 
 /* 空状态 */
@@ -152,44 +153,19 @@ function clearFocus() {
   font-size: 48px;
 }
 
-.panel-logo h2 {
-  font-size: 20px;
-  margin: 8px 0 0;
-  color: #303133;
-}
-
-.panel-desc {
-  font-size: 14px;
-  color: #606266;
-  line-height: 1.8;
-  margin-bottom: 24px;
-}
-
-.panel-stats {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px 20px;
-  border-radius: 10px;
-  background: #f5f7fa;
-}
-
-.stat-num {
-  font-size: 24px;
-  font-weight: 700;
-  color: #303133;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: #909399;
-}
+.panel-logo h2 { font-size: 20px; margin: 8px 0 0; color: var(--text-primary); }
+.panel-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px; }
+.stat-item { display: flex; flex-direction: column; align-items: center; padding: 12px 20px; border-radius: 10px; background: rgba(48,54,61,0.5); border: 1px solid var(--border); }
+.stat-num { font-size: 24px; font-weight: 700; color: var(--text-primary); }
+.stat-label { font-size: 12px; color: var(--text-secondary); }
+.panel-header h3 { font-size: 18px; margin: 0; color: var(--text-primary); }
+.node-summary { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px; }
+.meta-label { color: var(--text-muted); }
+.meta-value { color: var(--text-primary); }
+.related-section { border-top: 1px solid var(--border); padding-top: 12px; margin-bottom: 16px; }
+.related-section h4 { font-size: 13px; color: var(--text-muted); margin: 0 0 8px; font-weight: 500; }
+.related-item:hover { background: var(--glow-blue); }
+.related-name { flex: 1; font-size: 13px; color: var(--text-primary); }
 
 .stat-item.l3 .stat-num { color: #E6A817; }
 .stat-item.l2 .stat-num { color: #409EFF; }
@@ -217,95 +193,20 @@ function clearFocus() {
   margin-bottom: 12px;
 }
 
-.panel-header h3 {
-  font-size: 18px;
-  margin: 0;
-  color: #303133;
-}
-
-.level-badge {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-  border: 1px solid;
-}
-
-.gold-badge {
-  font-size: 12px;
-  color: #E6A817;
-  font-weight: 500;
-}
-
-.node-summary {
-  font-size: 14px;
-  color: #606266;
-  line-height: 1.8;
-  margin-bottom: 16px;
-}
-
-.detail-btn {
-  width: 100%;
-  margin-bottom: 16px;
-  border-radius: 10px;
-}
-
-.node-meta {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  font-size: 13px;
-}
-
-.meta-label { color: #909399; }
-.meta-value { color: #303133; }
-
-.related-section {
-  border-top: 1px solid #ebeef5;
-  padding-top: 12px;
-  margin-bottom: 16px;
-}
-
-.related-section h4 {
-  font-size: 13px;
-  color: #909399;
-  margin: 0 0 8px;
-  font-weight: 500;
-}
-
-.related-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.related-item:hover {
-  background: #f5f7fa;
-}
-
-.related-arrow {
-  font-size: 11px;
-  white-space: nowrap;
-  min-width: 56px;
-}
-
-.related-name {
-  flex: 1;
-  font-size: 13px;
-  color: #303133;
-}
-
-.related-level {
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.clear-btn {
-  width: 100%;
-  color: #909399;
-}
+.panel-header h3 { font-size: 18px; margin: 0; color: var(--text-primary); }
+.level-badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; border: 1px solid; }
+.gold-badge { font-size: 12px; color: var(--gold); font-weight: 500; }
+.node-summary { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px; }
+.detail-btn { width: 100%; margin-bottom: 16px; border-radius: 10px; }
+.node-meta { display: flex; gap: 8px; margin-bottom: 16px; font-size: 13px; }
+.meta-label { color: var(--text-muted); }
+.meta-value { color: var(--text-primary); }
+.related-section { border-top: 1px solid var(--border); padding-top: 12px; margin-bottom: 16px; }
+.related-section h4 { font-size: 13px; color: var(--text-muted); margin: 0 0 8px; font-weight: 500; }
+.related-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.15s; }
+.related-item:hover { background: var(--glow-blue); }
+.related-arrow { font-size: 11px; white-space: nowrap; min-width: 56px; }
+.related-name { flex: 1; font-size: 13px; color: var(--text-primary); }
+.related-level { font-size: 11px; font-weight: 500; }
+.clear-btn { width: 100%; color: var(--text-muted); }
 </style>
