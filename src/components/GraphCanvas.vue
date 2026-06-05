@@ -89,7 +89,9 @@ function renderChart() {
   particles = []
 }
 
-// ── 流光动画 ──────────────────────────────────────────
+// ── 流光动画 + 波浪线 ─────────────────────────────────
+let wavePhase = 0
+
 function startGlow() {
   const canvas = glowRef.value
   if (!canvas) return
@@ -100,30 +102,75 @@ function startGlow() {
     const w = canvas.width
     const h = canvas.height
     ctx.clearRect(0, 0, w, h)
+    wavePhase += 0.06
 
-    // 每帧尝试从高亮边生成新粒子
-    if (graphStore.highlightedPathIds.length > 1) {
-      spawnParticles()
-    }
+    // 绘制 suggest_sync 波浪线
+    drawWaveEdges(ctx)
 
-    // 绘制 & 更新粒子
+    // 流光粒子
+    if (graphStore.highlightedPathIds.length > 1) spawnParticles()
     particles = particles.filter((p) => p.life > 0)
     particles.forEach((p) => {
-      p.x += p.vx
-      p.y += p.vy
-      p.life -= 1.5
+      p.x += p.vx; p.y += p.vy; p.life -= 1.5
       const alpha = Math.max(0, p.life / p.maxLife)
       ctx.beginPath()
       ctx.arc(p.x, p.y, p.r * alpha, 0, Math.PI * 2)
       const color = graphStore.traceMode ? `rgba(232,51,51,${alpha * 0.9})` : `rgba(64,158,255,${alpha * 0.9})`
       ctx.fillStyle = color
-      ctx.shadowBlur = 6
-      ctx.shadowColor = color
-      ctx.fill()
+      ctx.shadowBlur = 6; ctx.shadowColor = color; ctx.fill()
     })
     ctx.shadowBlur = 0
   }
   loop()
+}
+
+function getNodePixel(nodeId) {
+  if (!chartInstance) return null
+  const model = chartInstance.getModel()
+  const sm = model?.getSeriesByIndex(0)
+  if (!sm) return null
+  const idx = graphStore.visibleNodes.findIndex((n) => n.id === nodeId)
+  if (idx < 0) return null
+  const layout = sm.getData().getItemLayout(idx)
+  if (!layout) return null
+  const [px, py] = chartInstance.convertToPixel({ seriesIndex: 0 }, [layout[0], layout[1]])
+  return isNaN(px) ? null : [px, py]
+}
+
+function drawWaveEdges(ctx) {
+  const syncEdges = graphStore.visibleEdges.filter((e) => e.type === 'suggest_sync')
+  if (!syncEdges.length) return
+
+  syncEdges.forEach((e) => {
+    const src = getNodePixel(e.source)
+    const tgt = getNodePixel(e.target)
+    if (!src || !tgt) return
+
+    const [sx, sy] = src
+    const [tx, ty] = tgt
+    const len = Math.hypot(tx - sx, ty - sy) || 1
+    // 法向量（垂直于边方向）
+    const nx = -(ty - sy) / len
+    const ny = (tx - sx) / len
+
+    const segments = Math.floor(len / 8)
+    const amp = 4  // 波浪振幅（像素）
+
+    ctx.beginPath()
+    for (let i = 0; i <= segments; i++) {
+      const t = i / segments
+      const bx = sx + (tx - sx) * t
+      const by = sy + (ty - sy) * t
+      const wave = Math.sin(t * Math.PI * 6 + wavePhase) * amp
+      const x = bx + nx * wave
+      const y = by + ny * wave
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+    }
+    ctx.strokeStyle = 'rgba(230,168,23,0.55)'
+    ctx.lineWidth = 1.5
+    ctx.setLineDash([])
+    ctx.stroke()
+  })
 }
 
 function spawnParticles() {
