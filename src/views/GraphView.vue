@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGraphStore } from '@/stores/graphStore'
+import { useTheme } from '@/composables/useTheme'
 import GraphCanvas from '@/components/GraphCanvas.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import ContextPanel from '@/components/ContextPanel.vue'
@@ -11,6 +12,7 @@ import TourGuide from '@/components/TourGuide.vue'
 
 const router = useRouter()
 const graphStore = useGraphStore()
+const { isLight, toggle: toggleTheme } = useTheme()
 
 const tourVisible = ref(false)
 const drawerVisible = ref(false)
@@ -86,6 +88,9 @@ function goToReview() {
           {{ drawerVisible ? '隐藏面板' : '详情面板' }}
         </el-button>
         <el-button size="small" @click="tourVisible = true">新手引导</el-button>
+        <el-button size="small" @click="toggleTheme" class="theme-btn">
+          {{ isLight ? '🌙 深色' : '☀️ 白色' }}
+        </el-button>
       </div>
     </header>
 
@@ -170,4 +175,41 @@ function goToReview() {
   position: relative;
   overflow: hidden;
 }
+
+/* 右侧叙事面板 */
+.side-panel {
+  position: fixed;
+  top: 57px; /* topbar 高度 */
+  right: 0;
+  width: 360px;
+  height: calc(100vh - 57px);
+  background: var(--bg-surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border);
+  z-index: 40;
+  overflow: hidden;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4);
+}
+
+.panel-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.panel-close:hover { color: var(--text-primary); }
+
+/* 面板从右侧飞入 */
+.panel-slide-enter-active { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease; }
+.panel-slide-leave-active { transition: transform 0.25s ease-in, opacity 0.2s ease; }
+.panel-slide-enter-from  { transform: translateX(100%); opacity: 0; }
+.panel-slide-leave-to    { transform: translateX(100%); opacity: 0; }
 </style>

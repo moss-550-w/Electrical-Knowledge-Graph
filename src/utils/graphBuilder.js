@@ -144,21 +144,22 @@ export function buildGraphOption(nodes, edges, state = {}) {
   // 计算拓扑深度，用于入场动画延迟
   const depthMap = computeDepth(nodes, edges)
 
+  const isLight = document.documentElement.classList.contains('light')
   return {
-    backgroundColor: '#0d1117',
+    backgroundColor: isLight ? '#f5f7fa' : '#0d1117',
     tooltip: {
       show: true,
       trigger: 'item',
-      backgroundColor: 'rgba(22,27,34,0.95)',
-      borderColor: 'rgba(48,54,61,0.8)',
-      textStyle: { color: '#e6edf3', fontSize: 13 },
+      backgroundColor: isLight ? 'rgba(255,255,255,0.97)' : 'rgba(22,27,34,0.95)',
+      borderColor: isLight ? 'rgba(220,223,230,0.9)' : 'rgba(48,54,61,0.8)',
+      textStyle: { color: isLight ? '#303133' : '#e6edf3', fontSize: 13 },
     },
     legend: {
       show: true,
       bottom: 10,
       data: categories.map((c) => c.name),
-      textStyle: { fontSize: 11, color: '#8b949e' },
-      backgroundColor: 'rgba(13,17,23,0.6)',
+      textStyle: { fontSize: 11, color: isLight ? '#606266' : '#8b949e' },
+      backgroundColor: isLight ? 'rgba(255,255,255,0.8)' : 'rgba(13,17,23,0.6)',
       borderColor: 'rgba(48,54,61,0.5)',
       borderWidth: 1,
       borderRadius: 6,

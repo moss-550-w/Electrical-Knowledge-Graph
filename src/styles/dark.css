@@ -1,4 +1,4 @@
-/* 全局深色主题变量 */
+/* 深色主题（默认） */
 :root {
   --bg-primary: #0d1117;
   --bg-surface: rgba(22, 27, 34, 0.92);
@@ -13,6 +13,19 @@
   --glow-gold: rgba(230, 168, 23, 0.15);
 }
 
+/* 白色主题覆盖 */
+.light {
+  --bg-primary: #f5f7fa;
+  --bg-surface: rgba(255, 255, 255, 0.95);
+  --bg-card: rgba(255, 255, 255, 0.98);
+  --border: rgba(220, 223, 230, 0.9);
+  --text-primary: #303133;
+  --text-secondary: #606266;
+  --text-muted: #909399;
+  --glow-blue: rgba(64, 158, 255, 0.08);
+  --glow-gold: rgba(230, 168, 23, 0.08);
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body, #app {
@@ -21,35 +34,34 @@ html, body, #app {
   color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
     'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Element Plus 深色覆盖 */
+/* Element Plus 主题适配（变量驱动，深色/浅色自动切换） */
 .el-button { border-color: var(--border) !important; background: var(--bg-card) !important; color: var(--text-primary) !important; }
-.el-button:hover { border-color: var(--accent) !important; background: rgba(64,158,255,0.12) !important; }
+.el-button:hover { border-color: var(--accent) !important; background: var(--glow-blue) !important; }
 .el-button--primary { background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important; }
 .el-button--primary:hover { background: #66b1ff !important; border-color: #66b1ff !important; }
-
-.el-drawer { background: var(--bg-surface) !important; border-left: 1px solid var(--border) !important; }
-.el-drawer__body { background: transparent !important; }
 
 .el-dialog { background: var(--bg-card) !important; border: 1px solid var(--border) !important; border-radius: 12px !important; }
 .el-dialog__header { border-bottom: 1px solid var(--border) !important; }
 .el-dialog__title { color: var(--text-primary) !important; }
 .el-dialog__headerbtn .el-dialog__close { color: var(--text-secondary) !important; }
 
-.el-input__wrapper { background: rgba(22,27,34,0.8) !important; border-color: var(--border) !important; box-shadow: none !important; }
+.el-input__wrapper { background: var(--bg-card) !important; border-color: var(--border) !important; box-shadow: none !important; }
 .el-input__wrapper:hover, .el-input__wrapper.is-focus { border-color: var(--accent) !important; }
 .el-input__inner { color: var(--text-primary) !important; }
 .el-input__inner::placeholder { color: var(--text-muted) !important; }
 
-.el-select__wrapper { background: rgba(22,27,34,0.8) !important; border-color: var(--border) !important; color: var(--text-primary) !important; }
+.el-select__wrapper { background: var(--bg-card) !important; border-color: var(--border) !important; color: var(--text-primary) !important; }
 .el-select-dropdown { background: var(--bg-card) !important; border-color: var(--border) !important; }
 .el-select-dropdown__item { color: var(--text-primary) !important; }
 .el-select-dropdown__item:hover, .el-select-dropdown__item.is-hovering { background: var(--glow-blue) !important; }
 
-.el-skeleton { --el-skeleton-color: rgba(48,54,61,0.8); --el-skeleton-to-color: rgba(64,71,80,0.8); }
-
+.el-skeleton { --el-skeleton-color: var(--border); --el-skeleton-to-color: var(--bg-surface); }
 .el-switch__label { color: var(--text-secondary) !important; }
 .el-switch.is-checked .el-switch__label--right { color: var(--text-primary) !important; }
+.el-tag { background: var(--glow-blue) !important; border-color: rgba(64,158,255,0.3) !important; color: #409EFF !important; }
 
-.el-tag { background: var(--glow-blue) !important; border-color: rgba(64,158,255,0.3) !important; color: #6db8ff !important; }
+/* 侧边面板浅色适配 */
+.light .side-panel { box-shadow: -4px 0 20px rgba(0,0,0,0.1); }

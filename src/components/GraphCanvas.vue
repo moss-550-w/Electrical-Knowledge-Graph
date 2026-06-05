@@ -6,8 +6,9 @@ import { buildGraphOption, loadGraphToStore } from '@/utils/graphBuilder'
 
 const graphStore = useGraphStore()
 const chartRef = ref(null)
-const glowRef = ref(null)   // 流光叠加层
+const glowRef = ref(null)
 let chartInstance = null
+let themeObserver = null
 let animId = null
 let particles = []
 
@@ -15,11 +16,15 @@ onMounted(async () => {
   await nextTick()
   initChart()
   window.addEventListener('resize', handleResize)
+  // 监听 html class 变化（主题切换）→ 重新渲染图谱背景
+  themeObserver = new MutationObserver(() => renderChart())
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
   cancelAnimationFrame(animId)
+  themeObserver?.disconnect()
   chartInstance?.dispose()
 })
 
