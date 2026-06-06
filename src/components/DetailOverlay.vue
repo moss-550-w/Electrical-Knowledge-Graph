@@ -205,6 +205,11 @@ const crossFieldNodes = computed(() =>
           <span class="category-tag">{{ nodeData?.category }}</span>
         </div>
 
+        <div v-if="detail?.scene" class="scene-card">
+          <span class="scene-icon">{{ detail.scene.icon }}</span>
+          <p class="scene-text">{{ detail.scene.text }}</p>
+        </div>
+
         <div class="detail-section">
           <h4>概述</h4>
           <p>{{ detail?.description || nodeData?.summary }}</p>
@@ -298,6 +303,21 @@ const crossFieldNodes = computed(() =>
 </template>
 
 <style scoped>
+/* 工程场景卡片 */
+.scene-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(64,158,255,0.08), rgba(64,158,255,0.03));
+  border: 1px solid rgba(64,158,255,0.25);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.scene-icon { font-size: 28px; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+.scene-text { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin: 0; }
+
 /* ── 容器 ─────────────────────────── */
 .detail-wrapper {
   position: relative;
