@@ -1,5 +1,10 @@
 # 电气知识图谱可视化学习平台
 
+[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?logo=github)](https://moss-550-w.github.io/Electrical-Knowledge-Graph/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+
+🌐 **在线访问：[https://moss-550-w.github.io/Electrical-Knowledge-Graph/](https://moss-550-w.github.io/Electrical-Knowledge-Graph/)**
+
 **以网状知识图谱深度打通电气工程多学科关联**，围绕「永磁同步电机矢量控制」主线，用可视化脉络取代碎片化学习。
 
 ---

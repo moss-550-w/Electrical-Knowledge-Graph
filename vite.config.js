@@ -17,7 +17,7 @@ export default defineConfig({
   resolve: {
     alias: { '@': resolve(__dirname, 'src') },
   },
-  base: './',
+  base: process.env.VITE_BASE ?? './',
   build: {
     chunkSizeWarningLimit: 1200,
     rollupOptions: {
