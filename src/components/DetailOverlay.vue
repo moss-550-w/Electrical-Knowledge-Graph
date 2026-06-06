@@ -356,7 +356,7 @@ const crossFieldNodes = computed(() =>
 
 /* ── 公式逐条入场 ───────────────────── */
 .formula-block {
-  background: rgba(22,27,34,0.8);
+  background:rgba(255,255,255,0.95);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px 24px;
