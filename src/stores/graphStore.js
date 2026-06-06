@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useHistoryStore } from './historyStore'
 
 export const useGraphStore = defineStore('graph', () => {
   // ===== 原始数据 =====
@@ -77,6 +78,9 @@ export const useGraphStore = defineStore('graph', () => {
     }
     focusNodeId.value = nodeId
     updateHighlightedPath(nodeId)
+    // 记录访问历史
+    const node = nodes.value.find((n) => n.id === nodeId)
+    if (node) useHistoryStore().recordVisit(node)
   }
 
   function clearFocus() {

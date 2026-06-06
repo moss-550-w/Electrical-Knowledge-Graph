@@ -1,11 +1,13 @@
 <script setup>
 import { computed } from 'vue'
 import { useGraphStore } from '@/stores/graphStore'
+import { useHistoryStore } from '@/stores/historyStore'
 import { getMaturityConfig, getRelationConfig } from '@/utils/maturityTags'
 
 const emit = defineEmits(['open-detail', 'open-planner'])
 
 const graphStore = useGraphStore()
+const historyStore = useHistoryStore()
 
 const node = computed(() => graphStore.focusNode)
 const hasFocus = computed(() => !!node.value)
@@ -36,6 +38,11 @@ function openDetail() {
 
 function clearFocus() {
   graphStore.clearFocus()
+}
+
+function formatTime(ts) {
+  const d = new Date(ts)
+  return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 </script>
 
@@ -68,6 +75,28 @@ function clearFocus() {
       <el-button type="primary" class="planner-entry" @click="$emit('open-planner')">
         生成学习路径
       </el-button>
+
+      <!-- 探索历史时间轴 -->
+      <div v-if="historyStore.history.length" class="history-section">
+        <div class="history-header">
+          <span>👣 我的探索历史（{{ historyStore.history.length }}）</span>
+          <button class="history-clear" @click="historyStore.clearHistory()">清空</button>
+        </div>
+        <div class="history-timeline">
+          <div
+            v-for="item in historyStore.history.slice(0, 20)"
+            :key="item.id + item.visitedAt"
+            class="history-item"
+            @click="graphStore.setFocusNode(item.id)"
+          >
+            <div class="history-dot" :style="{ background: getMaturityConfig(item.level).color }" />
+            <div class="history-info">
+              <span class="history-name">{{ item.name }}</span>
+              <span class="history-meta">{{ item.category }} · {{ formatTime(item.visitedAt) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 有焦点节点：详情 -->
@@ -209,4 +238,17 @@ function clearFocus() {
 .related-name { flex: 1; font-size: 13px; color: var(--text-primary); }
 .related-level { font-size: 11px; font-weight: 500; }
 .clear-btn { width: 100%; color: var(--text-muted); }
+
+/* 探索历史时间轴 */
+.history-section { margin-top: 24px; border-top: 1px solid var(--border); padding-top: 14px; }
+.history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 12px; color: var(--text-muted); }
+.history-clear { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+.history-clear:hover { color: var(--accent); }
+.history-timeline { display: flex; flex-direction: column; gap: 4px; }
+.history-item { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.history-item:hover { background: var(--glow-blue); }
+.history-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.history-info { display: flex; flex-direction: column; min-width: 0; }
+.history-name { font-size: 13px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 </style>

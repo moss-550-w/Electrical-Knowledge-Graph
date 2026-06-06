@@ -2,9 +2,11 @@
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import { useGraphStore } from '@/stores/graphStore'
+import { useHistoryStore } from '@/stores/historyStore'
 import { buildGraphOption, loadGraphToStore } from '@/utils/graphBuilder'
 
 const graphStore = useGraphStore()
+const historyStore = useHistoryStore()
 const chartRef = ref(null)
 const glowRef = ref(null)
 let chartInstance = null
@@ -25,6 +27,12 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
   cancelAnimationFrame(animId)
   themeObserver?.disconnect()
+  // 保存视角
+  if (chartInstance) {
+    const opt = chartInstance.getOption()
+    const s = opt?.series?.[0]
+    if (s?.zoom && s?.center) historyStore.saveViewport(s.zoom, s.center)
+  }
   chartInstance?.dispose()
 })
 
@@ -36,6 +44,14 @@ function initChart() {
   if (graphStore.nodes.length === 0) loadGraphToStore(graphStore)
 
   renderChart()
+
+  // 恢复上次视角
+  const vp = historyStore.savedViewport
+  if (vp?.zoom && vp?.center) {
+    setTimeout(() => {
+      chartInstance?.setOption({ series: [{ zoom: vp.zoom, center: vp.center }] }, { replaceMerge: [] })
+    }, 800)
+  }
 
   chartInstance.on('click', (params) => {
     if (params.dataType === 'node') {
@@ -82,10 +98,10 @@ function renderChart() {
       focusNodeId: graphStore.focusNodeId,
       highlightedPathIds: graphStore.highlightedPathIds,
       traceMode: graphStore.traceMode,
+      visitedIds: historyStore.visitedIds,
     }
   )
   chartInstance.setOption(option, true)
-  // 重置流光粒子
   particles = []
 }
 

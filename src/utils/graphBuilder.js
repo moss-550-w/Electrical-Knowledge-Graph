@@ -54,7 +54,7 @@ export function loadGraphData() {
  * @returns {Object} ECharts option
  */
 export function buildGraphOption(nodes, edges, state = {}) {
-  const { focusNodeId, highlightedPathIds = [], traceMode = false } = state
+  const { focusNodeId, highlightedPathIds = [], traceMode = false, visitedIds = new Set() } = state
   const highlightSet = new Set(highlightedPathIds)
   const highlightActive = highlightSet.size > 0
 
@@ -99,7 +99,11 @@ export function buildGraphOption(nodes, edges, state = {}) {
         fontSize: isFocus ? 15 : isNeighbor ? 12 : 11,
         fontWeight: isFocus || isNeighbor ? 'bold' : 'normal',
         color: dimmed ? '#484f58' : isFocus ? '#FF6B35' : '#e6edf3',
-        formatter: () => isFocus ? `★ ${n.name}` : n.name,
+        formatter: () => {
+          const visited = visitedIds.has(n.id)
+          const prefix = isFocus ? '★ ' : visited ? '👣 ' : ''
+          return prefix + n.name
+        },
       },
       tooltip: {
         formatter: () => {
