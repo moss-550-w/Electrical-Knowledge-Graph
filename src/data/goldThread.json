@@ -11,6 +11,79 @@
         "\\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} = \\frac{2}{3} \\begin{bmatrix} \\cos\\theta & \\cos(\\theta-120^\\circ) & \\cos(\\theta+120^\\circ) \\\\ -\\sin\\theta & -\\sin(\\theta-120^\\circ) & -\\sin(\\theta+120^\\circ) \\end{bmatrix} \\begin{bmatrix} i_a \\\\ i_b \\\\ i_c \\end{bmatrix}",
         "T_e = \\frac{3}{2} \\frac{P}{2} [\\psi_f i_q + (L_d - L_q) i_d i_q]",
         "J\\frac{d\\omega_m}{dt} = T_e - T_L - B\\omega_m"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} = \\frac{2}{3} \\begin{bmatrix} \\cos\\theta & \\cos(\\theta-120^\\circ) & \\cos(\\theta+120^\\circ) \\\\ -\\sin\\theta & -\\sin(\\theta-120^\\circ) & -\\sin(\\theta+120^\\circ) \\end{bmatrix} \\begin{bmatrix} i_a \\\\ i_b \\\\ i_c \\end{bmatrix}",
+          "steps": [
+            {
+              "latex": "\\text{目标：将三相电流}(i_a,i_b,i_c)\\text{变换为旋转坐标系}(i_d,i_q)",
+              "note": "让交流电机像直流电机一样控制"
+            },
+            {
+              "latex": "\\text{步骤①：Clarke——三相}\\to\\text{两相静止}(\\alpha\\beta)",
+              "note": ""
+            },
+            {
+              "latex": "\\text{步骤②：Park——将}(\\alpha\\beta)\\text{按转子角}\\theta\\text{旋转到}(dq)",
+              "note": "θ 由编码器实时获取"
+            },
+            {
+              "latex": "i_d = \\tfrac{2}{3}[i_a\\cos\\theta+i_b\\cos(\\theta-120^\\circ)+i_c\\cos(\\theta+120^\\circ)]",
+              "note": "两步合并即为题目矩阵公式"
+            },
+            {
+              "latex": "i_q = \\tfrac{2}{3}[-i_a\\sin\\theta-i_b\\sin(\\theta-120^\\circ)-i_c\\sin(\\theta+120^\\circ)]",
+              "note": "d 轴控制磁通，q 轴控制转矩，完全解耦"
+            }
+          ]
+        },
+        {
+          "formula": "T_e = \\frac{3}{2} \\frac{P}{2} [\\psi_f i_q + (L_d - L_q) i_d i_q]",
+          "steps": [
+            {
+              "latex": "T_e = \\tfrac{3P}{4}(\\psi_d i_q - \\psi_q i_d)",
+              "note": "由功率守恒推导：电磁功率 = 转矩 × 角速度"
+            },
+            {
+              "latex": "\\psi_d = L_d i_d + \\psi_f,\\quad \\psi_q = L_q i_q",
+              "note": "永磁体产生的磁链 ψf 仅在 d 轴"
+            },
+            {
+              "latex": "T_e = \\tfrac{3P}{4}[(L_d i_d+\\psi_f)i_q - L_q i_q i_d]",
+              "note": ""
+            },
+            {
+              "latex": "= \\tfrac{3P}{4}[\\psi_f i_q + (L_d-L_q)i_d i_q]",
+              "note": "第一项：永磁转矩；第二项：磁阻转矩（凸极效应）"
+            },
+            {
+              "latex": "\\text{贴装式 PMSM}(L_d=L_q)\\Rightarrow T_e = \\tfrac{3P}{4}\\psi_f i_q",
+              "note": "转矩仅由 iq 决定，控制最简洁"
+            }
+          ]
+        },
+        {
+          "formula": "J\\frac{d\\omega_m}{dt} = T_e - T_L - B\\omega_m",
+          "steps": [
+            {
+              "latex": "J\\tfrac{d\\omega_m}{dt} = T_e - T_L - B\\omega_m",
+              "note": "牛顿第二定律在旋转系统中的类比"
+            },
+            {
+              "latex": "T_e\\text{：电磁力矩（驱动）；}T_L\\text{：负载阻力矩；}B\\omega_m\\text{：粘性摩擦}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{稳态}(\\dot{\\omega}=0)\\Rightarrow T_e = T_L + B\\omega_m",
+              "note": "电机转矩等于负载加摩擦"
+            },
+            {
+              "latex": "\\text{加速：}T_e>T_L,\\quad \\tfrac{d\\omega_m}{dt}=\\tfrac{T_e-T_L-B\\omega_m}{J}",
+              "note": "J 越大加速越慢，惯量匹配是伺服设计关键"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -116,6 +189,46 @@
       "formulas": [
         "\\begin{bmatrix} v_a \\\\ v_b \\\\ v_c \\end{bmatrix} = \\frac{V_{dc}}{3} \\begin{bmatrix} 2 & -1 & -1 \\\\ -1 & 2 & -1 \\\\ -1 & -1 & 2 \\end{bmatrix} \\begin{bmatrix} S_a \\\\ S_b \\\\ S_c \\end{bmatrix}",
         "S_x \\in \\{0,1\\}, \\quad x = a,b,c"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\begin{bmatrix} v_a \\\\ v_b \\\\ v_c \\end{bmatrix} = \\frac{V_{dc}}{3} \\begin{bmatrix} 2 & -1 & -1 \\\\ -1 & 2 & -1 \\\\ -1 & -1 & 2 \\end{bmatrix} \\begin{bmatrix} S_a \\\\ S_b \\\\ S_c \\end{bmatrix}",
+          "steps": [
+            {
+              "latex": "\\text{设上管}S_x=1\\text{，下管}S_x=0\\text{；上管输出接}+V_{dc}\\text{，下管接地}",
+              "note": ""
+            },
+            {
+              "latex": "v_{xO} = S_x \\cdot V_{dc}\\quad(O\\text{为直流母线负极})",
+              "note": ""
+            },
+            {
+              "latex": "\\text{三相负载中性点电位：}V_N = \\tfrac{1}{3}(v_{aO}+v_{bO}+v_{cO}) = \\tfrac{V_{dc}}{3}(S_a+S_b+S_c)",
+              "note": "Y 型对称负载，中性点浮动"
+            },
+            {
+              "latex": "v_a = v_{aO}-V_N = \\tfrac{V_{dc}}{3}(2S_a-S_b-S_c)",
+              "note": ""
+            },
+            {
+              "latex": "\\text{整理为矩阵：对角元为}2\\text{，其余为}-1\\text{——即题目中的系数矩阵}",
+              "note": "三相互为参考，所以每项都包含其他两相"
+            }
+          ]
+        },
+        {
+          "formula": "S_x \\in \\{0,1\\}, \\quad x = a,b,c",
+          "steps": [
+            {
+              "latex": "S_x\\in\\{0,1\\}\\text{：每桥臂仅两态，上下管互补导通（不能同时=死区保护）}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{三桥臂独立：}2^3=8\\text{种开关组合}",
+              "note": "6个非零电压矢量 + 2个零矢量，SVPWM 在其间切换"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -147,6 +260,46 @@
       "formulas": [
         "P_{loss} = P_{cond} + P_{sw} = I_{rms}^2 R_{on} + \\frac{1}{2}V_{ds} I_d (t_{on} + t_{off}) f_{sw}",
         "E_{sw} = \\int_0^{t_{sw}} v(t) \\cdot i(t)\\,dt"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "P_{loss} = P_{cond} + P_{sw} = I_{rms}^2 R_{on} + \\frac{1}{2}V_{ds} I_d (t_{on} + t_{off}) f_{sw}",
+          "steps": [
+            {
+              "latex": "\\text{功率器件损耗 = 通态损耗 + 开关损耗}",
+              "note": "两类分别优化，是器件选型的核心"
+            },
+            {
+              "latex": "P_{cond} = I_{rms}^2 R_{on}\\text{：电流流过导通电阻，焦耳定律}",
+              "note": "SiC MOSFET 的 Rds(on) 远小于 Si，通态损耗低"
+            },
+            {
+              "latex": "P_{sw} = \\tfrac{1}{2}V_{ds}I_d(t_{on}+t_{off})f_{sw}\\text{：每次开关有电压电流交叠}",
+              "note": "线性近似下的三角形交叠面积"
+            },
+            {
+              "latex": "f_{sw}\\uparrow\\Rightarrow P_{sw}\\uparrow\\text{，高频变换器散热是主要挑战}",
+              "note": "SiC/GaN 宽禁带器件能在更高频率下保持低损耗"
+            }
+          ]
+        },
+        {
+          "formula": "E_{sw} = \\int_0^{t_{sw}} v(t) \\cdot i(t)\\,dt",
+          "steps": [
+            {
+              "latex": "E_{sw}=\\int_0^{t_{sw}}v(t)\\cdot i(t)\\,dt\\text{：开关过程中电压与电流同时存在的乘积}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{关断时：}v\\text{ 从 0 升至 }V_{dc}\\text{，}i\\text{ 从 }I_d\\text{ 降至 0，近似三角形}",
+              "note": "IGBT 还有拖尾电流，使实际损耗更大"
+            },
+            {
+              "latex": "\\Rightarrow E_{sw}\\approx\\tfrac{1}{2}V_{dc}I_d t_{sw}",
+              "note": "这就是前一公式 1/2 系数的物理来源"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -179,6 +332,59 @@
         "I_{gate(peak)} = \\frac{\\Delta V_{gs}}{R_{gate} + R_{g(int)}}",
         "t_{sw} \\approx \\frac{Q_g}{I_{gate(avg)}}",
         "P_{gate} = Q_g \\cdot V_{gs} \\cdot f_{sw}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "I_{gate(peak)} = \\frac{\\Delta V_{gs}}{R_{gate} + R_{g(int)}}",
+          "steps": [
+            {
+              "latex": "\\text{栅极等效为电容}C_{iss}\\text{，充电电流}I=C\\tfrac{dV}{dt}\\text{，电流越大开关越快}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{峰值电流由驱动电压差除以总电阻决定：}I_{peak}=\\tfrac{\\Delta V_{gs}}{R_{total}}",
+              "note": ""
+            },
+            {
+              "latex": "R_{total}=R_{gate}(\\text{外部可调})+R_{g(int)}(\\text{芯片内部，固定})",
+              "note": "增大 Rgate 可降低 di/dt 和 EMI，但开关变慢损耗增大"
+            }
+          ]
+        },
+        {
+          "formula": "t_{sw} \\approx \\frac{Q_g}{I_{gate(avg)}}",
+          "steps": [
+            {
+              "latex": "t_{sw}\\approx\\tfrac{Q_g}{I_{gate(avg)}}\\text{：开关时间 = 总电荷 ÷ 平均充电电流}",
+              "note": "类比\"充满水桶的时间 = 容量 ÷ 流量\""
+            },
+            {
+              "latex": "Q_g\\text{ 由 datasheet 给出，含米勒平台阶段（Cgd 充电最耗时）}",
+              "note": "米勒效应是栅极驱动设计最需关注的特性"
+            },
+            {
+              "latex": "\\text{要快}\\Rightarrow\\text{大}I_{gate}\\Rightarrow\\text{小}R_{gate}\\Rightarrow\\text{大 di/dt，EMI 增大}",
+              "note": "这是驱动设计的核心权衡"
+            }
+          ]
+        },
+        {
+          "formula": "P_{gate} = Q_g \\cdot V_{gs} \\cdot f_{sw}",
+          "steps": [
+            {
+              "latex": "P_{gate}=Q_g\\cdot V_{gs}\\cdot f_{sw}\\text{：每次开关消耗能量}Q_g V_{gs}\\text{，每秒}f_{sw}\\text{次}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{充电能量：}E=\\tfrac{1}{2}C_{iss}V_{gs}^2=Q_g V_{gs}\\text{（线性电容）}",
+              "note": "放电时能量耗散在驱动电阻上，不可回收"
+            },
+            {
+              "latex": "\\text{结论：频率越高驱动损耗越大，驱动 IC 需要散热设计}",
+              "note": "600V/30A 场景下，驱动损耗可达数瓦"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -211,6 +417,59 @@
         "V_{out} = -\\frac{R_f}{R_{in}} \\cdot V_{in} \\quad \\text{(反相放大)}",
         "V_{out} = \\left(1+\\frac{R_f}{R_1}\\right) V_{in} \\quad \\text{(同相放大)}",
         "V_{out} = \\frac{R_f}{R_1}(V_2 - V_1) \\quad \\text{(差分放大)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "V_{out} = -\\frac{R_f}{R_{in}} \\cdot V_{in} \\quad \\text{(反相放大)}",
+          "steps": [
+            {
+              "latex": "\\text{运放同相端接地，输入从反相端经}R_{in}\\text{进入，负反馈通过}R_f\\text{回到反相端}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{虚短：}V_+ = V_- = 0\\Rightarrow R_{in}\\text{上电流}i=\\tfrac{V_{in}}{R_{in}}",
+              "note": "虚短是深度负反馈的结论，不是真正短路"
+            },
+            {
+              "latex": "\\text{虚断：}i\\text{全部流过}R_f\\Rightarrow V_{out} = -i\\cdot R_f = -\\tfrac{R_f}{R_{in}}V_{in}",
+              "note": "负号来源：电流从输出流向反相端"
+            }
+          ]
+        },
+        {
+          "formula": "V_{out} = \\left(1+\\frac{R_f}{R_1}\\right) V_{in} \\quad \\text{(同相放大)}",
+          "steps": [
+            {
+              "latex": "\\text{同相放大：输入从}+\\text{端进，负反馈从输出经}R_f,R_1\\text{分压回}-\\text{端}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{虚短：}V_- = V_{in}\\Rightarrow\\text{反馈分压}=V_{in}\\Rightarrow V_{out}\\cdot\\tfrac{R_1}{R_1+R_f}=V_{in}",
+              "note": ""
+            },
+            {
+              "latex": "\\Rightarrow V_{out} = \\left(1+\\tfrac{R_f}{R_1}\\right)V_{in}",
+              "note": "增益 ≥ 1，最小为 1（跟随器，Rf=0）"
+            }
+          ]
+        },
+        {
+          "formula": "V_{out} = \\frac{R_f}{R_1}(V_2 - V_1) \\quad \\text{(差分放大)}",
+          "steps": [
+            {
+              "latex": "\\text{差分放大将两个反相放大电路叠加：对}V_1\\text{反相，对}V_2\\text{同相}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{叠加定理：}V_{out}=V_{out}(V_2\\text{单独})+V_{out}(V_1\\text{单独})",
+              "note": "线性电路可以叠加"
+            },
+            {
+              "latex": "= \\tfrac{R_f}{R_1}V_2 + (-\\tfrac{R_f}{R_1}V_1) = \\tfrac{R_f}{R_1}(V_2-V_1)",
+              "note": "用于差分信号采集，共模信号被消除（CMRR）"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -238,6 +497,59 @@
         "D = \\frac{T_{on}}{T_{period}} = \\frac{V_{ref}}{V_{max}}",
         "v_{avg}(t) = \\frac{1}{T_s}\\int_0^{T_s} v(\\tau)\\,d\\tau",
         "f_{sw} = \\frac{f_{clk}}{(ARR+1)(PSC+1)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "D = \\frac{T_{on}}{T_{period}} = \\frac{V_{ref}}{V_{max}}",
+          "steps": [
+            {
+              "latex": "D=\\tfrac{T_{on}}{T_{period}}\\text{：占空比 = 高电平时间 ÷ 总周期}",
+              "note": "0到1之间的数，D=0.5表示50%高电平"
+            },
+            {
+              "latex": "\\text{面积等效原理：}V_{avg}=\\tfrac{1}{T}\\int_0^T v\\,dt=D\\cdot V_{high}",
+              "note": "PWM 通过占空比控制等效平均电压"
+            },
+            {
+              "latex": "\\text{实现方式：}V_{ref}\\text{（模拟）与载波（三角波}V_{max}\\text{）比较}",
+              "note": "Vref > 载波时输出高，否则输出低"
+            },
+            {
+              "latex": "D=\\tfrac{V_{ref}}{V_{max}}\\Rightarrow V_{avg}=D\\cdot V_{dc}=\\tfrac{V_{ref}}{V_{max}}V_{dc}",
+              "note": "这就是 PWM 调压的数学本质"
+            }
+          ]
+        },
+        {
+          "formula": "v_{avg}(t) = \\frac{1}{T_s}\\int_0^{T_s} v(\\tau)\\,d\\tau",
+          "steps": [
+            {
+              "latex": "v_{avg}=\\tfrac{1}{T_s}\\int_0^{T_s}v(\\tau)\\,d\\tau\\text{：一个周期内的时间平均值}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{PWM 输出为高低电平：}v_{avg}=\\tfrac{T_{on}}{T_s}V_{high}+\\tfrac{T_{off}}{T_s}\\cdot 0=D\\cdot V_{dc}",
+              "note": "惯性负载（电感/电机）起到低通滤波作用，响应的是平均值"
+            }
+          ]
+        },
+        {
+          "formula": "f_{sw} = \\frac{f_{clk}}{(ARR+1)(PSC+1)}",
+          "steps": [
+            {
+              "latex": "f_{sw}=\\tfrac{f_{clk}}{(ARR+1)(PSC+1)}\\text{：MCU 定时器产生 PWM 的频率公式}",
+              "note": ""
+            },
+            {
+              "latex": "f_{clk}\\text{：系统时钟（如 168MHz）；PSC：预分频器；ARR：自动重装载值}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{例：}f_{clk}=168\\text{MHz，PSC=0，ARR=999}\\Rightarrow f_{sw}=168\\text{kHz}",
+              "note": "168MHz/1000 = 168kHz，典型电驱用10~20kHz"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -265,6 +577,67 @@
         "V_{out} = D \\cdot V_{in} \\quad \\text{(Buck)}",
         "V_{out} = \\frac{1}{1-D} V_{in} \\quad \\text{(Boost)}",
         "\\eta = \\frac{P_{out}}{P_{in}} \\times 100\\%"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "V_{out} = D \\cdot V_{in} \\quad \\text{(Buck)}",
+          "steps": [
+            {
+              "latex": "V_{out}=D\\cdot V_{in}\\text{（Buck 降压）：由伏秒平衡推导}",
+              "note": "稳态时电感两端电压的时间积分为零"
+            },
+            {
+              "latex": "\\text{开通时：}V_L=V_{in}-V_{out}\\text{，电感储能；关断时：}V_L=-V_{out}\\text{，电感放能}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{稳态}\\Rightarrow(V_{in}-V_{out})\\cdot DT_s = V_{out}(1-D)T_s",
+              "note": "开通时间的伏秒积 = 关断时间的伏秒积"
+            },
+            {
+              "latex": "\\Rightarrow V_{out}=D\\cdot V_{in}\\quad(0\\leq D\\leq 1)",
+              "note": "占空比控制输出，D<1 → 降压"
+            }
+          ]
+        },
+        {
+          "formula": "V_{out} = \\frac{1}{1-D} V_{in} \\quad \\text{(Boost)}",
+          "steps": [
+            {
+              "latex": "V_{out}=\\tfrac{1}{1-D}V_{in}\\text{（Boost 升压）}",
+              "note": "同样由伏秒平衡推导"
+            },
+            {
+              "latex": "\\text{开通：}V_L=V_{in}\\text{；关断：}V_L=V_{in}-V_{out}",
+              "note": "注意关断时输出侧二极管导通"
+            },
+            {
+              "latex": "V_{in}\\cdot DT_s=(V_{out}-V_{in})(1-D)T_s",
+              "note": ""
+            },
+            {
+              "latex": "\\Rightarrow V_{out}=\\tfrac{1}{1-D}V_{in}\\geq V_{in}",
+              "note": "D 越大升压比越大；D→1 时理论无穷大，实际受损耗限制"
+            }
+          ]
+        },
+        {
+          "formula": "\\eta = \\frac{P_{out}}{P_{in}} \\times 100\\%",
+          "steps": [
+            {
+              "latex": "\\eta=\\tfrac{P_{out}}{P_{in}}\\times100\\%\\text{：输出功率与输入功率之比}",
+              "note": ""
+            },
+            {
+              "latex": "P_{loss}=P_{in}-P_{out}=P_{cond}+P_{sw}+P_{core}+P_{gate}+\\cdots",
+              "note": "损耗以热量形式耗散，决定散热器尺寸"
+            },
+            {
+              "latex": "\\text{理想变换器}\\eta=100\\%\\text{；实际开关电源：}\\eta\\approx85\\%\\sim97\\%",
+              "note": "宽禁带器件（SiC/GaN）可将 η 提升至 98%+"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -292,6 +665,67 @@
         "\\begin{cases} u_d = R_s i_d + L_d\\frac{di_d}{dt} - \\omega_e L_q i_q \\\\ u_q = R_s i_q + L_q\\frac{di_q}{dt} + \\omega_e(L_d i_d + \\psi_f) \\end{cases}",
         "T_e = \\frac{3}{2} \\frac{P}{2} [\\psi_f i_q + (L_d - L_q)i_d i_q]",
         "\\omega_e = \\frac{P}{2}\\omega_m"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\begin{cases} u_d = R_s i_d + L_d\\frac{di_d}{dt} - \\omega_e L_q i_q \\\\ u_q = R_s i_q + L_q\\frac{di_q}{dt} + \\omega_e(L_d i_d + \\psi_f) \\end{cases}",
+          "steps": [
+            {
+              "latex": "u_d=R_s i_d+L_d\\tfrac{di_d}{dt}-\\omega_e L_q i_q\\text{：d 轴电压方程}",
+              "note": ""
+            },
+            {
+              "latex": "u_q=R_s i_q+L_q\\tfrac{di_q}{dt}+\\omega_e(L_d i_d+\\psi_f)\\text{：q 轴电压方程}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{三项含义：①}R_s i\\text{：电阻压降；②}L\\tfrac{di}{dt}\\text{：感应电动势；③}\\omega_e\\psi\\text{：旋转耦合项}",
+              "note": ""
+            },
+            {
+              "latex": "\\omega_e L_q i_q\\text{（d 轴）和}\\omega_e L_d i_d\\text{（q 轴）\\text{：dq 轴交叉耦合，需前馈解耦}}",
+              "note": "这就是电流环设计中必须加解耦项的原因"
+            },
+            {
+              "latex": "\\omega_e\\psi_f\\text{（q 轴）：转速越高，反电动势越大，限制弱磁前的最高转速}",
+              "note": "弱磁控制通过注入负 id 来抑制反电动势"
+            }
+          ]
+        },
+        {
+          "formula": "T_e = \\frac{3}{2} \\frac{P}{2} [\\psi_f i_q + (L_d - L_q)i_d i_q]",
+          "steps": [
+            {
+              "latex": "T_e=\\tfrac{3P}{4}[\\psi_f i_q+(L_d-L_q)i_d i_q]",
+              "note": "与 pmsm_vector_control 中推导相同"
+            },
+            {
+              "latex": "\\text{id=0 控制策略：令}i_d=0\\Rightarrow T_e=\\tfrac{3P}{4}\\psi_f i_q",
+              "note": "转矩正比于 iq，控制最简单"
+            },
+            {
+              "latex": "L_d\\neq L_q\\text{（凸极）时，磁阻转矩项}(L_d-L_q)i_d i_q\\neq 0",
+              "note": "IPMSM（内置式）可通过注入适当 id 提升转矩密度"
+            }
+          ]
+        },
+        {
+          "formula": "\\omega_e = \\frac{P}{2}\\omega_m",
+          "steps": [
+            {
+              "latex": "\\omega_e=\\tfrac{P}{2}\\omega_m\\text{：电角速度 = 极对数 × 机械角速度}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{原因：一对磁极对应一个电气周期，}P/2\\text{ 对磁极对应 }P/2\\text{ 个电气周期/转}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{例：4极电机（P=4，2对极），机械转一圈对应 2 个电气周期}",
+              "note": "极对数越多，相同机械转速下电气频率越高，控制带宽要求越高"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -323,56 +757,73 @@
       "formulas": [
         "\\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} = \\frac{2}{3}\\begin{bmatrix} 1 & -\\frac{1}{2} & -\\frac{1}{2} \\\\ 0 & \\frac{\\sqrt{3}}{2} & -\\frac{\\sqrt{3}}{2} \\end{bmatrix} \\begin{bmatrix} i_a \\\\ i_b \\\\ i_c \\end{bmatrix} \\quad \\text{(Clarke)}",
         "\\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & \\sin\\theta \\\\ -\\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} \\quad \\text{(Park)}",
-        "\\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} \\quad \\text{(逆Park)}"
+        "\\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} \\quad \\text{（逆 Park）}"
       ],
       "formulas_steps": [
         {
-          "formula": "\begin{bmatrix}i_alpha \\ i_\betaend{bmatrix} = \frac{2}{3}\begin{bmatrix}1&-\tfrac{1}{2}&-\tfrac{1}{2}\\ 0&\tfrac{sqrt{3}}{2}&-\tfrac{sqrt{3}}{2}end{bmatrix}\begin{bmatrix}i_a\\i_b\\i_cend{bmatrix}",
+          "formula": "\\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} = \\frac{2}{3}\\begin{bmatrix} 1 & -\\frac{1}{2} & -\\frac{1}{2} \\\\ 0 & \\frac{\\sqrt{3}}{2} & -\\frac{\\sqrt{3}}{2} \\end{bmatrix} \\begin{bmatrix} i_a \\\\ i_b \\\\ i_c \\end{bmatrix} \\quad \\text{(Clarke)}",
           "steps": [
             {
-              "latex": "\text{目标：用两相正交量 } (i_alpha, i_\beta) \text{ 等效三相量，保持合成磁动势不变}",
-              "note": "α轴与 a 相轴线重合"
+              "latex": "\\text{目标：用两相正交量 }(i_\\alpha, i_\\beta)\\text{ 等效三相量，保持合成磁动势不变}",
+              "note": "α 轴与 a 相轴线重合"
             },
             {
-              "latex": "F_alpha = i_acdot 1 + i_bcos120^circ + i_ccos240^circ = i_a - \tfrac{1}{2}i_b - \tfrac{1}{2}i_c",
+              "latex": "F_\\alpha = i_a \\cdot 1 + i_b\\cos 120^\\circ + i_c\\cos 240^\\circ = i_a - \\tfrac{1}{2}i_b - \\tfrac{1}{2}i_c",
               "note": "各相磁动势在 α 轴投影之和"
             },
             {
-              "latex": "F_\beta = i_bsin120^circ + i_csin240^circ = \tfrac{sqrt{3}}{2}i_b - \tfrac{sqrt{3}}{2}i_c",
+              "latex": "F_\\beta = i_b\\sin 120^\\circ + i_c\\sin 240^\\circ = \\tfrac{\\sqrt{3}}{2}i_b - \\tfrac{\\sqrt{3}}{2}i_c",
               "note": "利用 ia+ib+ic=0 可进一步化简"
             },
             {
-              "latex": "\text{等幅值原则引入系数 } \tfrac{2}{3}\text{，使 } |\u000bec{i}_s|_{alpha\beta} = |\u000bec{i}_s|_{abc}",
-              "note": ""
+              "latex": "\\text{等幅值原则引入系数 }\\tfrac{2}{3}\\text{，使 }|\\vec{i}_s|_{\\alpha\\beta} = |\\vec{i}_s|_{abc}",
+              "note": "保持电流矢量幅值不变"
             },
             {
-              "latex": "Rightarrow \text{Clarke 变换矩阵} = \frac{2}{3}\begin{bmatrix}1&-\tfrac{1}{2}&-\tfrac{1}{2}\\ 0&\tfrac{sqrt{3}}{2}&-\tfrac{sqrt{3}}{2}end{bmatrix}",
-              "note": "这就是为什么矩阵第一行是 [1, -1/2, -1/2]"
+              "latex": "\\Rightarrow \\text{Clarke 变换矩阵} = \\tfrac{2}{3}\\begin{bmatrix}1&-\\tfrac{1}{2}&-\\tfrac{1}{2}\\\\0&\\tfrac{\\sqrt{3}}{2}&-\\tfrac{\\sqrt{3}}{2}\\end{bmatrix}",
+              "note": "输出 iα、iβ 仍为交流量"
             }
           ]
         },
         {
-          "formula": "\begin{bmatrix}i_d\\i_qend{bmatrix} = \begin{bmatrix}cos\theta&sin\theta\\ -sin\theta&cos\thetaend{bmatrix}\begin{bmatrix}i_alpha\\i_\betaend{bmatrix}",
+          "formula": "\\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & \\sin\\theta \\\\ -\\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} \\quad \\text{(Park)}",
           "steps": [
             {
-              "latex": "\text{问题：} (i_alpha, i_\beta) \text{ 仍是交流量，PI 控制器无法无静差跟踪正弦指令}",
+              "latex": "\\text{问题：}(i_\\alpha, i_\\beta)\\text{ 仍是交流量，PI 控制器无法无静差跟踪正弦指令}",
               "note": "需要变换到随转子同步旋转的坐标系"
             },
             {
-              "latex": "\text{引入 dq 坐标系，d 轴与转子永磁体 N 极重合，以电角速度 } omega_e \text{ 旋转}",
+              "latex": "\\text{引入 dq 坐标系：d 轴与转子永磁体 N 极重合，以电角速度 }\\omega_e\\text{ 旋转}",
               "note": "θ = ∫ωe dt，由编码器/观测器实时获取"
             },
             {
-              "latex": "\text{将矢量从静止} (alpha\beta) \text{投影到旋转} (dq)\text{：等同于坐标系逆时针旋转 } \theta \text{ 角}",
+              "latex": "\\text{将矢量从静止 }(\\alpha\\beta)\\text{ 投影到旋转 }(dq)\\text{：等同于坐标系逆时针旋转 }\\theta\\text{ 角}",
               "note": "旋转变换矩阵本质是二维旋转矩阵"
             },
             {
-              "latex": "i_d = i_alphacos\theta + i_\betasin\theta,quad i_q = -i_alphasin\theta + i_\betacos\theta",
-              "note": ""
+              "latex": "i_d = i_\\alpha\\cos\\theta + i_\\beta\\sin\\theta, \\quad i_q = -i_\\alpha\\sin\\theta + i_\\beta\\cos\\theta",
+              "note": "dq 系中稳态均为直流量，PI 可实现零稳差"
             },
             {
-              "latex": "\text{结果：正弦 } i_a,i_b,i_c \rightarrow \text{直流 } i_d, i_q\text{，可用 PI 无静差控制}",
-              "note": "id=0 对应最大转矩/安培比控制（MTPA）"
+              "latex": "\\text{完整链路：}i_a, i_b, i_c \\xrightarrow{\\text{Clarke}} i_\\alpha, i_\\beta \\xrightarrow{\\text{Park}} i_d, i_q",
+              "note": "逆变换（逆 Park + 逆 Clarke）用于将 vd、vq 还原为三相 PWM 指令"
+            }
+          ]
+        },
+        {
+          "formula": "\\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} \\quad \\text{（逆 Park）}",
+          "steps": [
+            {
+              "latex": "\\text{逆 Park：将 PI 控制器输出的 }(v_d, v_q)\\text{ 还原到静止 }(\\alpha\\beta)\\text{ 系}",
+              "note": "逆旋转矩阵 = 旋转矩阵的转置（正交矩阵性质）"
+            },
+            {
+              "latex": "\\begin{bmatrix}\\cos\\theta & -\\sin\\theta\\\\\\sin\\theta & \\cos\\theta\\end{bmatrix} = \\begin{bmatrix}\\cos\\theta & \\sin\\theta\\\\-\\sin\\theta & \\cos\\theta\\end{bmatrix}^T",
+              "note": "顺时针旋转 θ 角，与 Park 变换方向相反"
+            },
+            {
+              "latex": "v_\\alpha = v_d\\cos\\theta - v_q\\sin\\theta, \\quad v_\\beta = v_d\\sin\\theta + v_q\\cos\\theta",
+              "note": "得到 vα、vβ 后再经逆 Clarke（或直接 SVPWM）输出三相电压"
             }
           ]
         }
@@ -416,6 +867,33 @@
       "description": "Clarke变换的物理本质是基于磁动势等效原则：三相绕组产生的合成磁动势与两相正交绕组产生的合成磁动势完全一致。3→2变换可基于幅值不变原则（系数2/3）或功率不变原则（系数√(2/3)）。在电机控制中通常采用幅值不变原则，以方便与SVPWM的电压矢量计算衔接。",
       "formulas": [
         "\\begin{bmatrix} x_\\alpha \\\\ x_\\beta \\end{bmatrix} = \\frac{2}{3}\\begin{bmatrix} 1 & -\\frac{1}{2} & -\\frac{1}{2} \\\\ 0 & \\frac{\\sqrt{3}}{2} & -\\frac{\\sqrt{3}}{2} \\end{bmatrix} \\begin{bmatrix} x_a \\\\ x_b \\\\ x_c \\end{bmatrix}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\begin{bmatrix} x_\\alpha \\\\ x_\\beta \\end{bmatrix} = \\frac{2}{3}\\begin{bmatrix} 1 & -\\frac{1}{2} & -\\frac{1}{2} \\\\ 0 & \\frac{\\sqrt{3}}{2} & -\\frac{\\sqrt{3}}{2} \\end{bmatrix} \\begin{bmatrix} x_a \\\\ x_b \\\\ x_c \\end{bmatrix}",
+          "steps": [
+            {
+              "latex": "\\text{目标：三相量（轴线互差 120°）等效为两相正交量，保持合成磁动势不变}",
+              "note": "α 轴与 a 相轴线重合"
+            },
+            {
+              "latex": "F_\\alpha = x_a\\cos 0^\\circ + x_b\\cos 120^\\circ + x_c\\cos 240^\\circ = x_a - \\tfrac{1}{2}x_b - \\tfrac{1}{2}x_c",
+              "note": "各相磁动势在 α 轴的投影之和"
+            },
+            {
+              "latex": "F_\\beta = x_a\\sin 0^\\circ + x_b\\sin 120^\\circ + x_c\\sin 240^\\circ = \\tfrac{\\sqrt{3}}{2}x_b - \\tfrac{\\sqrt{3}}{2}x_c",
+              "note": "利用 ia+ib+ic=0 可进一步化简"
+            },
+            {
+              "latex": "\\text{等幅值原则：引入系数 }\\tfrac{2}{3}\\text{，使变换后幅值与原幅值相同}",
+              "note": "也有等功率原则（系数 √(2/3)），取决于应用场景"
+            },
+            {
+              "latex": "\\Rightarrow \\text{Clarke 矩阵} = \\tfrac{2}{3}\\begin{bmatrix}1&-\\tfrac{1}{2}&-\\tfrac{1}{2}\\\\0&\\tfrac{\\sqrt{3}}{2}&-\\tfrac{\\sqrt{3}}{2}\\end{bmatrix}",
+              "note": "输出仍是交流量，需再经 Park 变换才能 DC 化"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -442,6 +920,50 @@
       "formulas": [
         "\\begin{bmatrix} x_d \\\\ x_q \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & \\sin\\theta \\\\ -\\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} x_\\alpha \\\\ x_\\beta \\end{bmatrix}",
         "\\theta = \\int_0^t \\omega_e(\\tau)\\,d\\tau + \\theta_0"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\begin{bmatrix} x_d \\\\ x_q \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta & \\sin\\theta \\\\ -\\sin\\theta & \\cos\\theta \\end{bmatrix} \\begin{bmatrix} x_\\alpha \\\\ x_\\beta \\end{bmatrix}",
+          "steps": [
+            {
+              "latex": "\\text{问题：}(x_\\alpha, x_\\beta)\\text{ 仍是交流量，PI 控制器无法无静差跟踪正弦指令}",
+              "note": "需要变换到随转子同步旋转的坐标系"
+            },
+            {
+              "latex": "\\text{引入 dq 坐标系：d 轴与转子永磁体 N 极重合，以电角速度 }\\omega_e\\text{ 旋转}",
+              "note": "θ = ∫ωe dt，由编码器/观测器实时获取"
+            },
+            {
+              "latex": "x_d = x_\\alpha\\cos\\theta + x_\\beta\\sin\\theta \\quad \\text{（d 轴投影）}",
+              "note": "将静止 αβ 矢量投影到旋转 dq 坐标系"
+            },
+            {
+              "latex": "x_q = -x_\\alpha\\sin\\theta + x_\\beta\\cos\\theta \\quad \\text{（q 轴投影，超前 d 轴 90°）}",
+              "note": "本质是二维旋转矩阵（逆时针旋转 θ 角）"
+            },
+            {
+              "latex": "\\text{在同步旋转系中，稳态时 }x_d, x_q\\text{ 均为直流量，PI 控制器可实现零稳差}",
+              "note": "FOC 的核心优势：交流电机变成\"直流电机\"控制"
+            }
+          ]
+        },
+        {
+          "formula": "\\theta = \\int_0^t \\omega_e(\\tau)\\,d\\tau + \\theta_0",
+          "steps": [
+            {
+              "latex": "\\theta = \\int_0^t \\omega_e(\\tau)\\,d\\tau + \\theta_0 \\quad \\text{（转子电角度由角速度积分得到）}",
+              "note": "初始角 θ₀ 由上电对齐或编码器零点决定"
+            },
+            {
+              "latex": "\\omega_e = \\frac{P}{2}\\omega_m \\quad \\text{（电角速度 = 极对数 × 机械角速度）}",
+              "note": "4极电机（P=4）：电角速度是机械角速度的 2 倍"
+            },
+            {
+              "latex": "\\text{实际中 }\\theta\\text{ 由编码器/解算器/观测器提供——FOC 的控制精度完全依赖 }\\theta\\text{ 的准确性}",
+              "note": "无位置传感器控制（Sensorless）的核心难题即为估计 θ"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -473,6 +995,46 @@
       "formulas": [
         "\\vec{x}_s = \\frac{2}{3}(x_a + \\vec{a}x_b + \\vec{a}^2x_c), \\quad \\vec{a} = e^{j120^\\circ}",
         "\\vec{x}_s = x_\\alpha + j x_\\beta = |\\vec{x}_s| e^{j\\theta_x}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\vec{x}_s = \\frac{2}{3}(x_a + \\vec{a}x_b + \\vec{a}^2x_c), \\quad \\vec{a} = e^{j120^\\circ}",
+          "steps": [
+            {
+              "latex": "\\vec{a}=e^{j120°}\\text{：单位旋转算子，将向量逆时针旋转120°}",
+              "note": ""
+            },
+            {
+              "latex": "x_a\\text{在}0°\\text{方向，}x_b\\text{在}120°\\text{方向（乘}\\vec{a}\\text{），}x_c\\text{在}240°\\text{方向（乘}\\vec{a}^2\\text{）}",
+              "note": "将三个标量合并为一个旋转复矢量"
+            },
+            {
+              "latex": "\\vec{x}_s = \\tfrac{2}{3}(x_a+\\vec{a}x_b+\\vec{a}^2 x_c)\\text{：三相合成矢量}",
+              "note": "系数 2/3 保持等幅值，与 Clarke 变换完全等价"
+            },
+            {
+              "latex": "\\text{三相对称时（}x_a=X_m\\cos\\omega t\\text{ 等）：}|\\vec{x}_s|=X_m\\text{，}\\vec{x}_s\\text{匀速旋转}",
+              "note": "这就是\"旋转磁场\"的数学本质"
+            }
+          ]
+        },
+        {
+          "formula": "\\vec{x}_s = x_\\alpha + j x_\\beta = |\\vec{x}_s| e^{j\\theta_x}",
+          "steps": [
+            {
+              "latex": "\\vec{x}_s = x_\\alpha+jx_\\beta\\text{：空间矢量在直角坐标系中的表示}",
+              "note": "实部 = α 轴分量，虚部 = β 轴分量"
+            },
+            {
+              "latex": "= |\\vec{x}_s|e^{j\\theta_x}\\text{：极坐标表示，模值为幅值，辐角为相位}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{空间矢量统一了三相量、αβ 量和 dq 量的描述框架}",
+              "note": "Park 变换本质：将 αβ 矢量乘以 e^{-jθ}，即在复平面旋转 -θ 角"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -505,6 +1067,63 @@
         "u_d^* = (K_{p} + \\frac{K_i}{s})(i_d^* - i_d) - \\omega_e L_q i_q",
         "u_q^* = (K_{p} + \\frac{K_i}{s})(i_q^* - i_q) + \\omega_e(L_d i_d + \\psi_f)",
         "BW_{current} \\approx \\frac{f_{sw}}{10}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "u_d^* = (K_{p} + \\frac{K_i}{s})(i_d^* - i_d) - \\omega_e L_q i_q",
+          "steps": [
+            {
+              "latex": "u_d^*=(K_p+\\tfrac{K_i}{s})(i_d^*-i_d)-\\omega_e L_q i_q",
+              "note": ""
+            },
+            {
+              "latex": "\\text{第一项 PI 输出：消除}i_d\\text{误差}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{第二项}-\\omega_e L_q i_q\\text{：前馈解耦，补偿 dq 交叉耦合干扰}",
+              "note": "不加解耦时，q 轴电流变化会通过 ωeLqiq 干扰 d 轴，两路相互耦合"
+            },
+            {
+              "latex": "\\text{加解耦后，d 轴等效为：}U_d = L_d\\tfrac{dI_d}{dt}+R_s I_d\\text{（纯一阶系统）}",
+              "note": "可独立设计 PI 参数，带宽约 fsw/10"
+            }
+          ]
+        },
+        {
+          "formula": "u_q^* = (K_{p} + \\frac{K_i}{s})(i_q^* - i_q) + \\omega_e(L_d i_d + \\psi_f)",
+          "steps": [
+            {
+              "latex": "u_q^*=(K_p+\\tfrac{K_i}{s})(i_q^*-i_q)+\\omega_e(L_d i_d+\\psi_f)",
+              "note": ""
+            },
+            {
+              "latex": "\\text{前馈项}+\\omega_e(L_d i_d+\\psi_f)\\text{：补偿 q 轴中的反电动势和交叉耦合}",
+              "note": ""
+            },
+            {
+              "latex": "\\omega_e\\psi_f\\text{（反电动势）随转速线性增大，高速时占据大部分}u_q^*\\text{，影响控制余量}",
+              "note": "弱磁控制：当 uq 饱和时，注入负 id 以减小等效反电动势"
+            }
+          ]
+        },
+        {
+          "formula": "BW_{current} \\approx \\frac{f_{sw}}{10}",
+          "steps": [
+            {
+              "latex": "BW_{current}\\approx\\tfrac{f_{sw}}{10}\\text{：电流环带宽约为开关频率的1/10}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{理由：PWM 更新频率为}f_{sw}\\text{，控制量每}T_{sw}\\text{更新一次，奈奎斯特限制了可控带宽}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{例：}f_{sw}=10\\text{kHz}\\Rightarrow BW_{current}\\approx1\\text{kHz}",
+              "note": "速度环带宽需再低5~10倍，级联控制的频域分离原则"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -536,6 +1155,42 @@
       "formulas": [
         "i_q^* = (K_{p\\omega} + \\frac{K_{i\\omega}}{s})(\\omega_m^* - \\omega_m)",
         "BW_{speed} \\approx \\frac{BW_{current}}{5} \\sim \\frac{BW_{current}}{10}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "i_q^* = (K_{p\\omega} + \\frac{K_{i\\omega}}{s})(\\omega_m^* - \\omega_m)",
+          "steps": [
+            {
+              "latex": "i_q^*=(K_{p\\omega}+\\tfrac{K_{i\\omega}}{s})(\\omega_m^*-\\omega_m)\\text{：速度 PI 控制器输出为 q 轴电流给定}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{速度误差→PI→}i_q^*\\text{（转矩电流）→电流环→电机转矩→速度}",
+              "note": "级联结构：外环产生内环的给定"
+            },
+            {
+              "latex": "\\text{积分限幅（Anti-windup）：限制}i_q^*\\text{不超过电机额定电流}",
+              "note": "防止快速升速时积分饱和导致超调"
+            }
+          ]
+        },
+        {
+          "formula": "BW_{speed} \\approx \\frac{BW_{current}}{5} \\sim \\frac{BW_{current}}{10}",
+          "steps": [
+            {
+              "latex": "BW_{speed}\\approx\\tfrac{BW_{current}}{5}\\sim\\tfrac{BW_{current}}{10}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{带宽分离原则：内外环带宽需相差 5-10 倍，保证控制稳定性}",
+              "note": "若两环带宽接近，内环动态会被外环\"看见\"，导致不稳定"
+            },
+            {
+              "latex": "\\text{例：电流环 1kHz，速度环 100~200Hz}",
+              "note": "机械时间常数远大于电气时间常数，这一分离在物理上也是合理的"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -622,6 +1277,59 @@
         "n_s = \\frac{60f}{p} \\quad \\text{(同步转速)}",
         "s = \\frac{n_s - n}{n_s} \\quad \\text{(转差率)}",
         "T_e = k B_s B_r \\sin\\delta"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "n_s = \\frac{60f}{p} \\quad \\text{(同步转速)}",
+          "steps": [
+            {
+              "latex": "n_s=\\tfrac{60f}{p}\\text{（r/min）：旋转磁场每分钟转速}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{电源每个周期（}1/f\\text{秒），磁场转过一对极距（360°/p对极 = 2/p圈）}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{每秒转数：}\\tfrac{f}{p/2}=\\tfrac{2f}{p}\\text{（r/s）}\\Rightarrow\\text{每分钟：}n_s=\\tfrac{60f}{p}",
+              "note": "p=2（一对极）时，50Hz 对应 3000 r/min；p=4 时 1500 r/min"
+            }
+          ]
+        },
+        {
+          "formula": "s = \\frac{n_s - n}{n_s} \\quad \\text{(转差率)}",
+          "steps": [
+            {
+              "latex": "s=\\tfrac{n_s-n}{n_s}\\text{：转差率 = 同步转速与实际转速之差/同步转速}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{同步电机：}n=n_s\\Rightarrow s=0\\text{（精确同步，永磁体\"锁住\"磁场）}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{感应电机：}n<n_s\\Rightarrow s>0\\text{（必须有相对运动才能感应电流产生转矩）}",
+              "note": "满载时 s≈0.03~0.08，空载时 s≈0"
+            }
+          ]
+        },
+        {
+          "formula": "T_e = k B_s B_r \\sin\\delta",
+          "steps": [
+            {
+              "latex": "T_e=kB_sB_r\\sin\\delta\\text{：转矩正比于定转子磁场的正弦夹角}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{类比：两个磁铁相互作用，夹角 90° 时转矩最大；0° 时转矩为零}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{矢量控制的精髓：强制维持}\\delta=90°\\text{（id=0 时 dq 轴正交），使转矩最大化}",
+              "note": "这就是为什么矢量控制比标量控制效率高的根本原因"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -649,6 +1357,71 @@
         "F_a(\\theta,t) = F_m \\cos\\theta \\cos\\omega t",
         "F_{total}(\\theta,t) = \\frac{3}{2}F_m \\cos(\\theta - \\omega t) \\quad \\text{(圆形旋转磁动势)}",
         "\\omega_s = 2\\pi f \\quad \\text{(电角速度)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "F_a(\\theta,t) = F_m \\cos\\theta \\cos\\omega t",
+          "steps": [
+            {
+              "latex": "F_a(\\theta,t)=F_m\\cos\\theta\\cos\\omega t\\text{：单相绕组产生的脉振磁动势}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{空间上}\\cos\\theta\\text{：沿轴线正弦分布（绕组结构决定）}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{时间上}\\cos\\omega t\\text{：随电流正弦变化}",
+              "note": "两个方向都有余弦，所以叫\"脉振\"——在空间固定方向上幅值振动"
+            }
+          ]
+        },
+        {
+          "formula": "F_{total}(\\theta,t) = \\frac{3}{2}F_m \\cos(\\theta - \\omega t) \\quad \\text{(圆形旋转磁动势)}",
+          "steps": [
+            {
+              "latex": "F_a+F_b+F_c\\text{：三相磁动势叠加}",
+              "note": "利用积化和差公式"
+            },
+            {
+              "latex": "F_a=F_m\\cos\\theta\\cos\\omega t = \\tfrac{F_m}{2}[\\cos(\\theta-\\omega t)+\\cos(\\theta+\\omega t)]",
+              "note": "分解为正向旋转波和反向旋转波"
+            },
+            {
+              "latex": "F_b=\\tfrac{F_m}{2}[\\cos(\\theta-\\omega t)+\\cos(\\theta+\\omega t-240°)]",
+              "note": "b 相空间滞后120°，时间滞后120°"
+            },
+            {
+              "latex": "F_c=\\tfrac{F_m}{2}[\\cos(\\theta-\\omega t)+\\cos(\\theta+\\omega t+240°)]",
+              "note": ""
+            },
+            {
+              "latex": "\\text{三个反向波叠加相消：}\\sum\\cos(\\theta+\\omega t+k\\cdot120°)=0",
+              "note": ""
+            },
+            {
+              "latex": "\\Rightarrow F_{total}=\\tfrac{3}{2}F_m\\cos(\\theta-\\omega t)\\text{：幅值恒为}\\tfrac{3}{2}F_m\\text{的旋转磁动势}",
+              "note": "这就是三相绕组能产生旋转磁场的数学证明"
+            }
+          ]
+        },
+        {
+          "formula": "\\omega_s = 2\\pi f \\quad \\text{(电角速度)}",
+          "steps": [
+            {
+              "latex": "\\omega_s=2\\pi f\\text{（rad/s）：旋转磁场的电角速度}",
+              "note": "与电源频率完全对应"
+            },
+            {
+              "latex": "\\text{机械角速度：}\\Omega_s=\\tfrac{\\omega_s}{p/2}=\\tfrac{4\\pi f}{p}\\text{（rad/s）}",
+              "note": ""
+            },
+            {
+              "latex": "\\text{同步转速：}n_s=\\tfrac{60\\Omega_s}{2\\pi}=\\tfrac{60f}{p/2}=\\tfrac{120f}{p}\\text{（注：p 为总极数）}",
+              "note": "与之前公式等价，注意 p 的定义（极数 vs 极对数）要一致"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -679,28 +1452,62 @@
       "description": "法拉第定律是电磁学最核心的定律之一，揭示了时变磁场产生电场的规律。在电机中具体表现为：①变压器电动势——绕组交链的磁链随时间变化产生的感应电动势（即使绕组静止）；②运动电动势（反电动势）——绕组在磁场中运动切割磁力线产生的电动势。Lenz定律（负号）表明感应电动势总是阻碍磁通的变化，这属于能量守恒的必然结果。",
       "formulas": [
         "\\mathcal{E} = -\\frac{d\\Phi}{dt} = -N\\frac{d\\phi}{dt}",
-        "\\mathcal{E} = Blv \\quad \\text{(导体切割磁力线)}",
+        "\\mathcal{E} = Blv \\quad \\text{（运动电动势）}",
         "\\oint_C \\mathbf{E} \\cdot d\\mathbf{l} = -\\frac{d}{dt}\\iint_S \\mathbf{B} \\cdot d\\mathbf{S}"
       ],
       "formulas_steps": [
         {
-          "formula": "mathcal{E} = -\frac{dPhi}{dt}",
+          "formula": "\\mathcal{E} = -\\frac{d\\Phi}{dt} = -N\\frac{d\\phi}{dt}",
           "steps": [
             {
-              "latex": "Phi = iint_S \u000bec{B}cdot d\u000bec{S}quad \text{——穿过闭合回路的磁通量（磁力线数）}",
+              "latex": "\\Phi = \\iint_S \\vec{B} \\cdot d\\vec{S} \\quad \\text{——穿过闭合回路的磁通量}",
               "note": "单位：Wb（韦伯）= V·s"
             },
             {
-              "latex": "\text{Faraday 实验：} |mathcal{E}| propto \frac{DeltaPhi}{Delta t}\text{，方向由 Lenz 定律决定}",
+              "latex": "\\text{Faraday 实验：} |\\mathcal{E}| \\propto \\frac{\\Delta\\Phi}{\\Delta t} \\text{，方向由 Lenz 定律决定}",
               "note": "感应电流总阻碍引起它的磁通变化"
             },
             {
-              "latex": "\text{负号来源——能量守恒：若 } mathcal{E} \text{ 方向使磁通进一步增大，将无限自激（违反守恒）}",
+              "latex": "\\text{负号来源——能量守恒：若 } \\mathcal{E} \\text{ 方向使磁通增大将无限自激（违反守恒）}",
               "note": "负号是 Lenz 定律的数学表达"
             },
             {
-              "latex": "\text{在电机中} ①\text{ 变压器电动势：绕组静止，} \frac{dPhi}{dt} \neq 0quad ②\text{ 运动电动势：} mathcal{E}=Blv",
-              "note": "PMSM 中 q 轴反电动势 = ωe·ψf，与转速成正比"
+              "latex": "\\mathcal{E} = -\\frac{d\\Phi}{dt} = -N\\frac{d\\phi}{dt}",
+              "note": "N 匝线圈：每匝磁通 φ 叠加"
+            }
+          ]
+        },
+        {
+          "formula": "\\mathcal{E} = Blv \\quad \\text{（运动电动势）}",
+          "steps": [
+            {
+              "latex": "f = qv \\times B \\quad \\text{（洛伦兹力驱动导体内自由电荷定向运动）}",
+              "note": "导体以速度 v 切割磁力线"
+            },
+            {
+              "latex": "\\mathcal{E} = \\int_0^l (v \\times B) \\cdot dl = Blv",
+              "note": "B⊥v⊥l 三者两两垂直时取最大值"
+            },
+            {
+              "latex": "\\mathcal{E} = Blv",
+              "note": "PMSM 中 q 轴反电动势 = ωe·ψf，本质即此"
+            }
+          ]
+        },
+        {
+          "formula": "\\oint_C \\mathbf{E} \\cdot d\\mathbf{l} = -\\frac{d}{dt}\\iint_S \\mathbf{B} \\cdot d\\mathbf{S}",
+          "steps": [
+            {
+              "latex": "\\text{法拉第定律微分形式（来自麦克斯韦第三方程）}",
+              "note": "积分形式到微分形式通过 Stokes 定理转化"
+            },
+            {
+              "latex": "\\oint_C \\mathbf{E} \\cdot d\\mathbf{l} = -\\frac{d\\Phi_B}{dt}",
+              "note": "变化的磁场在周围空间产生感应电场"
+            },
+            {
+              "latex": "\\oint_C \\mathbf{E} \\cdot d\\mathbf{l} = -\\frac{d}{dt}\\iint_S \\mathbf{B} \\cdot d\\mathbf{S}",
+              "note": "电机中 ① 变压器电动势：绕组静止，dΦ/dt≠0；② 运动电动势：E=Blv"
             }
           ]
         }
@@ -732,6 +1539,76 @@
         "\\nabla \\cdot \\mathbf{B} = 0 \\quad \\text{(高斯磁定律)}",
         "\\nabla \\times \\mathbf{E} = -\\frac{\\partial \\mathbf{B}}{\\partial t} \\quad \\text{(法拉第定律)}",
         "\\nabla \\times \\mathbf{H} = \\mathbf{J} + \\frac{\\partial \\mathbf{D}}{\\partial t} \\quad \\text{(安培-麦克斯韦定律)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\nabla \\cdot \\mathbf{D} = \\rho",
+          "steps": [
+            {
+              "latex": "\\text{高斯电场定律：空间中的电荷产生电场}",
+              "note": "ρ 为自由电荷体密度"
+            },
+            {
+              "latex": "\\oint_S \\mathbf{D}\\cdot d\\mathbf{S} = Q_{enc}",
+              "note": "积分形式：闭合面内的总自由电荷"
+            },
+            {
+              "latex": "\\nabla \\cdot \\mathbf{D} = \\rho",
+              "note": "微分形式，由散度定理推导"
+            }
+          ]
+        },
+        {
+          "formula": "\\nabla \\cdot \\mathbf{B} = 0",
+          "steps": [
+            {
+              "latex": "\\text{高斯磁场定律：磁场无源（无磁单极子）}",
+              "note": "磁力线总是闭合的"
+            },
+            {
+              "latex": "\\oint_S \\mathbf{B}\\cdot d\\mathbf{S} = 0",
+              "note": "穿入闭合面的磁通量等于穿出的"
+            },
+            {
+              "latex": "\\nabla \\cdot \\mathbf{B} = 0",
+              "note": "与电场不同，磁场散度恒为零"
+            }
+          ]
+        },
+        {
+          "formula": "\\nabla \\times \\mathbf{E} = -\\frac{\\partial \\mathbf{B}}{\\partial t}",
+          "steps": [
+            {
+              "latex": "\\text{法拉第电磁感应定律的微分形式}",
+              "note": "变化的磁场产生电场"
+            },
+            {
+              "latex": "\\oint_C \\mathbf{E}\\cdot d\\mathbf{l} = -\\frac{d\\Phi_B}{dt}",
+              "note": "积分形式：感应电动势"
+            },
+            {
+              "latex": "\\nabla \\times \\mathbf{E} = -\\frac{\\partial \\mathbf{B}}{\\partial t}",
+              "note": "由 Stokes 定理转化为微分形式"
+            }
+          ]
+        },
+        {
+          "formula": "\\nabla \\times \\mathbf{H} = \\mathbf{J} + \\frac{\\partial \\mathbf{D}}{\\partial t}",
+          "steps": [
+            {
+              "latex": "\\text{安培-麦克斯韦定律：电流和变化电场产生磁场}",
+              "note": "位移电流项是麦克斯韦的关键补充"
+            },
+            {
+              "latex": "\\oint_C \\mathbf{H}\\cdot d\\mathbf{l} = I_{enc} + \\frac{d\\Phi_D}{dt}",
+              "note": "传导电流 + 位移电流"
+            },
+            {
+              "latex": "\\nabla \\times \\mathbf{H} = \\mathbf{J} + \\frac{\\partial \\mathbf{D}}{\\partial t}",
+              "note": "预言了电磁波的存在"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -759,6 +1636,59 @@
         "f(t) = a_0 + \\sum_{n=1}^{\\infty}(a_n \\cos n\\omega t + b_n \\sin n\\omega t)",
         "a_n = \\frac{2}{T}\\int_0^T f(t)\\cos n\\omega t\\,dt, \\quad b_n = \\frac{2}{T}\\int_0^T f(t)\\sin n\\omega t\\,dt",
         "F(\\omega) = \\int_{-\\infty}^{\\infty} f(t) e^{-j\\omega t}\\,dt"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "f(t) = a_0 + \\sum_{n=1}^{\\infty}(a_n \\cos n\\omega t + b_n \\sin n\\omega t)",
+          "steps": [
+            {
+              "latex": "\\text{任意周期信号可分解为直流分量 + 各次谐波之和}",
+              "note": "正弦和余弦构成完备正交基"
+            },
+            {
+              "latex": "a_0 = \\frac{1}{T}\\int_0^T f(t)\\,dt",
+              "note": "直流分量（零次谐波）"
+            },
+            {
+              "latex": "f(t) = a_0 + \\sum_{n=1}^{\\infty}(a_n \\cos n\\omega t + b_n \\sin n\\omega t)",
+              "note": "PWM 波形含大量高次谐波，傅里叶展开是 EMC 分析基础"
+            }
+          ]
+        },
+        {
+          "formula": "a_n = \\frac{2}{T}\\int_0^T f(t)\\cos n\\omega t\\,dt, \\quad b_n = \\frac{2}{T}\\int_0^T f(t)\\sin n\\omega t\\,dt",
+          "steps": [
+            {
+              "latex": "\\text{利用三角函数正交性：}\\int_0^T \\cos m\\omega t\\cos n\\omega t\\,dt = \\frac{T}{2}\\delta_{mn}",
+              "note": "不同频率分量相互正交"
+            },
+            {
+              "latex": "a_n = \\frac{2}{T}\\int_0^T f(t)\\cos n\\omega t\\,dt",
+              "note": "对两边乘以 cos(nωt) 并积分，其余项为零"
+            },
+            {
+              "latex": "b_n = \\frac{2}{T}\\int_0^T f(t)\\sin n\\omega t\\,dt",
+              "note": "同理对 sin(nωt) 提取系数"
+            }
+          ]
+        },
+        {
+          "formula": "F(\\omega) = \\int_{-\\infty}^{\\infty} f(t) e^{-j\\omega t}\\,dt",
+          "steps": [
+            {
+              "latex": "\\text{傅里叶变换：将时域信号映射到频域}",
+              "note": "适用于非周期信号"
+            },
+            {
+              "latex": "e^{-j\\omega t} = \\cos\\omega t - j\\sin\\omega t",
+              "note": "欧拉公式将正余弦统一"
+            },
+            {
+              "latex": "F(\\omega) = \\int_{-\\infty}^{\\infty} f(t) e^{-j\\omega t}\\,dt",
+              "note": "|F(ω)| 即频谱幅度，用于分析 PWM 谐波分布"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -786,6 +1716,59 @@
         "\\frac{d}{dt}\\mathbf{x} = \\mathbf{A}\\mathbf{x} + \\mathbf{B}\\mathbf{u}",
         "\\mathbf{y} = \\mathbf{C}\\mathbf{x} + \\mathbf{D}\\mathbf{u}",
         "\\mathbf{A}^{-1} = \\frac{1}{\\det\\mathbf{A}}\\operatorname{adj}(\\mathbf{A})"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\frac{d}{dt}\\mathbf{x} = \\mathbf{A}\\mathbf{x} + \\mathbf{B}\\mathbf{u}",
+          "steps": [
+            {
+              "latex": "\\text{状态空间方程：将高阶微分方程组写成一阶矩阵形式}",
+              "note": "x 为状态向量，u 为输入向量"
+            },
+            {
+              "latex": "\\text{例：}\\frac{d}{dt}\\begin{bmatrix}i_d\\\\i_q\\end{bmatrix} = \\mathbf{A}\\begin{bmatrix}i_d\\\\i_q\\end{bmatrix} + \\mathbf{B}\\begin{bmatrix}v_d\\\\v_q\\end{bmatrix}",
+              "note": "PMSM dq 方程即为此形式"
+            },
+            {
+              "latex": "\\frac{d}{dt}\\mathbf{x} = \\mathbf{A}\\mathbf{x} + \\mathbf{B}\\mathbf{u}",
+              "note": "矩阵 A 的特征值决定系统稳定性"
+            }
+          ]
+        },
+        {
+          "formula": "\\mathbf{y} = \\mathbf{C}\\mathbf{x} + \\mathbf{D}\\mathbf{u}",
+          "steps": [
+            {
+              "latex": "\\text{输出方程：从状态量提取可观测输出}",
+              "note": "C 选择哪些状态作为输出"
+            },
+            {
+              "latex": "\\text{可观测性矩阵：}\\mathcal{O} = [\\mathbf{C}^T, (\\mathbf{CA})^T, ...]^T",
+              "note": "满秩则系统完全可观"
+            },
+            {
+              "latex": "\\mathbf{y} = \\mathbf{C}\\mathbf{x} + \\mathbf{D}\\mathbf{u}",
+              "note": "电机控制中输出常取 id, iq 或转速"
+            }
+          ]
+        },
+        {
+          "formula": "\\mathbf{A}^{-1} = \\frac{1}{\\det\\mathbf{A}}\\operatorname{adj}(\\mathbf{A})",
+          "steps": [
+            {
+              "latex": "\\det\\mathbf{A} = \\sum_j a_{ij} C_{ij}",
+              "note": "按任意行展开计算行列式"
+            },
+            {
+              "latex": "\\operatorname{adj}(\\mathbf{A})_{ij} = C_{ji}",
+              "note": "伴随矩阵是代数余子式矩阵的转置"
+            },
+            {
+              "latex": "\\mathbf{A}^{-1} = \\frac{1}{\\det\\mathbf{A}}\\operatorname{adj}(\\mathbf{A})",
+              "note": "det(A)≠0 时矩阵可逆，用于求解状态方程"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -808,6 +1791,59 @@
         "v(t) = V_m\\cos(\\omega t + \\phi) \\quad \\leftrightarrow \\quad \\dot{V} = \\frac{V_m}{\\sqrt{2}} e^{j\\phi}",
         "Z = R + jX = R + j(\\omega L - \\frac{1}{\\omega C})",
         "\\dot{V} = Z\\dot{I}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "v(t) = V_m\\cos(\\omega t + \\phi) \\quad \\leftrightarrow \\quad \\dot{V} = \\frac{V_m}{\\sqrt{2}} e^{j\\phi}",
+          "steps": [
+            {
+              "latex": "v(t) = V_m\\cos(\\omega t + \\phi) = \\operatorname{Re}[V_m e^{j(\\omega t+\\phi)}]",
+              "note": "时域正弦量对应旋转相量"
+            },
+            {
+              "latex": "\\dot{V} = \\frac{V_m}{\\sqrt{2}} e^{j\\phi} = \\frac{V_m}{\\sqrt{2}}(\\cos\\phi + j\\sin\\phi)",
+              "note": "有效值相量：模为有效值，辐角为初相"
+            },
+            {
+              "latex": "v(t) \\leftrightarrow \\dot{V}",
+              "note": "相量法将微分方程转化为代数方程，简化 AC 电路计算"
+            }
+          ]
+        },
+        {
+          "formula": "Z = R + jX = R + j(\\omega L - \\frac{1}{\\omega C})",
+          "steps": [
+            {
+              "latex": "Z_R = R,\\quad Z_L = j\\omega L,\\quad Z_C = \\frac{1}{j\\omega C} = -\\frac{j}{\\omega C}",
+              "note": "各元件阻抗"
+            },
+            {
+              "latex": "X = X_L - X_C = \\omega L - \\frac{1}{\\omega C}",
+              "note": "电抗：感抗与容抗之差"
+            },
+            {
+              "latex": "Z = R + jX",
+              "note": "谐振时 X=0，|Z|=R 最小，电流最大"
+            }
+          ]
+        },
+        {
+          "formula": "\\dot{V} = Z\\dot{I}",
+          "steps": [
+            {
+              "latex": "\\text{欧姆定律的相量形式}",
+              "note": "与直流欧姆定律形式完全相同"
+            },
+            {
+              "latex": "|\\dot{V}| = |Z||\\dot{I}|,\\quad \\angle\\dot{V} = \\angle Z + \\angle\\dot{I}",
+              "note": "模相乘、辐角相加"
+            },
+            {
+              "latex": "\\dot{V} = Z\\dot{I}",
+              "note": "PMSM 电压方程在频域下的本质"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -830,6 +1866,59 @@
         "F(s) = \\mathcal{L}\\{f(t)\\} = \\int_0^\\infty f(t) e^{-st}\\,dt",
         "G_c(s) = K_p + \\frac{K_i}{s} \\quad \\text{(PI控制器)}",
         "G_{cl}(s) = \\frac{G_c(s)G_p(s)}{1 + G_c(s)G_p(s)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "F(s) = \\mathcal{L}\\{f(t)\\} = \\int_0^\\infty f(t) e^{-st}\\,dt",
+          "steps": [
+            {
+              "latex": "s = \\sigma + j\\omega \\in \\mathbb{C}",
+              "note": "s 是复频率变量"
+            },
+            {
+              "latex": "\\mathcal{L}\\{e^{at}\\} = \\frac{1}{s-a},\\quad \\mathcal{L}\\left\\{\\frac{df}{dt}\\right\\} = sF(s) - f(0^-)",
+              "note": "常用变换对：微分变成乘 s"
+            },
+            {
+              "latex": "F(s) = \\int_0^\\infty f(t) e^{-st}\\,dt",
+              "note": "将时域微分方程转为 s 域代数方程"
+            }
+          ]
+        },
+        {
+          "formula": "G_c(s) = K_p + \\frac{K_i}{s}",
+          "steps": [
+            {
+              "latex": "u(t) = K_p e(t) + K_i \\int_0^t e(\\tau)d\\tau",
+              "note": "PI 控制器时域表达式"
+            },
+            {
+              "latex": "U(s) = K_p E(s) + \\frac{K_i}{s} E(s)",
+              "note": "对两项分别取拉普拉斯变换"
+            },
+            {
+              "latex": "G_c(s) = \\frac{U(s)}{E(s)} = K_p + \\frac{K_i}{s}",
+              "note": "积分项 Ki/s 消除稳态误差，是电流环的核心"
+            }
+          ]
+        },
+        {
+          "formula": "G_{cl}(s) = \\frac{G_c(s)G_p(s)}{1 + G_c(s)G_p(s)}",
+          "steps": [
+            {
+              "latex": "E(s) = R(s) - Y(s),\\quad Y(s) = G_c G_p E(s)",
+              "note": "闭环负反馈结构"
+            },
+            {
+              "latex": "Y(s)(1 + G_c G_p) = G_c G_p R(s)",
+              "note": "整理"
+            },
+            {
+              "latex": "G_{cl}(s) = \\frac{G_c(s)G_p(s)}{1 + G_c(s)G_p(s)}",
+              "note": "极点（分母为零的 s 值）决定闭环稳定性"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -862,6 +1951,59 @@
         "v_a(t) = V_m\\cos\\omega t, \\; v_b(t) = V_m\\cos(\\omega t-120^\\circ), \\; v_c(t) = V_m\\cos(\\omega t+120^\\circ)",
         "V_L = \\sqrt{3}V_P \\quad \\text{(Y接，线电压=√3·相电压)}",
         "p_{total}(t) = P = 3V_P I_P \\cos\\phi = \\sqrt{3}V_L I_L \\cos\\phi = \\text{常数}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "v_a(t) = V_m\\cos\\omega t, \\; v_b(t) = V_m\\cos(\\omega t-120^\\circ), \\; v_c(t) = V_m\\cos(\\omega t+120^\\circ)",
+          "steps": [
+            {
+              "latex": "\\text{三相对称：幅值相同，相位互差 120°}",
+              "note": "三相之和恒为零"
+            },
+            {
+              "latex": "v_a + v_b + v_c = V_m[\\cos\\theta + \\cos(\\theta-120^\\circ) + \\cos(\\theta+120^\\circ)] = 0",
+              "note": "三相矢量和为零，中线电流为零"
+            },
+            {
+              "latex": "v_a(t) = V_m\\cos\\omega t",
+              "note": "a 相为参考相，b、c 各滞后 120°、超前 120°"
+            }
+          ]
+        },
+        {
+          "formula": "V_L = \\sqrt{3}V_P",
+          "steps": [
+            {
+              "latex": "V_{ab} = V_a - V_b = V_m\\cos\\omega t - V_m\\cos(\\omega t-120^\\circ)",
+              "note": "线电压 = 两相电压之差"
+            },
+            {
+              "latex": "V_{ab} = \\sqrt{3}V_m\\cos(\\omega t + 30^\\circ)",
+              "note": "展开后利用和差化积"
+            },
+            {
+              "latex": "V_L = \\sqrt{3}V_P",
+              "note": "有效值关系，220V 相电压对应 380V 线电压"
+            }
+          ]
+        },
+        {
+          "formula": "p_{total}(t) = P = \\sqrt{3}V_L I_L \\cos\\phi",
+          "steps": [
+            {
+              "latex": "p_a = v_a i_a,\\; p_b = v_b i_b,\\; p_c = v_c i_c",
+              "note": "三相瞬时功率"
+            },
+            {
+              "latex": "p_{total} = p_a + p_b + p_c = \\frac{3}{2}V_m I_m \\cos\\phi = \\text{常数}",
+              "note": "三相对称时瞬时功率为恒定值，无脉动"
+            },
+            {
+              "latex": "P = \\sqrt{3}V_L I_L \\cos\\phi",
+              "note": "恒定功率是三相系统优于单相的关键优势"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -889,6 +2031,59 @@
         "I = I_s(e^{V/V_T} - 1), \\quad V_T = \\frac{kT}{q}",
         "W_d = \\sqrt{\\frac{2\\varepsilon_s(V_{bi} + V_R)}{q N_d}}",
         "BV \\propto N_d^{-3/4}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "I = I_s(e^{V/V_T} - 1), \\quad V_T = \\frac{kT}{q}",
+          "steps": [
+            {
+              "latex": "V_T = \\frac{kT}{q} \\approx 26\\,\\text{mV}\\;(T=300\\,\\text{K})",
+              "note": "热电压，玻尔兹曼常数 k=1.38×10⁻²³ J/K"
+            },
+            {
+              "latex": "\\text{正偏时：}V \\gg V_T \\Rightarrow I \\approx I_s e^{V/V_T}",
+              "note": "电流随电压指数增长"
+            },
+            {
+              "latex": "I = I_s(e^{V/V_T} - 1)",
+              "note": "反偏时 V<0，I≈-Is（饱和电流），PN 结单向导电性的本质"
+            }
+          ]
+        },
+        {
+          "formula": "W_d = \\sqrt{\\frac{2\\varepsilon_s(V_{bi} + V_R)}{q N_d}}",
+          "steps": [
+            {
+              "latex": "\\text{耗尽层两侧空间电荷产生内建电场 }E_{bi}",
+              "note": "阻止多子继续扩散"
+            },
+            {
+              "latex": "\\text{泊松方程：}\\frac{dE}{dx} = \\frac{qN_d}{\\varepsilon_s}",
+              "note": "反偏时 VR 增大，耗尽层展宽"
+            },
+            {
+              "latex": "W_d = \\sqrt{\\frac{2\\varepsilon_s(V_{bi}+V_R)}{qN_d}}",
+              "note": "IGBT 耐压层厚度设计的依据"
+            }
+          ]
+        },
+        {
+          "formula": "BV \\propto N_d^{-3/4}",
+          "steps": [
+            {
+              "latex": "\\text{击穿发生于耗尽层电场达到临界值 }E_{crit}",
+              "note": "雪崩击穿机制"
+            },
+            {
+              "latex": "BV = \\frac{\\varepsilon_s E_{crit}^2}{2qN_d}",
+              "note": "掺杂浓度越低，耐压越高"
+            },
+            {
+              "latex": "BV \\propto N_d^{-3/4}",
+              "note": "高压 IGBT 采用低掺杂厚漂移层，与导通电阻有权衡"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -911,6 +2106,59 @@
         "\\mathcal{F} = Ni = \\Phi \\mathcal{R} \\quad \\text{(Hopkinson定律)}",
         "\\mathcal{R} = \\frac{l}{\\mu A} = \\frac{l}{\\mu_0 \\mu_r A}",
         "B = \\frac{\\Phi}{A} = \\mu H"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\mathcal{F} = Ni = \\Phi \\mathcal{R}",
+          "steps": [
+            {
+              "latex": "\\text{安培定律：}\\oint \\mathbf{H}\\cdot d\\mathbf{l} = Ni",
+              "note": "磁路中类比欧姆定律"
+            },
+            {
+              "latex": "\\mathcal{F} = Ni\\text{（磁动势）},\\quad \\Phi\\text{（磁通量）},\\quad \\mathcal{R}\\text{（磁阻）}",
+              "note": "磁动势 = 磁通 × 磁阻，类比电压 = 电流 × 电阻"
+            },
+            {
+              "latex": "\\mathcal{F} = Ni = \\Phi\\mathcal{R}",
+              "note": "Hopkinson 定律，电机磁路设计的基础"
+            }
+          ]
+        },
+        {
+          "formula": "\\mathcal{R} = \\frac{l}{\\mu A}",
+          "steps": [
+            {
+              "latex": "\\Phi = \\int_S \\mathbf{B}\\cdot d\\mathbf{S} = BA\\;(\\text{均匀截面})",
+              "note": "磁通量与截面积和磁感应强度的关系"
+            },
+            {
+              "latex": "H = \\frac{B}{\\mu} = \\frac{\\Phi}{\\mu A}",
+              "note": "B=μH，μ 为磁导率"
+            },
+            {
+              "latex": "\\mathcal{R} = \\frac{Hl}{\\Phi} = \\frac{l}{\\mu A}",
+              "note": "气隙磁阻远大于硅钢磁阻，是电机磁路主要压降"
+            }
+          ]
+        },
+        {
+          "formula": "B = \\frac{\\Phi}{A} = \\mu H",
+          "steps": [
+            {
+              "latex": "\\mathbf{B} = \\mu_0\\mu_r\\mathbf{H}",
+              "note": "μ₀=4π×10⁻⁷ H/m，硅钢 μr ≈ 1000~10000"
+            },
+            {
+              "latex": "B = \\frac{\\Phi}{A}",
+              "note": "磁通密度（磁感应强度）的定义"
+            },
+            {
+              "latex": "B = \\mu H",
+              "note": "硅钢在高 B 下饱和，μ 下降，是电机磁路非线性来源"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -937,7 +2185,60 @@
       "formulas": [
         "G(s) = \\frac{Y(s)}{U(s)} = \\frac{b_ms^m + ... + b_0}{a_n s^n + ... + a_0}",
         "\\text{PM} = 180^\\circ + \\angle G_{open}(j\\omega_c), \\quad |G_{open}(j\\omega_c)| = 0\\,\\text{dB}",
-        "t_s \\approx \\frac{4}{\\zeta\\omega_n} \\quad \\text{(2%稳定时间)}"
+        "t_s \\approx \\frac{4}{\\zeta\\omega_n} \\quad \\text{(2\\% 稳定时间)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "G(s) = \\frac{Y(s)}{U(s)} = \\frac{b_ms^m + ... + b_0}{a_n s^n + ... + a_0}",
+          "steps": [
+            {
+              "latex": "\\text{传递函数：系统输出与输入的拉普拉斯变换之比（零初始条件）}",
+              "note": "描述线性时不变系统的频域特性"
+            },
+            {
+              "latex": "\\text{分母多项式} = 0 \\Rightarrow \\text{特征方程，根即为极点}",
+              "note": "极点决定系统的稳定性和动态特性"
+            },
+            {
+              "latex": "G(s) = \\frac{Y(s)}{U(s)}",
+              "note": "电流环、速度环均可用此框架建模"
+            }
+          ]
+        },
+        {
+          "formula": "\\text{PM} = 180^\\circ + \\angle G_{open}(j\\omega_c)",
+          "steps": [
+            {
+              "latex": "\\omega_c\\text{：增益穿越频率，}|G_{open}(j\\omega_c)| = 1\\,(0\\,\\text{dB})",
+              "note": "Bode 图上幅频曲线过 0dB 的频率"
+            },
+            {
+              "latex": "\\angle G_{open}(j\\omega_c)\\text{：此频率下的相位}",
+              "note": "若相位为 -180° 则 PM=0°，临界稳定"
+            },
+            {
+              "latex": "\\text{PM} = 180^\\circ + \\angle G_{open}(j\\omega_c)",
+              "note": "PM > 45° 为工程设计目标，保证足够稳定裕度"
+            }
+          ]
+        },
+        {
+          "formula": "t_s \\approx \\frac{4}{\\zeta\\omega_n} \\quad \\text{(2\\% 稳定时间)}",
+          "steps": [
+            {
+              "latex": "\\text{二阶系统标准形式：}G(s) = \\frac{\\omega_n^2}{s^2 + 2\\zeta\\omega_n s + \\omega_n^2}",
+              "note": "ζ 为阻尼比，ωn 为自然频率"
+            },
+            {
+              "latex": "\\text{欠阻尼（0<ζ<1）时响应有超调，包络时间常数} = \\frac{1}{\\zeta\\omega_n}",
+              "note": "超调量 OS\\% = e^{-\\pi\\zeta/\\sqrt{1-\\zeta^2}} \\times 100\\%"
+            },
+            {
+              "latex": "t_s \\approx \\frac{4}{\\zeta\\omega_n} \\quad (2\\%\\text{准则})",
+              "note": "调节时间与阵尼比和自然频率的乘积成反比"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -965,6 +2266,59 @@
         "\\sum_{k} i_k = 0 \\quad \\text{(KCL)}",
         "\\sum_{k} v_k = 0 \\quad \\text{(KVL)}",
         "v_L = L\\frac{di}{dt}, \\quad i_C = C\\frac{dv}{dt}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\sum_{k} i_k = 0",
+          "steps": [
+            {
+              "latex": "\\text{KCL（基尔霍夫电流定律）：节点处电荷守恒}",
+              "note": "流入节点的电流之和等于流出的"
+            },
+            {
+              "latex": "\\text{对任意节点：}i_1 + i_2 + ... = i_{n+1} + i_{n+2} + ...",
+              "note": "电流不能在节点积累"
+            },
+            {
+              "latex": "\\sum_k i_k = 0",
+              "note": "电路分析列方程的基本依据之一"
+            }
+          ]
+        },
+        {
+          "formula": "\\sum_{k} v_k = 0",
+          "steps": [
+            {
+              "latex": "\\text{KVL（基尔霍夫电压定律）：回路中能量守恒}",
+              "note": "沿任意闭合回路电压之和为零"
+            },
+            {
+              "latex": "\\text{任意回路：}v_1 + v_2 + ... + v_n = 0",
+              "note": "电位是单值函数，沿回路一圈回到原点"
+            },
+            {
+              "latex": "\\sum_k v_k = 0",
+              "note": "与 KCL 联立可求解任意线性电路"
+            }
+          ]
+        },
+        {
+          "formula": "v_L = L\\frac{di}{dt}, \\quad i_C = C\\frac{dv}{dt}",
+          "steps": [
+            {
+              "latex": "v_L = L\\frac{di}{dt}",
+              "note": "电感：电流不能突变，储存磁能 W=½LI²"
+            },
+            {
+              "latex": "i_C = C\\frac{dv}{dt}",
+              "note": "电容：电压不能突变，储存电能 W=½CV²"
+            },
+            {
+              "latex": "\\text{在 s 域：}V_L = sLI,\\quad I_C = sCV",
+              "note": "拉普拉斯变换后即为阻抗形式 ZL=sL, ZC=1/sC"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -992,6 +2346,59 @@
         "\\mathbf{A}\\mathbf{x} = \\mathbf{b}",
         "\\mathbf{A} = \\mathbf{P}\\mathbf{\\Lambda}\\mathbf{P}^{-1} \\quad \\text{(特征值分解)}",
         "\\mathbf{x}^* = (\\mathbf{A}^T\\mathbf{A})^{-1}\\mathbf{A}^T\\mathbf{b} \\quad \\text{(最小二乘)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\mathbf{A}\\mathbf{x} = \\mathbf{b}",
+          "steps": [
+            {
+              "latex": "\\text{线性方程组的矩阵形式}",
+              "note": "n 个方程，n 个未知数"
+            },
+            {
+              "latex": "\\text{若}\\det\\mathbf{A}\\neq 0\\Rightarrow \\mathbf{x} = \\mathbf{A}^{-1}\\mathbf{b}\\text{（唯一解）}",
+              "note": "矩阵可逆 ↔ 方程组有唯一解"
+            },
+            {
+              "latex": "\\mathbf{A}\\mathbf{x} = \\mathbf{b}",
+              "note": "Park/Clarke 变换矩阵的逆变换即为此结构"
+            }
+          ]
+        },
+        {
+          "formula": "\\mathbf{A} = \\mathbf{P}\\mathbf{\\Lambda}\\mathbf{P}^{-1}",
+          "steps": [
+            {
+              "latex": "\\mathbf{A}\\mathbf{v}_i = \\lambda_i\\mathbf{v}_i",
+              "note": "特征值方程：λi 为特征值，vi 为特征向量"
+            },
+            {
+              "latex": "\\mathbf{P} = [\\mathbf{v}_1, \\mathbf{v}_2, ...],\\quad \\mathbf{\\Lambda} = \\text{diag}(\\lambda_1, \\lambda_2, ...)",
+              "note": "特征向量构成变换矩阵 P"
+            },
+            {
+              "latex": "\\mathbf{A} = \\mathbf{P}\\mathbf{\\Lambda}\\mathbf{P}^{-1}",
+              "note": "特征值即为系统极点，决定状态方程的动态响应"
+            }
+          ]
+        },
+        {
+          "formula": "\\mathbf{x}^* = (\\mathbf{A}^T\\mathbf{A})^{-1}\\mathbf{A}^T\\mathbf{b}",
+          "steps": [
+            {
+              "latex": "\\min_{\\mathbf{x}} \\|\\mathbf{A}\\mathbf{x} - \\mathbf{b}\\|^2",
+              "note": "超定方程组（方程数>未知数）的最小二乘解"
+            },
+            {
+              "latex": "\\frac{\\partial}{\\partial\\mathbf{x}}\\|\\mathbf{A}\\mathbf{x}-\\mathbf{b}\\|^2 = 2\\mathbf{A}^T(\\mathbf{A}\\mathbf{x}-\\mathbf{b}) = 0",
+              "note": "对 x 求梯度并令其为零"
+            },
+            {
+              "latex": "\\mathbf{x}^* = (\\mathbf{A}^T\\mathbf{A})^{-1}\\mathbf{A}^T\\mathbf{b}",
+              "note": "电机参数辨识、观测器设计均用到此公式"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -1014,6 +2421,59 @@
         "A_v = \\frac{v_{out}}{v_{in}} = -g_m R_L \\quad \\text{(共源放大器增益)}",
         "A_f = \\frac{A}{1 + A\\beta} \\quad \\text{(负反馈闭环增益)}",
         "\\text{CMRR} = \\left|\\frac{A_{dm}}{A_{cm}}\\right|"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "A_v = -g_m R_L",
+          "steps": [
+            {
+              "latex": "g_m = \\frac{\\partial I_D}{\\partial V_{GS}}\\bigg|_{Q}",
+              "note": "跨导：MOSFET 小信号模型的核心参数"
+            },
+            {
+              "latex": "v_{out} = -g_m v_{gs} \\cdot R_L",
+              "note": "输出电压 = 受控电流源电流 × 负载电阻，负号表示反相"
+            },
+            {
+              "latex": "A_v = \\frac{v_{out}}{v_{in}} = -g_m R_L",
+              "note": "共源极放大器，驱动 IC 内部运放级即为此结构"
+            }
+          ]
+        },
+        {
+          "formula": "A_f = \\frac{A}{1 + A\\beta}",
+          "steps": [
+            {
+              "latex": "\\text{负反馈：}V_{err} = V_{in} - \\beta V_{out}",
+              "note": "β 为反馈系数，将输出采样后送回输入"
+            },
+            {
+              "latex": "V_{out} = A \\cdot V_{err} = A(V_{in} - \\beta V_{out})",
+              "note": "展开并整理"
+            },
+            {
+              "latex": "A_f = \\frac{V_{out}}{V_{in}} = \\frac{A}{1+A\\beta}",
+              "note": "深度负反馈（Aβ≫1）时 Af≈1/β，增益稳定"
+            }
+          ]
+        },
+        {
+          "formula": "\\text{CMRR} = \\left|\\frac{A_{dm}}{A_{cm}}\\right|",
+          "steps": [
+            {
+              "latex": "A_{dm}\\text{：差模增益（放大差分信号）},\\quad A_{cm}\\text{：共模增益（抑制共同干扰）}",
+              "note": "理想运放 Acm=0"
+            },
+            {
+              "latex": "\\text{CMRR}_{dB} = 20\\log_{10}\\left|\\frac{A_{dm}}{A_{cm}}\\right|",
+              "note": "典型运放 CMRR > 80dB"
+            },
+            {
+              "latex": "\\text{CMRR} = \\left|\\frac{A_{dm}}{A_{cm}}\\right|",
+              "note": "电流采样电路 CMRR 决定测量精度，影响 FOC 控制质量"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -1041,6 +2501,59 @@
         "Q_{n+1} = D \\quad \\text{(D触发器)}",
         "Q_{n+1} = J\\overline{Q_n} + \\overline{K}Q_n \\quad \\text{(JK触发器)}",
         "D = \\frac{V_{ref}}{2^N - 1} \\quad \\text{(ADC量化间隔)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "Q_{n+1} = D",
+          "steps": [
+            {
+              "latex": "\\text{D 触发器：时钟边沿到来时，输出跟随输入 D}",
+              "note": "最基本的时序逻辑单元"
+            },
+            {
+              "latex": "\\text{上升沿触发：}Q_{n+1} = D_n",
+              "note": "建立时间和保持时间是时序约束的来源"
+            },
+            {
+              "latex": "Q_{n+1} = D",
+              "note": "寄存器、移位寄存器、状态机均由 D 触发器构成"
+            }
+          ]
+        },
+        {
+          "formula": "Q_{n+1} = J\\overline{Q_n} + \\overline{K}Q_n",
+          "steps": [
+            {
+              "latex": "\\text{JK 触发器真值表：J=0,K=0→保持；J=1,K=0→置1；J=0,K=1→清0；J=1,K=1→翻转}",
+              "note": "解决了 SR 触发器的禁止态"
+            },
+            {
+              "latex": "Q_{n+1} = J\\overline{Q_n} + \\overline{K}Q_n",
+              "note": "特征方程直接描述状态转移"
+            },
+            {
+              "latex": "\\text{令 J=K：}Q_{n+1} = J\\oplus Q_n",
+              "note": "T 触发器，常用于计数器"
+            }
+          ]
+        },
+        {
+          "formula": "D = \\frac{V_{ref}}{2^N - 1}",
+          "steps": [
+            {
+              "latex": "\\text{N 位 ADC 的量化步长}\\Delta = \\frac{V_{ref}}{2^N - 1}",
+              "note": "分辨率：全量程分为 2^N-1 个等级"
+            },
+            {
+              "latex": "\\text{量化误差最大为}\\pm\\frac{\\Delta}{2}",
+              "note": "12位 ADC：4096级，步长约为 Vref/4095"
+            },
+            {
+              "latex": "D = \\frac{V_{ref}}{2^N - 1}",
+              "note": "电机电流采样 ADC 精度直接影响 FOC 控制带宽"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -1062,6 +2575,42 @@
       "formulas": [
         "E_g \\approx 1.12\\,\\text{eV (Si)}, \\quad E_g \\approx 0.67\\,\\text{eV (Ge)}",
         "n_i = \\sqrt{N_c N_v} e^{-E_g/2kT}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "E_g \\approx 1.12\\,\\text{eV (Si)}, \\quad E_g \\approx 0.67\\,\\text{eV (Ge)}",
+          "steps": [
+            {
+              "latex": "\\text{禁带宽度 Eg：价带顶到导带底的能量差}",
+              "note": "决定半导体的导电特性和工作温度范围"
+            },
+            {
+              "latex": "\\text{Si: }E_g=1.12\\,\\text{eV},\\quad\\text{SiC: }E_g=3.26\\,\\text{eV},\\quad\\text{GaN: }E_g=3.4\\,\\text{eV}",
+              "note": "宽禁带半导体耐高压、高温，适合 IGBT 替代品"
+            },
+            {
+              "latex": "E_g(T) = E_g(0) - \\frac{\\alpha T^2}{T+\\beta}",
+              "note": "Eg 随温度升高而减小，高温漏电流增大"
+            }
+          ]
+        },
+        {
+          "formula": "n_i = \\sqrt{N_c N_v} e^{-E_g/2kT}",
+          "steps": [
+            {
+              "latex": "n_i\\text{：本征载流子浓度，Si 室温下} n_i \\approx 1.5\\times10^{10}\\,\\text{cm}^{-3}",
+              "note": "纯净半导体的电子和空穴浓度相等"
+            },
+            {
+              "latex": "n_i = \\sqrt{N_c N_v} e^{-E_g/2kT}",
+              "note": "Nc、Nv 为导带、价带有效态密度"
+            },
+            {
+              "latex": "\\text{温度每升高 10°C，}n_i\\text{ 约翻倍}",
+              "note": "高温导致漏电流指数增大，是 IGBT 热设计的关键约束"
+            }
+          ]
+        }
       ]
     },
     "relations": [
@@ -1083,6 +2632,42 @@
       "formulas": [
         "\\nabla f = \\frac{\\partial f}{\\partial x}\\hat{i} + \\frac{\\partial f}{\\partial y}\\hat{j} + \\frac{\\partial f}{\\partial z}\\hat{k}",
         "\\iint_S \\mathbf{F}\\cdot d\\mathbf{S} = \\iiint_V \\nabla\\cdot\\mathbf{F}\\,dV \\quad \\text{(高斯散度定理)}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\nabla f = \\frac{\\partial f}{\\partial x}\\hat{i} + \\frac{\\partial f}{\\partial y}\\hat{j} + \\frac{\\partial f}{\\partial z}\\hat{k}",
+          "steps": [
+            {
+              "latex": "\\text{梯度：标量场中变化率最大的方向和大小}",
+              "note": "∇f 指向 f 增大最快的方向"
+            },
+            {
+              "latex": "\\nabla\\cdot\\mathbf{F} = \\frac{\\partial F_x}{\\partial x}+\\frac{\\partial F_y}{\\partial y}+\\frac{\\partial F_z}{\\partial z}",
+              "note": "散度：向量场在某点的源强度，∇·B=0 即磁场无源"
+            },
+            {
+              "latex": "\\nabla f = \\frac{\\partial f}{\\partial x}\\hat{i} + \\frac{\\partial f}{\\partial y}\\hat{j} + \\frac{\\partial f}{\\partial z}\\hat{k}",
+              "note": "∇算子是麦克斯韦方程组微分形式的数学基础"
+            }
+          ]
+        },
+        {
+          "formula": "\\iint_S \\mathbf{F}\\cdot d\\mathbf{S} = \\iiint_V \\nabla\\cdot\\mathbf{F}\\,dV",
+          "steps": [
+            {
+              "latex": "\\text{高斯散度定理：体积分与面积分的桥梁}",
+              "note": "将体积内散度积分转化为闭合面上的通量"
+            },
+            {
+              "latex": "\\text{斯托克斯定理：}\\oint_C \\mathbf{F}\\cdot d\\mathbf{l} = \\iint_S (\\nabla\\times\\mathbf{F})\\cdot d\\mathbf{S}",
+              "note": "将旋度面积分转化为边界线积分"
+            },
+            {
+              "latex": "\\iint_S \\mathbf{F}\\cdot d\\mathbf{S} = \\iiint_V \\nabla\\cdot\\mathbf{F}\\,dV",
+              "note": "麦克斯韦方程组的微分形式与积分形式正是通过这两个定理互相转化的"
+            }
+          ]
+        }
       ]
     },
     "relations": [
