@@ -12,7 +12,7 @@ const searchRef = ref(null)
 const searchResults = computed(() => {
   if (!query.value.trim()) return []
   const q = query.value.trim().toLowerCase()
-  return graphStore.nodes
+  return graphStore.visibleNodes
     .filter((n) => {
       const matchName = n.name.toLowerCase().includes(q)
       const matchId = n.id.toLowerCase().includes(q)

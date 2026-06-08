@@ -245,7 +245,7 @@ watch(
 )
 
 watch(
-  () => [graphStore.showL1Nodes, graphStore.showL2Nodes, graphStore.showL3Nodes],
+  () => [graphStore.showL1Nodes, graphStore.showL2Nodes, graphStore.showL3Nodes, graphStore.activeThread],
   () => renderChart()
 )
 

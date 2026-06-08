@@ -52,6 +52,23 @@ function goToReview() {
       </div>
       <SearchBar />
       <div class="topbar-right">
+        <el-button-group class="thread-switch">
+          <el-button
+            :type="graphStore.activeThread === 'all' ? 'primary' : 'default'"
+            size="small"
+            @click="graphStore.setThread('all')"
+          >全图</el-button>
+          <el-button
+            :type="graphStore.activeThread === 'motor' ? 'primary' : 'default'"
+            size="small"
+            @click="graphStore.setThread('motor')"
+          >⚙️ 电机控制</el-button>
+          <el-button
+            :type="graphStore.activeThread === 'storage' ? 'success' : 'default'"
+            size="small"
+            @click="graphStore.setThread('storage')"
+          >🔋 储能BMS</el-button>
+        </el-button-group>
         <el-switch
           v-model="graphStore.traceMode"
           active-text="溯源模式"

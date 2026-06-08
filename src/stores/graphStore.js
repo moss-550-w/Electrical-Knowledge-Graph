@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useHistoryStore } from './historyStore'
+import { computeThreadNodeIds } from '@/data/threads'
 
 export const useGraphStore = defineStore('graph', () => {
   // ===== 原始数据 =====
@@ -23,19 +24,31 @@ export const useGraphStore = defineStore('graph', () => {
   const showL2Nodes = ref(true)
   const showL3Nodes = ref(true)
 
+  // ===== 主线（金线窗口）状态 =====
+  const activeThread = ref('all') // 'all' | 'motor' | 'storage'
+
+  // 各主线节点集合（仅随边数据变化重算）
+  const threadMembership = computed(() => ({
+    motor: computeThreadNodeIds('motor', edges.value),
+    storage: computeThreadNodeIds('storage', edges.value),
+  }))
+
   // ===== 计算属性 =====
   const focusNode = computed(() =>
     nodes.value.find((n) => n.id === focusNodeId.value) || null
   )
 
-  const visibleNodes = computed(() =>
-    nodes.value.filter((n) => {
+  const visibleNodes = computed(() => {
+    const threadSet =
+      activeThread.value === 'all' ? null : threadMembership.value[activeThread.value]
+    return nodes.value.filter((n) => {
       if (n.level === 'L1' && !showL1Nodes.value) return false
       if (n.level === 'L2' && !showL2Nodes.value) return false
       if (n.level === 'L3' && !showL3Nodes.value) return false
+      if (threadSet && !threadSet.has(n.id)) return false
       return true
     })
-  )
+  })
 
   const visibleNodeIds = computed(() =>
     new Set(visibleNodes.value.map((n) => n.id))
@@ -86,6 +99,12 @@ export const useGraphStore = defineStore('graph', () => {
   function clearFocus() {
     focusNodeId.value = null
     highlightedPathIds.value = []
+  }
+
+  function setThread(key) {
+    if (activeThread.value === key) return
+    activeThread.value = key
+    clearFocus()
   }
 
   function updateHighlightedPath(nodeId) {
@@ -178,8 +197,10 @@ export const useGraphStore = defineStore('graph', () => {
     nodes, edges, focusNodeId, highlightedPathIds, traceMode,
     graphInstance, graphReady, selectedPath, savedPaths,
     showL1Nodes, showL2Nodes, showL3Nodes,
+    activeThread, threadMembership,
     focusNode, visibleNodes, visibleNodeIds, visibleEdges, nodeAdjacency,
     loadData, setFocusNode, clearFocus, updateHighlightedPath,
     toggleTraceMode, setSelectedPath, toggleLevel, getCrossFieldNodes,
+    setThread,
   }
 })
