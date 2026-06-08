@@ -52,7 +52,7 @@ function act(event) {
     <!-- 溯源模式 -->
     <div class="ctrl-group">
       <el-switch
-        v-model="graphStore.traceMode"
+        :model-value="graphStore.traceMode"
         active-text="溯源模式"
         inactive-text="普通模式"
         @change="graphStore.toggleTraceMode()"
