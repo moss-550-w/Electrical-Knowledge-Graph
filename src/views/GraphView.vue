@@ -68,6 +68,11 @@ function goToReview() {
             size="small"
             @click="graphStore.setThread('storage')"
           >🔋 储能BMS</el-button>
+          <el-button
+            :type="graphStore.activeThread === 'wpt' ? 'warning' : 'default'"
+            size="small"
+            @click="graphStore.setThread('wpt')"
+          >🔌 无线充电</el-button>
         </el-button-group>
         <el-switch
           v-model="graphStore.traceMode"

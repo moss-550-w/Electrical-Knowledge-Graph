@@ -25,12 +25,13 @@ export const useGraphStore = defineStore('graph', () => {
   const showL3Nodes = ref(true)
 
   // ===== 主线（金线窗口）状态 =====
-  const activeThread = ref('all') // 'all' | 'motor' | 'storage'
+  const activeThread = ref('all') // 'all' | 'motor' | 'storage' | 'wpt'
 
   // 各主线节点集合（仅随边数据变化重算）
   const threadMembership = computed(() => ({
     motor: computeThreadNodeIds('motor', edges.value),
     storage: computeThreadNodeIds('storage', edges.value),
+    wpt: computeThreadNodeIds('wpt', edges.value),
   }))
 
   // ===== 计算属性 =====

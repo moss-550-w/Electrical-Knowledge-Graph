@@ -34,6 +34,18 @@ export const THREADS = {
       'rotating_magnetic_field', 'speed_loop',
     ],
   },
+  wpt: {
+    key: 'wpt',
+    name: '无线充电',
+    apex: 'wpt_ev_charging',
+    icon: '🔌',
+    color: '#E6A23C',
+    // Qi 标准仅经 strong_related 与 apex 相连，闭包覆盖不到，需补回
+    extraInclude: ['s_qi_standard'],
+    // 原边定义为单相高频全桥，依赖 s_dc_dc_full_bridge；其与 three_phase_inverter
+    // 仅 maps_to（非 depends_on）相连，BFS 不展开，电机 FOC 子树天然隔离，无需剪除
+    prune: [],
+  },
 }
 
 /**

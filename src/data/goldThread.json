@@ -3339,5 +3339,281 @@
       { "target": "grid_storage_application", "type": "depends_on", "weight": 0.9 },
       { "target": "s_grid_tied_inverter", "type": "strong_related", "weight": 0.6 }
     ]
+  },
+  {
+    "id": "wpt_ev_charging",
+    "name": "电动汽车无线充电系统",
+    "category": "无线电能传输",
+    "level": "L3",
+    "summary": "基于磁耦合谐振（MCR/IPT）的电动汽车无线充电系统，原边高频逆变激励发射线圈，经谐振补偿在 85kHz 下与副边松耦合传能，是贯通电磁—谐振—功率变换—控制的第三条金线。",
+    "detail": {
+      "description": "电动汽车无线充电系统（SAE J2954，工作频率 81.38–90kHz，标称 85kHz）由原边（地面端 GA）与副边（车载端 VA）两部分组成。原边将电网整流后的直流经高频全桥逆变为 85kHz 方波，激励发射线圈；发射与接收线圈间为松耦合（气隙 100–250mm，耦合系数 k≈0.1–0.3），靠原副边谐振补偿网络在谐振点形成高 Q 回路，使弱耦合下仍能高效传能；副边经高频整流为电池充电。系统功率等级 WPT1–WPT3（3.7/7.7/11kW），DC-DC 效率可达 90–93%。本节点是统领发射、补偿、效率、整流各子环节的应用顶点。",
+      "formulas": [
+        "k = \\frac{M}{\\sqrt{L_1 L_2}}, \\quad 0<k<1",
+        "P_{out} = \\frac{8}{\\pi^2}\\cdot\\frac{V_{in}V_{out}}{\\omega_0 M}\\quad(\\text{SS},\\ \\omega=\\omega_0)",
+        "\\eta_{\\text{dc-dc}} = \\eta_{inv}\\cdot\\eta_{coil}\\cdot\\eta_{rect}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "k = \\frac{M}{\\sqrt{L_1 L_2}}, \\quad 0<k<1",
+          "steps": [
+            { "latex": "M = k\\sqrt{L_1 L_2}\\ \\text{——互感由两线圈自感与耦合系数共同决定}", "note": "M 描述一侧电流在另一侧建立磁链的能力" },
+            { "latex": "\\Phi_{21} = M i_1 \\Rightarrow \\mathcal{E}_2 = -M\\frac{di_1}{dt}", "note": "本质是法拉第定律在双线圈上的体现" },
+            { "latex": "k = \\frac{M}{\\sqrt{L_1 L_2}}", "note": "归一化耦合强度，气隙越大、错位越多 k 越小" },
+            { "latex": "\\text{紧耦合变压器}\\ k\\to0.95;\\ \\text{EV WPT 松耦合}\\ k\\approx0.1\\text{–}0.3", "note": "松耦合正是 WPT 必须谐振补偿的根本原因" }
+          ]
+        },
+        {
+          "formula": "P_{out} = \\frac{8}{\\pi^2}\\cdot\\frac{V_{in}V_{out}}{\\omega_0 M}\\quad(\\text{SS},\\ \\omega=\\omega_0)",
+          "steps": [
+            { "latex": "\\text{方波逆变基波幅值}\\ V_1=\\frac{4}{\\pi}V_{in}", "note": "原副边整流同理各贡献 4/π 系数" },
+            { "latex": "\\text{SS 谐振时两侧电抗被补偿，功率经互感 M 传递}", "note": "谐振点回路呈纯阻性" },
+            { "latex": "P = \\frac{V_1 V_2}{\\omega_0 M}", "note": "传输功率反比于 ω₀M" },
+            { "latex": "P_{out}=\\frac{8}{\\pi^2}\\frac{V_{in}V_{out}}{\\omega_0 M}", "note": "工程上靠调原边直流电压与移相控制功率" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🔌",
+        "text": "一辆电动出租车停进车位，无需插枪，地面线圈与车底线圈隔着 15cm 空气自动对位，11kW 功率悄然流入电池。这套系统把电磁感应、谐振补偿与高频功率变换拧成一体，是图谱里第三条从麦克斯韦方程通到充电桩的金线。"
+      }
+    },
+    "relations": [
+      { "target": "wpt_inductive_coupling", "type": "depends_on", "weight": 1 },
+      { "target": "wpt_resonant_compensation", "type": "depends_on", "weight": 1 },
+      { "target": "wpt_hf_inverter", "type": "depends_on", "weight": 1 },
+      { "target": "wpt_efficiency_kq", "type": "depends_on", "weight": 0.9 },
+      { "target": "wpt_secondary_rectifier", "type": "depends_on", "weight": 0.8 },
+      { "target": "battery_charging", "type": "strong_related", "weight": 0.6 },
+      { "target": "s_qi_standard", "type": "strong_related", "weight": 0.5 }
+    ]
+  },
+  {
+    "id": "wpt_inductive_coupling",
+    "name": "磁耦合与互感机理",
+    "category": "无线电能传输",
+    "level": "L3",
+    "summary": "描述松耦合线圈间通过时变磁场传递能量的物理本质，以互感 M、耦合系数 k 与线圈品质因数 Q 刻画弱耦合（k≈0.1–0.3、大气隙）下的能量交链能力，是无线传能的电磁地基。",
+    "detail": {
+      "description": "WPT 的能量传递本质是两个空间分离线圈间的磁场耦合。发射线圈通入高频电流 i₁，在周围建立时变磁场，其中一部分磁链交链到接收线圈，由法拉第定律在副边感应电动势。耦合程度由互感 M=k√(L₁L₂) 决定。与紧耦合变压器（k>0.95、共磁芯）不同，EV WPT 气隙达 100–250mm 且存在横向错位，k 仅 0.1–0.3，绝大部分磁通为漏磁不参与传能。为弥补弱耦合，工程上采用扁平盘式/DD 线圈配铁氧体磁屏蔽提升 k，并定义线圈品质因数 Q=ωL/R，后续以乘积 kQ 衡量传能优劣。耦合电感方程把 M 拆为可分析的集中参数，是建立 SS/LCC 补偿模型的前提。",
+      "formulas": [
+        "\\begin{cases} u_1 = R_1 i_1 + L_1\\frac{di_1}{dt} + M\\frac{di_2}{dt} \\\\ u_2 = R_2 i_2 + L_2\\frac{di_2}{dt} + M\\frac{di_1}{dt} \\end{cases}",
+        "Q_i = \\frac{\\omega_0 L_i}{R_i}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\begin{cases} u_1 = R_1 i_1 + L_1\\frac{di_1}{dt} + M\\frac{di_2}{dt} \\\\ u_2 = R_2 i_2 + L_2\\frac{di_2}{dt} + M\\frac{di_1}{dt} \\end{cases}",
+          "steps": [
+            { "latex": "\\text{单线圈：}\\ u=Ri+L\\frac{di}{dt}", "note": "电阻压降加自感电动势" },
+            { "latex": "\\text{引入耦合：对方电流变化经互感感应}\\ M\\frac{di}{dt}", "note": "源于 ℰ=-dΦ/dt，磁链 Φ 含互感分量 Mi" },
+            { "latex": "u_1=R_1 i_1+L_1\\frac{di_1}{dt}+M\\frac{di_2}{dt}", "note": "原边方程，含副边反射作用" },
+            { "latex": "u_2=R_2 i_2+L_2\\frac{di_2}{dt}+M\\frac{di_1}{dt}", "note": "副边方程，原边电流是能量来源" },
+            { "latex": "\\text{相量化：}\\ U_1=(R_1+j\\omega L_1)I_1+j\\omega M I_2", "note": "为谐振补偿分析铺路，M 项即耦合通道" }
+          ]
+        },
+        {
+          "formula": "Q_i = \\frac{\\omega_0 L_i}{R_i}",
+          "steps": [
+            { "latex": "Q=2\\pi\\cdot\\frac{\\text{每周期储能}}{\\text{每周期耗能}}", "note": "品质因数衡量谐振回路的纯净度" },
+            { "latex": "\\text{电感储能}\\ \\tfrac12 L I^2,\\ \\text{电阻每周期耗能}\\ I^2 R/f", "note": "代入定义并化简" },
+            { "latex": "Q_i=\\frac{\\omega_0 L_i}{R_i}", "note": "WPT 线圈 Q 常达 100–300，利兹线降 R 提 Q" },
+            { "latex": "kQ=k\\sqrt{Q_1 Q_2}\\ \\text{是衡量最大效率的关键无量纲量}", "note": "引出传输效率节点" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🧲",
+        "text": "把两个茶杯垫大小的线圈隔着一拳的距离面对面，通上 8 万赫兹的电流——肉眼看不见的磁力线在空气中架起一座桥。九成磁通漏掉了，只有一成穿过对面线圈，正是这一成，撑起了整车的充电功率。"
+      }
+    },
+    "relations": [
+      { "target": "faraday_law", "type": "depends_on", "weight": 1 },
+      { "target": "magnetic_circuit", "type": "depends_on", "weight": 0.8 },
+      { "target": "s_magnetostatics", "type": "depends_on", "weight": 0.6 },
+      { "target": "complex_numbers", "type": "depends_on", "weight": 0.7 },
+      { "target": "s_transformer", "type": "strong_related", "weight": 0.8 }
+    ]
+  },
+  {
+    "id": "wpt_resonant_compensation",
+    "name": "谐振补偿网络（SS/LCC）",
+    "category": "无线电能传输",
+    "level": "L3",
+    "summary": "在原副边串/并联补偿电容，使松耦合线圈在系统频率下谐振，抵消漏感无功、实现近单位功率因数与恒流/恒压输出。SS 与 LCC 是 EV WPT 两大主流拓扑。",
+    "detail": {
+      "description": "松耦合线圈漏感大、自身无功巨大，若不补偿，逆变器需提供海量无功，电流应力极高且效率极低。补偿网络通过串联（S）或并联（P）谐振电容，使线圈电抗在谐振频率 ω₀=1/√(LC) 处被抵消，逆变器仅需提供有功。四种基本拓扑 SS/SP/PS/PP 中，SS（原副边均串联）最常用：其谐振电容与耦合无关，谐振时呈现恒流源特性、副边开路不过压，但轻载失谐时原边电流发散。高端 EV WPT 多采用 LCC 补偿（L-C-C 三元件）：引入独立谐振电感，使逆变器输出电流与负载和耦合解耦，实现恒流充电且具备零相角（ZPA）软开关条件，代价是元件更多、体积更大。补偿设计须与 SAE J2954 规定的 85kHz 严格对齐，否则频率分裂将导致功率骤降。",
+      "formulas": [
+        "C_1 = \\frac{1}{\\omega_0^2 L_1}, \\quad C_2 = \\frac{1}{\\omega_0^2 L_2}\\quad(\\text{SS})",
+        "Z_{in} = \\frac{\\omega_0^2 M^2}{R_{eq}}\\quad(\\text{SS 谐振})"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "C_1 = \\frac{1}{\\omega_0^2 L_1}, \\quad C_2 = \\frac{1}{\\omega_0^2 L_2}\\quad(\\text{SS})",
+          "steps": [
+            { "latex": "\\text{串联回路阻抗}\\ Z=R+j\\left(\\omega L-\\frac{1}{\\omega C}\\right)", "note": "电感为正电抗，电容为负电抗" },
+            { "latex": "\\text{谐振}\\Leftrightarrow\\text{虚部为零：}\\ \\omega_0 L=\\frac{1}{\\omega_0 C}", "note": "感抗与容抗大小相等、相互抵消" },
+            { "latex": "\\Rightarrow C=\\frac{1}{\\omega_0^2 L}", "note": "SS 拓扑原副边各自独立谐振" },
+            { "latex": "C_1=\\frac{1}{\\omega_0^2 L_1},\\ C_2=\\frac{1}{\\omega_0^2 L_2}", "note": "SS 补偿电容与 M 无关，对气隙变化鲁棒" },
+            { "latex": "\\omega_0=2\\pi\\times85\\,\\text{kHz}\\ \\text{固定}", "note": "对齐 SAE J2954 频带，C 由线圈自感唯一确定" }
+          ]
+        },
+        {
+          "formula": "Z_{in} = \\frac{\\omega_0^2 M^2}{R_{eq}}\\quad(\\text{SS 谐振})",
+          "steps": [
+            { "latex": "\\text{副边谐振}\\Rightarrow\\text{副边回路仅余等效负载}\\ R_{eq}", "note": "R_eq 为整流器加电池折算的等效交流电阻" },
+            { "latex": "\\text{反射阻抗}\\ Z_r=\\frac{(\\omega_0 M)^2}{R_{eq}}", "note": "副边负载经互感反射回原边" },
+            { "latex": "\\text{原边谐振}\\Rightarrow\\text{自身电抗抵消，仅剩}\\ R_1+Z_r", "note": "忽略 R₁ 时输入呈纯阻，单位功率因数" },
+            { "latex": "Z_{in}\\approx\\frac{\\omega_0^2 M^2}{R_{eq}}", "note": "M 减小则输入阻抗减小，原边电流增大需限流保护" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "⚖️",
+        "text": "松耦合线圈像一根漏气的水管，九成无功在原地空转。工程师在两端各串一只电容，精确调到 85kHz 谐振——感性与容性瞬间握手言和，逆变器从此只需推动真正流向汽车的有功电流，功率因数逼近 1。"
+      }
+    },
+    "relations": [
+      { "target": "s_resonant_circuit", "type": "depends_on", "weight": 1 },
+      { "target": "wpt_inductive_coupling", "type": "depends_on", "weight": 1 },
+      { "target": "complex_numbers", "type": "depends_on", "weight": 0.8 },
+      { "target": "circuit_theory", "type": "depends_on", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "wpt_hf_inverter",
+    "name": "原边高频全桥逆变与软开关",
+    "category": "无线电能传输",
+    "level": "L3",
+    "summary": "原边采用单相全桥逆变将直流斩成 85kHz 高频方波激励谐振网络，经移相调功并利用谐振回路感性失谐实现 ZVS 零电压开关，是大功率 WPT 高效高频化的关键。",
+    "detail": {
+      "description": "EV WPT 原边功率级为单相高频电压源全桥逆变器：四只 SiC MOSFET 构成 H 桥，将 PFC 后的直流母线斩波为 85kHz 方波，激励原边谐振补偿网络。其方波经傅里叶分解，基波分量 V₁=(4/π)Vdc·sin(πD/2) 驱动谐振回路，高次谐波被高 Q 回路滤除。功率调节有两种主流方式：①调原边直流母线电压；②移相控制，通过调节两桥臂驱动相位差改变基波幅值。为抑制 85kHz 硬开关带来的巨大开关损耗，逆变器必须工作于 ZVS（零电压开通）：令系统略微感性失谐，使开关管开通前其反并联体二极管先续流、漏源电压已被钳至零，从而消除开通损耗。SiC 器件的低 Coss 与快速体二极管使其成为高频 WPT 的优选；栅极驱动须提供精确死区以保证 ZVS 窗口并防止桥臂直通。",
+      "formulas": [
+        "v(t) = \\frac{4V_{dc}}{\\pi}\\sum_{n=1,3,5\\cdots}\\frac{1}{n}\\sin(n\\omega_0 t)",
+        "V_1 = \\frac{4V_{dc}}{\\pi}\\sin\\left(\\frac{\\pi D}{2}\\right)",
+        "\\text{ZVS：}\\ \\varphi=\\angle Z_{in}>0\\ (\\text{感性})"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "v(t) = \\frac{4V_{dc}}{\\pi}\\sum_{n=1,3,5\\cdots}\\frac{1}{n}\\sin(n\\omega_0 t)",
+          "steps": [
+            { "latex": "\\text{全桥输出}\\ \\pm V_{dc}\\ \\text{的奇对称方波}", "note": "占空比 50%，无偶次谐波" },
+            { "latex": "\\text{傅里叶展开：}\\ v(t)=\\sum b_n\\sin(n\\omega_0 t)", "note": "方波等于基波加奇次谐波" },
+            { "latex": "b_n=\\frac{4V_{dc}}{n\\pi}\\ (n=1,3,5\\cdots)", "note": "谐波幅值随 n 反比衰减" },
+            { "latex": "\\text{基波}\\ V_1=\\frac{4V_{dc}}{\\pi}\\approx1.27 V_{dc}", "note": "高 Q 回路仅响应基波，谐波被滤除" }
+          ]
+        },
+        {
+          "formula": "V_1 = \\frac{4V_{dc}}{\\pi}\\sin\\left(\\frac{\\pi D}{2}\\right)",
+          "steps": [
+            { "latex": "\\text{移相：两桥臂错开相位}\\ \\delta,\\ \\text{有效占空}\\ D=1-\\delta/\\pi", "note": "输出变准方波，正负电平间插入零电平" },
+            { "latex": "\\text{对准方波重做傅里叶积分}", "note": "基波系数随 D 变化" },
+            { "latex": "V_1=\\frac{4V_{dc}}{\\pi}\\sin\\left(\\frac{\\pi D}{2}\\right)", "note": "D=1（全方波）时回到 4V_dc/π" },
+            { "latex": "\\text{调}\\ D\\ \\text{即调基波幅值，进而调功率}", "note": "频率锁定 85kHz，功率靠移相而非调频" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "⚡",
+        "text": "四只碳化硅管子每秒开关 8 万次，把 600V 直流剁成凌厉的高频方波。诀窍在死区那几十纳秒：让电流先于电压抢跑，管子两端电压归零的刹那才导通——零电压开关，让这台 kW 级逆变器在如此高频下依旧凉得发指。"
+      }
+    },
+    "relations": [
+      { "target": "s_dc_dc_full_bridge", "type": "depends_on", "weight": 1 },
+      { "target": "igbt_mosfet", "type": "depends_on", "weight": 0.9 },
+      { "target": "gate_drive", "type": "depends_on", "weight": 0.8 },
+      { "target": "s_resonant_circuit", "type": "depends_on", "weight": 0.8 },
+      { "target": "power_electronics_basics", "type": "depends_on", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "wpt_efficiency_kq",
+    "name": "传输效率、kQ 积与频率分裂",
+    "category": "无线电能传输",
+    "level": "L3",
+    "summary": "无线传能的最大效率由耦合系数 k 与线圈品质因数 Q 的乘积 kQ 唯一决定；过耦合时谐振峰一分为二（频率分裂），揭示 WPT 效率优化与频率稳定的核心约束。",
+    "detail": {
+      "description": "WPT 系统的链路效率（线圈到线圈）存在理论上限，仅取决于无量纲优值 kQ。在最优负载匹配下，最大效率 η_max 随 kQ 单调上升：kQ 越大效率越高。这把线圈设计（提 Q，用利兹线降交流电阻、铁氧体导磁）与磁路设计（提 k，优化线圈形状与气隙）统一为单一目标。然而当耦合过强或系统失谐时，会出现频率分裂（pole-splitting）现象：原本单一的谐振峰在 k>k_crit 时分裂为两个谐振频率，系统在标称 85kHz 处增益反而下降。EV WPT 气隙较大通常工作于欠耦合区不易分裂，但近距离对位良好时可能进入过耦合区，需通过频率跟踪或阻抗调谐规避。理解 kQ 与频率分裂，是 WPT 效率优化、线圈选型与控制策略设计的理论顶层。",
+      "formulas": [
+        "\\eta_{max} = \\frac{(kQ)^2}{\\left(1+\\sqrt{1+(kQ)^2}\\right)^2},\\quad Q=\\sqrt{Q_1 Q_2}",
+        "\\omega_{\\pm} = \\frac{\\omega_0}{\\sqrt{1\\pm k}}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\eta_{max} = \\frac{(kQ)^2}{\\left(1+\\sqrt{1+(kQ)^2}\\right)^2},\\quad Q=\\sqrt{Q_1 Q_2}",
+          "steps": [
+            { "latex": "\\eta=\\frac{P_{R_L}}{P_{R_L}+P_{R_1}+P_{R_2}}", "note": "传能与线圈铜损磁损的竞争" },
+            { "latex": "\\text{以反射阻抗代入，对负载求极值}\\ \\frac{\\partial\\eta}{\\partial R_L}=0", "note": "存在唯一最优等效负载" },
+            { "latex": "\\text{结果仅含无量纲量}\\ kQ=k\\sqrt{Q_1 Q_2}", "note": "k 与 Q 的全部影响凝聚为一个数" },
+            { "latex": "\\eta_{max}=\\frac{(kQ)^2}{(1+\\sqrt{1+(kQ)^2})^2}", "note": "kQ=10 时 η≈82%；kQ=30 时 η≈94%" },
+            { "latex": "\\text{设计目标：最大化}\\ kQ", "note": "提 Q（利兹线/铁氧体）、提 k（线圈形状/减气隙）" }
+          ]
+        },
+        {
+          "formula": "\\omega_{\\pm} = \\frac{\\omega_0}{\\sqrt{1\\pm k}}",
+          "steps": [
+            { "latex": "\\text{双谐振耦合系统特征方程含}\\ (1-k^2)\\ \\text{项}", "note": "两回路经 M 耦合形成二自由度系统" },
+            { "latex": "\\text{求解本征频率}\\ \\Rightarrow\\ \\omega_\\pm=\\frac{\\omega_0}{\\sqrt{1\\pm k}}", "note": "类比两弹簧耦合的正交模式" },
+            { "latex": "k>k_{crit}=\\frac{1}{\\sqrt{Q_1 Q_2}}\\Rightarrow\\text{谐振峰分裂}", "note": "过耦合区，85kHz 处增益凹陷" },
+            { "latex": "\\text{对策：频率跟踪锁定}\\ \\omega_-\\ \\text{或调原边电压}", "note": "EV 大气隙多为欠耦合，分裂主要出现在近距对位" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "📈",
+        "text": "为什么有的无线充电又快又凉，有的又慢又烫？答案藏在一个数里：kQ。它把线圈绕多少匝、用不用利兹线、气隙留多大，全部压缩成一个优值。kQ 过 30，九成四的电稳稳过桥；贴得太近又会乐极生悲，一个谐振峰裂成两个。"
+      }
+    },
+    "relations": [
+      { "target": "wpt_inductive_coupling", "type": "depends_on", "weight": 1 },
+      { "target": "s_resonant_circuit", "type": "depends_on", "weight": 0.9 },
+      { "target": "wpt_resonant_compensation", "type": "strong_related", "weight": 0.8 },
+      { "target": "s_eddy_current", "type": "strong_related", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "wpt_secondary_rectifier",
+    "name": "副边高频整流与等效负载",
+    "category": "无线电能传输",
+    "level": "L3",
+    "summary": "副边将 85kHz 交流经全桥/同步整流为直流为电池充电，并把电池侧直流负载折算为谐振网络可见的等效交流电阻 R_eq，是连接 WPT 链路与 CC-CV 充电的接口环节。",
+    "detail": {
+      "description": "副边接收线圈感应出的 85kHz 高频交流，需经整流滤波转为直流为动力电池充电。低成本方案用二极管全桥，高效大功率方案用 SiC MOSFET 同步整流以降低导通损耗。分析谐振网络时，必须将整流器、滤波电容与电池这一非线性直流负载折算为一个线性等效交流电阻 R_eq，接在副边谐振回路输出端，这是用相量法分析整个 WPT 链路的关键桥接。对全桥整流接恒压电池（负载电阻 R_L），基波等效法给出 R_eq=(8/π²)R_L。该等效电阻随电池 SOC 与充电阶段（CC/CV）变化，进而改变反射阻抗与原边工作点，因此副边整流与原边功率控制必须协同，共同服务于电池的恒流-恒压（CC-CV）充电曲线。",
+      "formulas": [
+        "R_{eq} = \\frac{8}{\\pi^2}R_L\\quad(\\text{全桥整流})",
+        "Z_{ref} = \\frac{(\\omega_0 M)^2}{R_2 + R_{eq}}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "R_{eq} = \\frac{8}{\\pi^2}R_L\\quad(\\text{全桥整流})",
+          "steps": [
+            { "latex": "\\text{谐振时副边电压电流同相：}\\ v=V_m\\sin\\omega t,\\ i=I_m\\sin\\omega t", "note": "副边呈阻性" },
+            { "latex": "\\text{全桥整流输出}\\ V_{dc}=\\frac{2}{\\pi}V_m,\\ I_{dc}=\\frac{2}{\\pi}I_m", "note": "正弦全波均值系数 2/π" },
+            { "latex": "\\text{功率守恒}\\ \\tfrac12 V_m I_m=V_{dc}I_{dc}", "note": "交流有功等于直流功率（理想无损）" },
+            { "latex": "R_{eq}=\\frac{V_m}{I_m}=\\frac{8}{\\pi^2}R_L", "note": "非线性整流负载线性化为等效交流电阻" },
+            { "latex": "R_{eq}\\propto R_L\\ \\text{随充电阶段变化}", "note": "CV 末期 R_L 增大则 R_eq 增大" }
+          ]
+        },
+        {
+          "formula": "Z_{ref} = \\frac{(\\omega_0 M)^2}{R_2 + R_{eq}}",
+          "steps": [
+            { "latex": "\\text{副边总阻}\\ Z_2=R_2+R_{eq}\\ \\text{（谐振抵消电抗后）}", "note": "R₂ 为副边线圈寄生电阻" },
+            { "latex": "\\text{反射阻抗}\\ Z_{ref}=\\frac{(\\omega_0 M)^2}{Z_2}", "note": "互感耦合的阻抗变换本质" },
+            { "latex": "Z_{ref}=\\frac{(\\omega_0 M)^2}{R_2+R_{eq}}", "note": "这是原边逆变器实际驱动的负载" },
+            { "latex": "R_{eq}\\downarrow\\Rightarrow Z_{ref}\\uparrow\\Rightarrow\\text{原边电流}\\downarrow", "note": "解释了为何原副边须协同调功" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🔋",
+        "text": "高频交流跨过空气抵达车底，还得落地成电池能喝的直流。四只同步整流管接力把 85kHz 交流抚平成平稳直流。而分析师的妙招是：把整块电池连同整流器，在原边眼里简化成一只会随充电进度悄悄变化的等效电阻。"
+      }
+    },
+    "relations": [
+      { "target": "s_rectifier", "type": "depends_on", "weight": 1 },
+      { "target": "wpt_resonant_compensation", "type": "depends_on", "weight": 0.8 },
+      { "target": "igbt_mosfet", "type": "depends_on", "weight": 0.6 },
+      { "target": "circuit_theory", "type": "depends_on", "weight": 0.5 },
+      { "target": "battery_charging", "type": "strong_related", "weight": 0.7 }
+    ]
   }
 ]
