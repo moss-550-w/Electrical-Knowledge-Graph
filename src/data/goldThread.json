@@ -4542,5 +4542,184 @@
         "weight": 0.7
       }
     ]
+  },
+  {
+    "id": "pv_grid_system",
+    "name": "光伏并网发电系统",
+    "category": "电力系统",
+    "level": "L3",
+    "summary": "将光伏阵列直流电经 MPPT 升压、并网逆变与锁相同步注入电网的完整发电系统，是贯通半导体光电转换—功率变换—并网控制的第四条金线。",
+    "detail": {
+      "description": "光伏并网发电系统把太阳能电池阵列产生的直流电，转换为与电网同频同相的交流电并注入电网。典型两级结构：前级 Boost 变换器执行最大功率点跟踪（MPPT），把随光照与温度漂移的光伏最大功率点电压抬升并稳定直流母线；后级三相并网逆变器在 dq 旋转坐标系下做电流闭环控制，经锁相环（PLL）实时获取电网电压相位，使并网电流与电网电压同步，实现单位功率因数注入与可控的有功/无功。系统还须具备孤岛检测（电网失电时主动停机，保障检修安全）、低电压穿越（LVRT）等并网保护功能，满足 IEEE 1547 / GB/T 19964 等并网标准。从光子打在 PN 结激发电子，到电流并入万家电网，本节点统领光电转换、MPPT、并网逆变、锁相同步、孤岛保护各子环节。",
+      "formulas": [
+        "P_{pv} = V_{pv} I_{pv}, \\quad \\frac{dP_{pv}}{dV_{pv}} = 0 \\;(\\text{MPP})",
+        "V_{dc} = \\frac{V_{mpp}}{1 - D} \\;(\\text{Boost 升压})",
+        "P = \\frac{3}{2}(v_d i_d + v_q i_q), \\quad Q = \\frac{3}{2}(v_q i_d - v_d i_q)",
+        "\\theta_{grid} = \\int (\\omega_0 + \\Delta\\omega)\\,dt \\;(\\text{PLL})"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "P = \\frac{3}{2}(v_d i_d + v_q i_q), \\quad Q = \\frac{3}{2}(v_q i_d - v_d i_q)",
+          "steps": [
+            {
+              "latex": "\\text{电网电压定向：令 d 轴对齐电网电压矢量}\\Rightarrow v_q = 0",
+              "note": "PLL 锁相的目的正是实现这一定向"
+            },
+            {
+              "latex": "P = \\tfrac{3}{2} v_d i_d, \\quad Q = -\\tfrac{3}{2} v_d i_q",
+              "note": "有功仅由 id 决定、无功仅由 iq 决定，完全解耦"
+            },
+            {
+              "latex": "\\text{单位功率因数并网}\\Rightarrow i_q^* = 0",
+              "note": "只注入有功、不注入无功"
+            },
+            {
+              "latex": "i_d^* = \\frac{2 P^*}{3 v_d} \\;(\\text{由直流母线电压外环给定})",
+              "note": "母线电压环输出有功电流指令，闭环维持功率平衡"
+            }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "☀️",
+        "text": "屋顶光伏板在正午把阳光变成直流电，逆变器在毫秒间把它「梳理」成与电网完全同步的交流正弦波倒灌进电表——多发的电卖给电网，靠的正是 MPPT 与锁相并网这套精密配合。"
+      }
+    },
+    "relations": [
+      { "target": "pv_array_model", "type": "depends_on", "weight": 1 },
+      { "target": "mppt", "type": "depends_on", "weight": 1 },
+      { "target": "grid_inverter_control", "type": "depends_on", "weight": 1 },
+      { "target": "pll", "type": "depends_on", "weight": 0.9 },
+      { "target": "islanding_detection", "type": "depends_on", "weight": 0.8 },
+      { "target": "s_grid_tied_inverter", "type": "strong_related", "weight": 0.7 },
+      { "target": "s_power_system_structure", "type": "strong_related", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "pv_array_model",
+    "name": "光伏电池与阵列建模",
+    "category": "电力电子",
+    "level": "L3",
+    "summary": "光伏电池基于 PN 结光生伏特效应把光子转换为电能，其单二极管等效模型给出非线性 I-V 与 P-V 特性，是 MPPT 与系统设计的物理起点。",
+    "detail": {
+      "description": "光伏电池本质是一个大面积 PN 结：入射光子激发电子-空穴对，在结电场作用下分离形成光生电流。工程上用单二极管等效模型描述：一个光生电流源 I_ph 并联一个二极管（表征结的复合特性），再串联电阻 Rs（欧姆损耗）、并联电阻 Rsh（漏电流）。由此得到非线性的 I-V 特性曲线——短路电流 Isc、开路电压 Voc、以及二者之间存在唯一的最大功率点（MPP）。光生电流随光照强度近似线性增加，开路电压随温度升高而下降，因此 MPP 随环境实时漂移，这正是必须做最大功率点跟踪的根源。多片电池串联提升电压成组件，多组件串并联成阵列；串联失配与局部阴影会导致多峰 P-V 曲线，需旁路二极管与全局 MPPT 应对。填充因子 FF 衡量电池接近理想矩形特性的程度，是评价电池质量的关键指标。",
+      "formulas": [
+        "I = I_{ph} - I_0\\left(e^{\\frac{q(V + I R_s)}{nkT}} - 1\\right) - \\frac{V + I R_s}{R_{sh}}",
+        "P = VI, \\quad P_{max} = V_{mpp} I_{mpp}",
+        "FF = \\frac{V_{mpp} I_{mpp}}{V_{oc} I_{sc}}",
+        "\\eta = \\frac{P_{max}}{G \\cdot A}"
+      ],
+      "scene": {
+        "icon": "🔆",
+        "text": "一块巴掌大的硅片在阳光下就能驱动计算器——PN 结里光子撞出的电子被结电场「扫」向两极形成电流，这枚小电池的 I-V 曲线上那个隐藏的最大功率点，正是后续 MPPT 苦苦追踪的目标。"
+      }
+    },
+    "relations": [
+      { "target": "semiconductor_physics", "type": "depends_on", "weight": 0.9 },
+      { "target": "circuit_theory", "type": "depends_on", "weight": 0.6 },
+      { "target": "solid_state_physics", "type": "depends_on", "weight": 0.5 }
+    ]
+  },
+  {
+    "id": "mppt",
+    "name": "最大功率点跟踪(MPPT)",
+    "category": "控制理论",
+    "level": "L3",
+    "summary": "通过实时调节变换器占空比使光伏工作点稳定在最大功率点，在光照、温度变化下持续榨取最大发电量，是光伏发电效率的核心控制算法。",
+    "detail": {
+      "description": "光伏电池的最大功率点（MPP）随光照、温度实时漂移，MPPT 的任务是让光伏始终工作在 MPP 上以最大化发电量。它通过控制前级 DC-DC（常为 Boost）的占空比改变光伏端等效负载，从而移动工作点。经典算法是扰动观察法（P&O）：周期性微调电压并比较前后功率，若功率上升则维持扰动方向、下降则反向，逐步逼近 dP/dV=0 的峰点；其缺点是稳态在 MPP 附近小幅振荡、且快速变光照时可能误判方向。电导增量法（INC）以 dI/dV=-I/V 作为 MPP 判据，理论上稳态无振荡、动态响应更好。此外还有恒定电压法、基于模型与智能算法（模糊、神经网络）等。局部阴影下 P-V 出现多峰，需全局 MPPT 跳出局部峰。MPPT 是光伏逆变器的标志性功能，其跟踪精度与速度直接决定系统发电量。",
+      "formulas": [
+        "\\frac{dP}{dV} = 0 \\;(\\text{MPP 判据})",
+        "\\frac{dI}{dV} = -\\frac{I}{V} \\;(\\text{电导增量法})",
+        "D_{k+1} = D_k \\pm \\Delta D \\;(\\text{P\\&O 扰动})",
+        "\\eta_{MPPT} = \\frac{\\int P_{actual}\\,dt}{\\int P_{max}\\,dt}"
+      ],
+      "scene": {
+        "icon": "📈",
+        "text": "云朵飘过遮住一半阳光，逆变器里的 MPPT 算法立刻像爬山者一样重新摸索功率峰顶——每秒数十次试探占空比，确保哪怕光照剧变也总在榨取当下能发的最大功率。"
+      }
+    },
+    "relations": [
+      { "target": "pv_array_model", "type": "depends_on", "weight": 1 },
+      { "target": "s_boost_converter", "type": "depends_on", "weight": 0.9 },
+      { "target": "control_theory_basics", "type": "depends_on", "weight": 0.7 }
+    ]
+  },
+  {
+    "id": "grid_inverter_control",
+    "name": "并网逆变器控制",
+    "category": "电力电子",
+    "level": "L3",
+    "summary": "三相并网逆变器在 dq 坐标系下做电流闭环，结合直流母线电压外环与电网电压前馈，实现单位功率因数、低谐波的并网电流注入。",
+    "detail": {
+      "description": "并网逆变器把直流母线电能逆变为与电网同步的三相交流并注入电网，其控制核心是电网电压定向的 dq 电流闭环。借助 PLL 获得的电网相位，把三相电流经 Clark/Park 变换到与电网电压同步旋转的 dq 坐标系，使有功、无功分别由 d、q 轴电流解耦控制。典型双环结构：外环为直流母线电压环，维持功率平衡并输出有功电流指令 id*；内环为 dq 电流环（PI 调节器 + dq 轴交叉耦合解耦 + 电网电压前馈），快速跟踪电流指令并经 SVPWM 生成开关信号。单位功率因数运行时令 iq*=0，只注入有功。并网电流必须满足谐波（THD<5%）、功率因数、直流分量等并网标准，故常配 LCL 滤波器抑制开关谐波。该节点是光伏、储能、风电等所有并网变流器的通用控制内核。",
+      "formulas": [
+        "v_d = R i_d + L\\frac{di_d}{dt} - \\omega L i_q + e_d",
+        "v_q = R i_q + L\\frac{di_q}{dt} + \\omega L i_d + e_q",
+        "v_d^* = (k_p + \\tfrac{k_i}{s})(i_d^* - i_d) - \\omega L i_q + e_d",
+        "i_q^* = 0 \\;(\\text{单位功率因数})"
+      ],
+      "scene": {
+        "icon": "🔀",
+        "text": "逆变器要把直流「切」成和电网分毫不差的正弦电流挤进电网——dq 电流环让有功无功各管各的，前馈解耦再抵消两轴的相互拉扯，最终输出一条干净到 THD<5% 的并网电流。"
+      }
+    },
+    "relations": [
+      { "target": "three_phase_inverter", "type": "depends_on", "weight": 1 },
+      { "target": "pi_controller", "type": "depends_on", "weight": 0.8 },
+      { "target": "pll", "type": "depends_on", "weight": 0.9 },
+      { "target": "dq_transform", "type": "depends_on", "weight": 0.7 },
+      { "target": "s_grid_tied_inverter", "type": "strong_related", "weight": 0.7 }
+    ]
+  },
+  {
+    "id": "pll",
+    "name": "锁相环与电网同步",
+    "category": "控制理论",
+    "level": "L3",
+    "summary": "锁相环实时估计电网电压的相位与频率，为并网逆变器提供同步基准，是并网电流与电网电压对齐的前提。",
+    "detail": {
+      "description": "锁相环（PLL）通过闭环反馈使内部振荡器的相位跟踪输入信号相位，在并网系统中用于实时获取电网电压的相位角与频率，作为坐标变换与电流控制的同步基准。三相系统常用同步旋转坐标系 PLL（SRF-PLL）：把三相电压 Park 变换到 dq 系，通过 PI 调节器把 q 轴电压调到零，使 dq 系与电网电压矢量同步旋转，PI 输出即为角频率、积分得到相位角。PLL 的带宽需折中——过高易受谐波与噪声干扰、过低则动态跟踪慢。电网不平衡或畸变时，简单 SRF-PLL 的 q 轴会出现二倍频脉动，需用 DSOGI、解耦双同步坐标系等改进结构提取正序分量。准确的相位同步是并网电流不偏离电网电压、避免无功冲击与脱网的根本保障，也是低电压穿越期间维持同步的关键。",
+      "formulas": [
+        "v_q = V\\sin(\\theta_{grid} - \\hat{\\theta}) \\approx V(\\theta_{grid} - \\hat{\\theta})",
+        "\\hat{\\omega} = (k_p + \\tfrac{k_i}{s})\\, v_q + \\omega_{ff}",
+        "\\hat{\\theta} = \\int \\hat{\\omega}\\,dt",
+        "v_q \\to 0 \\Rightarrow \\hat{\\theta} \\to \\theta_{grid}"
+      ],
+      "scene": {
+        "icon": "🎯",
+        "text": "电网的相位每秒变化 50 圈，逆变器要并上去就必须先「跟上拍子」——锁相环把 q 轴电压死死压到零，让自己的相位严丝合缝咬住电网，差半度都可能引发冲击电流。"
+      }
+    },
+    "relations": [
+      { "target": "control_theory_basics", "type": "depends_on", "weight": 0.9 },
+      { "target": "three_phase_ac", "type": "depends_on", "weight": 0.8 },
+      { "target": "park_transform", "type": "depends_on", "weight": 0.6 },
+      { "target": "pi_controller", "type": "strong_related", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "islanding_detection",
+    "name": "孤岛检测",
+    "category": "电力系统",
+    "level": "L3",
+    "summary": "在电网失电时快速检测并使并网逆变器主动停机，防止形成危及检修人员与设备安全的非计划孤岛，是并网发电的强制性保护功能。",
+    "detail": {
+      "description": "孤岛是指电网侧失电后，并网逆变器仍带着本地负载持续供电、形成局部带电孤立区域的危险工况，会危及电网检修人员安全、并在电网恢复时因不同步造成冲击。并网标准（IEEE 1547、GB/T 19964）强制要求逆变器具备孤岛检测并在规定时限（通常 2 秒内）停机。检测方法分两类：被动法监测电网电压幅值、频率、相位跳变或谐波越限，简单但存在检测盲区（当本地负载与发电功率精确匹配时电压频率几乎不变）；主动法则由逆变器主动注入微小扰动（如周期性频率偏移 AFD、无功扰动、阻抗测量），并网时扰动被强大电网钳制、孤岛时扰动被正反馈放大触发越限保护，大幅缩小盲区，但多机并联时存在扰动相互稀释问题。孤岛检测的盲区大小（NDZ）与对电网电能质量的影响是方法评价的核心权衡。",
+      "formulas": [
+        "f_{min} \\le f \\le f_{max}, \\quad V_{min} \\le V \\le V_{max} \\;(\\text{被动判据})",
+        "\\Delta f = c_f \\cdot \\Delta P, \\quad \\Delta V = c_v \\cdot \\Delta Q \\;(\\text{负载失配})",
+        "t_{trip} \\le 2\\,\\text{s} \\;(\\text{并网标准})"
+      ],
+      "scene": {
+        "icon": "🛡️",
+        "text": "电网突然停电检修，屋顶光伏却还在「自顾自」给线路供电——这对爬上电杆的工人是致命危险。孤岛检测就是逆变器的良知：一旦发现电网消失，两秒内果断切断自己。"
+      }
+    },
+    "relations": [
+      { "target": "grid_inverter_control", "type": "depends_on", "weight": 0.9 },
+      { "target": "s_power_system_structure", "type": "depends_on", "weight": 0.5 },
+      { "target": "pll", "type": "strong_related", "weight": 0.6 }
+    ]
   }
 ]

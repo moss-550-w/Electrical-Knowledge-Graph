@@ -17,6 +17,7 @@ const threads = [
   { key: 'motor', label: '⚙️ 电机控制', type: 'primary' },
   { key: 'storage', label: '🔋 储能BMS', type: 'success' },
   { key: 'wpt', label: '🔌 无线充电', type: 'warning' },
+  { key: 'pv', label: '☀️ 光伏并网', type: 'danger' },
 ]
 
 // 打开二级浮层 / 切换面板：移动端顺手收起抽屉

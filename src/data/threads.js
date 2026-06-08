@@ -46,6 +46,18 @@ export const THREADS = {
     // 仅 maps_to（非 depends_on）相连，BFS 不展开，电机 FOC 子树天然隔离，无需剪除
     prune: [],
   },
+  pv: {
+    key: 'pv',
+    name: '光伏并网',
+    apex: 'pv_grid_system',
+    icon: '☀️',
+    color: '#E6A23C',
+    // 并网逆变器复用 dq/Park 坐标变换与三相逆变（与电机线共享基础，体现网状交汇）；
+    // s_grid_tied_inverter 仅经 strong_related 与 apex/grid_inverter_control 相连，需补回
+    extraInclude: ['s_grid_tied_inverter'],
+    // park_transform → rotating_magnetic_field 会把电机专属的「旋转磁场」串入，光伏并网无此概念，剪除
+    prune: ['rotating_magnetic_field'],
+  },
 }
 
 /**
