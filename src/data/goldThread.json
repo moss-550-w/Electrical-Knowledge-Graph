@@ -2818,5 +2818,526 @@
         "weight": 1
       }
     ]
+  },
+  {
+    "id": "battery_electrochemistry",
+    "name": "锂离子电池电化学",
+    "category": "储能",
+    "level": "L3",
+    "summary": "锂离子在正负极间嵌入与脱出实现充放电，电池电压由电极电化学势差决定，是一切电池建模与管理的物理化学基础。",
+    "detail": {
+      "description": "锂离子电池通过锂离子在正极（如LiFePO4、NCM三元）与负极（石墨）之间的嵌入与脱出，实现电能与化学能的相互转换。充电时锂离子从正极脱出、经电解液与隔膜迁移并嵌入负极，电子经外电路反向流动；放电过程相反。电池开路电压由正负极的电化学势之差决定，遵循能斯特方程并随荷电状态非线性变化。理解电极反应、能斯特电压与极化机制，是电池等效电路建模、SOC估算与热失控分析的物理起点。",
+      "formulas": [
+        "E = E^0 - \\frac{RT}{nF}\\ln Q",
+        "U_{oc} = \\varphi_{+}(SOC) - \\varphi_{-}(SOC)",
+        "\\Delta Q = nF\\,\\Delta N_{Li}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "E = E^0 - \\frac{RT}{nF}\\ln Q",
+          "steps": [
+            { "latex": "E = E^0 - \\frac{RT}{nF}\\ln Q", "note": "能斯特方程：非标准态下的电极电位" },
+            { "latex": "E^0:\\text{标准电极电位},\\ R:\\text{气体常数},\\ T:\\text{温度},\\ n:\\text{转移电子数},\\ F:\\text{法拉第常数}", "note": "各参数物理意义" },
+            { "latex": "Q = \\frac{a_{red}}{a_{ox}}", "note": "反应商，由氧化/还原态活度比决定，随SOC变化" },
+            { "latex": "25^\\circ C:\\ \\frac{RT}{F}\\approx 25.7\\,mV", "note": "常温热电压，决定电位随活度变化的尺度" },
+            { "latex": "U_{oc}(SOC) = \\varphi_{+} - \\varphi_{-}", "note": "端开路电压即正负极Nernst电位之差，构成OCV-SOC曲线" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🔬",
+        "text": "一块手机电池能反复充放上千次，靠的正是锂离子在正负极晶格间稳定地来回穿梭。能斯特方程则把这种微观的离子浓度变化，翻译成万用表上读到的那几伏电压。"
+      }
+    },
+    "relations": [
+      { "target": "solid_state_physics", "type": "depends_on", "weight": 0.8 },
+      { "target": "semiconductor_physics", "type": "depends_on", "weight": 0.4 }
+    ]
+  },
+  {
+    "id": "lithium_battery_model",
+    "name": "电池等效电路模型(ECM)",
+    "category": "储能",
+    "level": "L3",
+    "summary": "用开路电压源串联欧姆内阻与RC网络等效电池动态，是SOC估算与BMS实时仿真的核心模型。",
+    "detail": {
+      "description": "电池等效电路模型（ECM）以一个随SOC变化的开路电压源U_oc(SOC)，串联欧姆内阻R0表征电流突变引起的瞬时压降，再串联一至两个RC并联环节描述电化学极化与浓差极化的动态弛豫。一阶RC（Thevenin）模型在精度与计算量间取得良好平衡，被广泛用于在线SOC估算与BMS实时仿真。模型参数R0、R1、C1可通过混合脉冲功率特性（HPPC）测试辨识。",
+      "formulas": [
+        "U_t = U_{oc}(SOC) - I R_0 - U_1",
+        "\\dot{U}_1 = -\\frac{1}{R_1 C_1}U_1 + \\frac{1}{C_1}I",
+        "\\tau_1 = R_1 C_1"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "U_t = U_{oc}(SOC) - I R_0 - U_1",
+          "steps": [
+            { "latex": "U_t = U_{oc}(SOC) - I R_0 - U_1", "note": "沿等效电路KVL求和得端电压" },
+            { "latex": "U_{oc}(SOC)", "note": "开路电压源，由OCV-SOC曲线插值得到" },
+            { "latex": "I R_0", "note": "欧姆内阻瞬时压降，随电流阶跃立即跳变" },
+            { "latex": "U_1", "note": "RC环节极化电压，反映动态弛豫过程" },
+            { "latex": "I>0\\Rightarrow U_t<U_{oc}\\ (\\text{放电});\\ I<0\\Rightarrow U_t>U_{oc}\\ (\\text{充电})", "note": "符号约定" }
+          ]
+        },
+        {
+          "formula": "\\dot{U}_1 = -\\frac{1}{R_1 C_1}U_1 + \\frac{1}{C_1}I",
+          "steps": [
+            { "latex": "I = C_1\\dot{U}_1 + \\frac{U_1}{R_1}", "note": "RC并联节点电流：电容电流＋电阻电流" },
+            { "latex": "C_1\\dot{U}_1 = I - \\frac{U_1}{R_1}", "note": "移项" },
+            { "latex": "\\dot{U}_1 = -\\frac{1}{R_1 C_1}U_1 + \\frac{1}{C_1}I", "note": "一阶线性ODE" },
+            { "latex": "U_1(t) = I R_1\\left(1 - e^{-t/\\tau_1}\\right)", "note": "恒流阶跃响应" },
+            { "latex": "\\tau_1 = R_1 C_1", "note": "时间常数，表征极化电压的建立/消退快慢" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🔋",
+        "text": "当你给电动车快充时插枪瞬间电压猛地一跳——那是欧姆内阻R0；随后电压缓缓爬升——那是RC环节在慢慢极化。BMS里跑的SOC算法，正是基于这张几欧姆几法拉的小电路图在实时推演电量。"
+      }
+    },
+    "relations": [
+      { "target": "battery_electrochemistry", "type": "depends_on", "weight": 0.9 },
+      { "target": "circuit_theory", "type": "depends_on", "weight": 0.8 },
+      { "target": "s_differential_equations", "type": "depends_on", "weight": 0.7 }
+    ]
+  },
+  {
+    "id": "soc_estimation",
+    "name": "SOC荷电状态估算",
+    "category": "储能",
+    "level": "L3",
+    "summary": "通过安时积分累计电量并以开路电压校正漂移，估计电池剩余电量百分比，是BMS最核心的状态量。",
+    "detail": {
+      "description": "荷电状态（SOC）表示电池当前剩余可用容量占额定容量的百分比，是BMS最关键的状态量。基础方法为安时积分（库仑计数）：对电流积分累计已充放电量，简单直接但依赖初值且误差随时间累积。开路电压法（OCV）利用静置后端压与SOC的单调映射校正初值与漂移，但需长时间静置无法实时。工程上常将二者融合，并以卡尔曼类观测器构成闭环，兼顾实时性与精度。",
+      "formulas": [
+        "SOC(t) = SOC_0 - \\frac{1}{C_n}\\int_0^t \\eta\\, i(\\tau)\\, d\\tau",
+        "SOC = U_{oc}^{-1}(U_t)\\big|_{i=0}",
+        "\\eta = \\frac{Q_{discharge}}{Q_{charge}}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "SOC(t) = SOC_0 - \\frac{1}{C_n}\\int_0^t \\eta\\, i(\\tau)\\, d\\tau",
+          "steps": [
+            { "latex": "SOC = \\frac{Q_{remain}}{C_n}", "note": "定义：剩余电量比额定容量C_n" },
+            { "latex": "dQ = -\\eta\\, i\\, dt", "note": "放电i>0时电量减少，η为库仑效率" },
+            { "latex": "SOC(t) = SOC_0 - \\frac{1}{C_n}\\int_0^t \\eta\\, i\\, d\\tau", "note": "两边除以C_n并积分" },
+            { "latex": "SOC_0 = U_{oc}^{-1}(U_t)\\big|_{i=0}", "note": "初值由静置OCV反查确定" },
+            { "latex": "\\text{误差源}:\\ \\text{电流零漂},\\ C_n\\text{老化},\\ \\eta(T)", "note": "开环误差累积，需观测器闭环校正" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "⛽",
+        "text": "手机右上角那个电量百分比，就是SOC。它不像油表有浮子可量，电池里看不见摸不着——只能靠对每一毫安的电流积分加上电压校正，把剩余电量一点点推算出来。"
+      }
+    },
+    "relations": [
+      { "target": "lithium_battery_model", "type": "depends_on", "weight": 0.9 },
+      { "target": "s_signal_sampling", "type": "depends_on", "weight": 0.6 },
+      { "target": "s_observer", "type": "maps_to", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "kalman_filter",
+    "name": "卡尔曼滤波",
+    "category": "控制理论",
+    "level": "L3",
+    "summary": "融合系统模型预测与含噪测量的最优递推状态估计器，是SOC估算、无传感器控制等的算法核心。",
+    "detail": {
+      "description": "卡尔曼滤波是线性高斯系统的最优递推状态估计器，通过预测与更新两步在每个采样周期融合系统模型的先验与含噪测量：预测步由状态方程外推状态与误差协方差；更新步以卡尔曼增益按模型可信度与测量可信度的相对比例校正估计。它仅需上一时刻估计即可递推，存储与计算量小、适合嵌入式实时实现，是电池SOC估算、电机无传感器控制与组合导航等状态估计问题的算法基石。",
+      "formulas": [
+        "\\hat{x}_k^- = A\\hat{x}_{k-1} + Bu_k,\\quad P_k^- = AP_{k-1}A^T + Q",
+        "K_k = P_k^- H^T\\left(HP_k^- H^T + R\\right)^{-1}",
+        "\\hat{x}_k = \\hat{x}_k^- + K_k\\left(z_k - H\\hat{x}_k^-\\right)"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "K_k = P_k^- H^T\\left(HP_k^- H^T + R\\right)^{-1}",
+          "steps": [
+            { "latex": "P_k^- = AP_{k-1}A^T + Q", "note": "预测误差协方差，Q为过程噪声，表征模型不确定度" },
+            { "latex": "\\tilde{y}_k = z_k - H\\hat{x}_k^-", "note": "新息（残差）：实测与预测输出之差" },
+            { "latex": "S_k = HP_k^- H^T + R", "note": "新息协方差，R为测量噪声协方差" },
+            { "latex": "K_k = P_k^- H^T S_k^{-1}", "note": "卡尔曼增益：正比于模型不确定度、反比于测量噪声" },
+            { "latex": "R\\uparrow\\Rightarrow K\\downarrow\\ (\\text{信模型});\\ Q\\uparrow\\Rightarrow K\\uparrow\\ (\\text{信测量})", "note": "增益在两种不确定度间自动权衡" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🛰️",
+        "text": "GPS信号会跳、电池电流会有噪声，可手机导航的小蓝点却走得很稳——卡尔曼滤波在背后不停地把不靠谱的测量和靠谱的物理模型加权融合，每一步都给出当前最优的猜测。"
+      }
+    },
+    "relations": [
+      { "target": "s_state_space", "type": "depends_on", "weight": 0.9 },
+      { "target": "matrix_calculus", "type": "depends_on", "weight": 0.9 },
+      { "target": "s_probability", "type": "depends_on", "weight": 0.8 }
+    ]
+  },
+  {
+    "id": "ekf_soc",
+    "name": "扩展卡尔曼SOC估算",
+    "category": "储能",
+    "level": "L3",
+    "summary": "对非线性电池模型做局部线性化的扩展卡尔曼滤波，融合安时积分与端压测量实现SOC闭环高精度估计。",
+    "detail": {
+      "description": "由于OCV-SOC关系与电池动态呈非线性，标准卡尔曼滤波不再适用，工程主流采用扩展卡尔曼滤波（EKF）：在每个工作点对状态方程与输出方程做一阶泰勒展开（求雅可比矩阵）实现局部线性化，再套用卡尔曼预测—更新框架。以SOC与极化电压为状态、端电压为观测，EKF在线融合安时积分（模型先验）与端压测量（OCV信息），对电流漂移与初值误差自动校正，是当前BMS实现SOC高精度估算的核心算法。",
+      "formulas": [
+        "x_k = \\begin{bmatrix} SOC \\\\ U_1 \\end{bmatrix},\\quad x_k = f(x_{k-1}, i_k)",
+        "A_k = \\left.\\frac{\\partial f}{\\partial x}\\right|_{\\hat{x}},\\quad H_k = \\left.\\frac{\\partial U_t}{\\partial x}\\right|_{\\hat{x}}",
+        "U_t = U_{oc}(SOC) - I R_0 - U_1"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "A_k = \\left.\\frac{\\partial f}{\\partial x}\\right|_{\\hat{x}},\\quad H_k = \\left.\\frac{\\partial U_t}{\\partial x}\\right|_{\\hat{x}}",
+          "steps": [
+            { "latex": "x = [\\,SOC,\\ U_1\\,]^T,\\ \\text{输入}\\ i,\\ \\text{观测}\\ U_t", "note": "选SOC与极化电压为状态" },
+            { "latex": "SOC_k = SOC_{k-1} - \\frac{\\eta\\,\\Delta t}{C_n} i_k", "note": "状态方程之一：离散安时积分" },
+            { "latex": "U_{1,k} = e^{-\\Delta t/\\tau} U_{1,k-1} + R_1\\left(1-e^{-\\Delta t/\\tau}\\right) i_k", "note": "RC环节离散化" },
+            { "latex": "H_k = \\left[\\frac{dU_{oc}}{dSOC},\\ -1\\right],\\quad A_k = \\mathrm{diag}\\!\\left(1,\\ e^{-\\Delta t/\\tau}\\right)", "note": "对非线性输出求雅可比" },
+            { "latex": "\\frac{dU_{oc}}{dSOC}>0\\Rightarrow SOC\\ \\text{可观测}", "note": "OCV斜率提供观测灵敏度，平台区斜率小则估算难度大" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "📈",
+        "text": "电池真实世界里电压随电量是条弯弯的曲线，普通卡尔曼只会走直线。EKF的办法很务实：在当前工作点把曲线掰直一小段，照着直线算，下一步再重新掰——于是非线性的SOC也能被稳稳跟住。"
+      }
+    },
+    "relations": [
+      { "target": "kalman_filter", "type": "depends_on", "weight": 1 },
+      { "target": "soc_estimation", "type": "depends_on", "weight": 0.9 },
+      { "target": "lithium_battery_model", "type": "depends_on", "weight": 0.8 }
+    ]
+  },
+  {
+    "id": "soh_estimation",
+    "name": "SOH健康状态估算",
+    "category": "储能",
+    "level": "L3",
+    "summary": "通过容量衰减与内阻增长量化电池老化程度，用于剩余寿命预测并反馈修正SOC估算。",
+    "detail": {
+      "description": "健康状态（SOH）量化电池相对出厂时的老化程度，常用两种定义：容量型SOH为当前最大可用容量与额定容量之比；内阻型SOH基于欧姆内阻随老化的增长。电池老化主要源于活性锂损失、SEI膜增厚与活性材料脱落，宏观表现为容量衰减、内阻上升与功率下降。SOH既用于剩余寿命（RUL）预测与梯次利用判定，也反馈修正SOC估算中的容量参数C_n，构成BMS长期精度的保障。",
+      "formulas": [
+        "SOH_C = \\frac{C_{now}}{C_{rated}} \\times 100\\%",
+        "SOH_R = \\frac{R_{eol} - R_{now}}{R_{eol} - R_{new}} \\times 100\\%",
+        "C_{now} = C_{rated}\\left(1 - k\\sqrt{N}\\right)"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "C_{now} = C_{rated}\\left(1 - k\\sqrt{N}\\right)",
+          "steps": [
+            { "latex": "SOH_C = \\frac{C_{now}}{C_{rated}}", "note": "容量保持率定义" },
+            { "latex": "\\text{衰减主因}:\\ \\text{活性锂损失}+\\text{SEI增厚}+\\text{材料脱落}", "note": "不可逆副反应消耗可循环锂" },
+            { "latex": "C_{now} = C_{rated}\\left(1 - k\\sqrt{N}\\right)", "note": "经验模型：容量随循环数N常呈根号衰减" },
+            { "latex": "SOH_C \\le 80\\% \\Rightarrow \\text{EOL}", "note": "通常降至80%视为寿命终点" },
+            { "latex": "C_n \\leftarrow C_{now}", "note": "用实时容量更新安时积分分母，闭环提升SOC精度" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🩺",
+        "text": "用了两年的手机电池一天要充好几回，这就是SOH下降——容量缩水、内阻变大。BMS像体检医生，长期跟踪这两项指标，判断电池还能服役多久、何时该退役做梯次利用。"
+      }
+    },
+    "relations": [
+      { "target": "lithium_battery_model", "type": "depends_on", "weight": 0.8 },
+      { "target": "soc_estimation", "type": "depends_on", "weight": 0.6 },
+      { "target": "ekf_soc", "type": "strong_related", "weight": 0.5 }
+    ]
+  },
+  {
+    "id": "bidirectional_dcdc",
+    "name": "双向DC-DC变换器",
+    "category": "电力电子",
+    "level": "L3",
+    "summary": "支持能量双向流动的DC-DC拓扑，连接电池与直流母线，通过电流闭环精确控制充放电功率。",
+    "detail": {
+      "description": "双向DC-DC变换器允许功率在低压电池侧与高压直流母线侧之间双向流动：放电时工作于Boost模式升压向母线供电，充电时工作于Buck模式降压为电池充电。最常见的半桥拓扑用两只互补开关管替代单向Buck中的二极管，实现同步整流与反向导通，将Buck与Boost合二为一。通过电感电流闭环可精确调节充放电功率与方向，是储能变流器（PCS）功率级与主动均衡的核心单元。",
+      "formulas": [
+        "\\frac{V_{batt}}{V_{bus}} = D \\quad(\\text{Buck/充电})",
+        "\\frac{V_{bus}}{V_{batt}} = \\frac{1}{1-D} \\quad(\\text{Boost/放电})",
+        "\\Delta i_L = \\frac{V_{batt}(1-D)}{L f_s}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\frac{V_{bus}}{V_{batt}} = \\frac{1}{1-D} \\quad(\\text{Boost/放电})",
+          "steps": [
+            { "latex": "\\text{放电模式}:\\ \\text{电池经电感储能后向高压母线升压}", "note": "能量自低压侧流向高压侧" },
+            { "latex": "\\text{导通}(DT_s):\\ \\Delta i_L^{+} = \\frac{V_{batt}}{L}DT_s", "note": "电感两端为V_batt，电流上升" },
+            { "latex": "\\text{关断}((1-D)T_s):\\ \\Delta i_L^{-} = \\frac{V_{bus}-V_{batt}}{L}(1-D)T_s", "note": "电感向母线放电，电流下降" },
+            { "latex": "V_{batt}DT_s = (V_{bus}-V_{batt})(1-D)T_s", "note": "稳态伏秒平衡" },
+            { "latex": "\\frac{V_{bus}}{V_{batt}} = \\frac{1}{1-D}", "note": "整理得升压比，占空比D调节功率与方向" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🔁",
+        "text": "电动车踩刹车时电机变发电机，电流要反着灌回电池——靠的就是这只能正能反的双向DC-DC。同一套开关管，白天升压放电、夜里降压充电，方向全由占空比一念之间切换。"
+      }
+    },
+    "relations": [
+      { "target": "s_buck_converter", "type": "depends_on", "weight": 0.8 },
+      { "target": "s_boost_converter", "type": "depends_on", "weight": 0.8 },
+      { "target": "igbt_mosfet", "type": "depends_on", "weight": 0.7 },
+      { "target": "power_electronics_basics", "type": "depends_on", "weight": 0.7 }
+    ]
+  },
+  {
+    "id": "cell_balancing",
+    "name": "电芯均衡技术",
+    "category": "储能",
+    "level": "L3",
+    "summary": "通过被动耗散或主动转移消除串联电芯间SOC不一致，缓解木桶效应、提升组容量利用与安全。",
+    "detail": {
+      "description": "串联电池组中各电芯因制造离散与温度差异存在SOC与容量不一致，木桶效应使最弱电芯限制整组的可用容量与寿命。均衡技术分两类：被动均衡为高电量电芯并联泄放电阻、将多余能量耗散为热，简单廉价但有损耗且速度慢；主动均衡用电容、电感或DC-DC将能量从高电芯转移到低电芯，效率高、速度快但成本与复杂度更高。均衡以电压或SOC一致性为目标，是延长电池组寿命与保障安全的关键手段。",
+      "formulas": [
+        "\\Delta SOC = SOC_{max} - SOC_{min}",
+        "P_{bleed} = \\frac{U_{cell}^2}{R_{bleed}}",
+        "E_{trans} = \\eta\\cdot\\tfrac{1}{2}C\\left(U_{high}^2 - U_{low}^2\\right)"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "P_{bleed} = \\frac{U_{cell}^2}{R_{bleed}}",
+          "steps": [
+            { "latex": "\\text{目标}:\\ \\Delta SOC = SOC_{max}-SOC_{min}\\to 0", "note": "使各电芯荷电收敛一致" },
+            { "latex": "i_b = \\frac{U_{cell}}{R_{bleed}}", "note": "被动法对高电芯并联泄放电阻产生泄放电流" },
+            { "latex": "P_{bleed} = \\frac{U_{cell}^2}{R_{bleed}}", "note": "泄放功率全部转为热，需配套热设计" },
+            { "latex": "\\Delta Q = (SOC_{high}-SOC_{target})C_n,\\quad t = \\frac{\\Delta Q}{i_b}", "note": "均衡所需电荷与耗时" },
+            { "latex": "\\text{主动法}:\\ \\text{DC-DC转移},\\ \\eta\\ \\text{高、发热小}", "note": "适合大容量系统，能量在电芯间搬运而非耗散" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "⚖️",
+        "text": "一组几百节电芯就像一队齐步走的士兵，谁掉队整队就得等谁。均衡电路要么把跑太快的拽住（被动放电），要么把能量从快的匀给慢的（主动转移），让大家始终步调一致。"
+      }
+    },
+    "relations": [
+      { "target": "bidirectional_dcdc", "type": "depends_on", "weight": 0.7 },
+      { "target": "s_buck_converter", "type": "depends_on", "weight": 0.6 },
+      { "target": "power_electronics_basics", "type": "depends_on", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "pcs",
+    "name": "储能变流器(PCS)",
+    "category": "电力电子",
+    "level": "L3",
+    "summary": "连接电池直流侧与交流电网的双向功率变流器，以dq解耦电流环实现并网充放电与电能质量控制。",
+    "detail": {
+      "description": "储能变流器（PCS）是连接电池直流母线与交流电网的双向AC/DC变流器，通常采用三相电压源型逆变器拓扑配SVPWM调制。整流模式下从电网吸收功率为电池充电，逆变模式下将电池能量馈入电网放电，并通过dq解耦的电流闭环精确控制有功与无功。PCS还承担并网点电压支撑、谐波抑制与低电压穿越等电能质量功能，是储能系统对外的功率接口，与电机驱动的逆变器/SVPWM共享同一套功率与控制技术。",
+      "formulas": [
+        "P = \\tfrac{3}{2}(u_d i_d + u_q i_q),\\quad Q = \\tfrac{3}{2}(u_q i_d - u_d i_q)",
+        "u_d = u_d^* - \\omega L i_q,\\quad u_q = u_q^* + \\omega L i_d",
+        "P_{dc} = V_{dc}I_{dc} = P_{ac} + P_{loss}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "P = \\tfrac{3}{2}(u_d i_d + u_q i_q),\\quad Q = \\tfrac{3}{2}(u_q i_d - u_d i_q)",
+          "steps": [
+            { "latex": "\\text{电网电压定向}:\\ u_q = 0,\\ u_d = |U_s|", "note": "dq轴对齐电网电压矢量" },
+            { "latex": "P = \\tfrac{3}{2}u_d i_d", "note": "有功仅由d轴电流决定" },
+            { "latex": "Q = -\\tfrac{3}{2}u_d i_q", "note": "无功仅由q轴电流决定，实现P/Q解耦" },
+            { "latex": "i_d>0\\ \\text{放电送网},\\ i_d<0\\ \\text{充电}", "note": "充放电方向由d轴电流符号切换" },
+            { "latex": "u_d = u_d^* - \\omega L i_q,\\ u_q = u_q^* + \\omega L i_d", "note": "前馈解耦抵消dq交叉耦合，电流环独立设计" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🔌",
+        "text": "一座电网侧储能电站要在毫秒间从充电切到放电、从送有功切到补无功——这只大功率PCS就是它与电网握手的那只手，用的正是和电动车电机控制如出一辙的dq解耦与SVPWM。"
+      }
+    },
+    "relations": [
+      { "target": "bidirectional_dcdc", "type": "depends_on", "weight": 1 },
+      { "target": "three_phase_inverter", "type": "depends_on", "weight": 0.9 },
+      { "target": "svpwm", "type": "depends_on", "weight": 0.8 },
+      { "target": "current_loop", "type": "depends_on", "weight": 0.8 },
+      { "target": "pi_controller", "type": "depends_on", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "battery_charging",
+    "name": "充放电策略(CC-CV)",
+    "category": "储能",
+    "level": "L3",
+    "summary": "恒流-恒压两阶段充电协议，兼顾充电速度、容量利用与电池寿命。",
+    "detail": {
+      "description": "锂电池标准充电采用恒流-恒压（CC-CV）两阶段：先以恒定电流快速充电，端电压随SOC上升；当端压达到充电截止电压后转入恒压阶段，电流逐渐衰减直至降到截止电流（如0.05C）判定充满。CC阶段决定充电速度，CV阶段保证不过充以延长寿命。先进策略包括多阶段恒流、脉冲充电与基于温度/SOH的自适应充电，在快充需求与析锂、老化抑制之间寻求平衡。",
+      "formulas": [
+        "\\text{CC}:\\ i = I_{const},\\ U_t\\uparrow\\ \\text{直到}\\ U_t = U_{cv}",
+        "\\text{CV}:\\ U_t = U_{cv},\\ i = \\frac{U_{cv} - U_{oc}(SOC)}{R_0}\\downarrow",
+        "\\text{截止}:\\ i \\le I_{cutoff}\\approx 0.05C"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\text{CV}:\\ U_t = U_{cv},\\ i = \\frac{U_{cv} - U_{oc}(SOC)}{R_0}\\downarrow",
+          "steps": [
+            { "latex": "\\text{CC段}:\\ i = I_{const},\\ U_t = U_{oc}(SOC)+IR_0+U_1\\ \\uparrow", "note": "恒流充电，端压随SOC升高" },
+            { "latex": "U_t \\to U_{cv}", "note": "触及截止电压（LFP约3.65V、NCM约4.2V）即切换" },
+            { "latex": "\\text{CV段}:\\ U_t = U_{cv}\\ \\text{钳位}", "note": "恒压充电" },
+            { "latex": "i = \\frac{U_{cv}-U_{oc}(SOC)}{R_0}\\ \\downarrow", "note": "随OCV上升与极化消退，电流自然衰减" },
+            { "latex": "i \\le I_{cutoff}\\Rightarrow \\text{充满}", "note": "截止电流判满，避免长时恒压析锂、护寿命" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🔋",
+        "text": "手机从0冲到80%飞快、最后20%却磨磨蹭蹭——这正是CC-CV：前半程恒流猛灌求速度，后半程恒压细灌防过充。慢下来的那段，是充电器在替电池的寿命踩刹车。"
+      }
+    },
+    "relations": [
+      { "target": "lithium_battery_model", "type": "depends_on", "weight": 0.8 },
+      { "target": "pi_controller", "type": "depends_on", "weight": 0.7 },
+      { "target": "bidirectional_dcdc", "type": "depends_on", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "battery_thermal",
+    "name": "电池热管理与热失控",
+    "category": "储能",
+    "level": "L3",
+    "summary": "控制电池温度于最佳区间并防止热失控连锁反应，是储能安全的核心命题。",
+    "detail": {
+      "description": "电池性能、寿命与安全均强烈依赖温度。充放电产热包含欧姆焦耳热I²R与电化学反应的可逆熵热，热管理通过风冷、液冷或相变材料将电芯维持在最佳区间（约15至35摄氏度）并控制单体温差。当局部过热触发SEI分解、隔膜熔毁与正极放氧的放热连锁，电池进入热失控——温度急剧飙升、起火甚至蔓延至相邻电芯。建模产热与散热平衡、设置温度预警与防蔓延隔离结构，是BMS与PACK设计的安全核心。",
+      "formulas": [
+        "\\dot{Q}_{gen} = I^2 R_0 - I T\\frac{\\partial U_{oc}}{\\partial T}",
+        "m c_p\\frac{dT}{dt} = \\dot{Q}_{gen} - h A (T - T_{amb})",
+        "\\dot{Q}_{gen}(T) > \\dot{Q}_{diss}(T)\\Rightarrow \\text{热失控}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "m c_p\\frac{dT}{dt} = \\dot{Q}_{gen} - h A (T - T_{amb})",
+          "steps": [
+            { "latex": "\\dot{Q}_{gen} = I^2 R_0 - I T\\frac{\\partial U_{oc}}{\\partial T}", "note": "Bernardi产热：不可逆焦耳热＋可逆熵热" },
+            { "latex": "\\dot{Q}_{diss} = h A (T - T_{amb})", "note": "牛顿冷却定律描述对流散热" },
+            { "latex": "m c_p\\frac{dT}{dt} = \\dot{Q}_{gen} - \\dot{Q}_{diss}", "note": "集总参数热容方程" },
+            { "latex": "\\frac{dT}{dt}=0\\Rightarrow T = T_{amb} + \\frac{\\dot{Q}_{gen}}{hA}", "note": "稳态平衡温度" },
+            { "latex": "\\dot{Q}_{gen}(T)\\ \\text{随T正反馈} > \\dot{Q}_{diss}(T)", "note": "产热超过散热能力则温升不可逆，触发热失控" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🌡️",
+        "text": "新闻里电动车自燃往往始于一颗电芯过热——SEI分解放热、隔膜熔穿、正极放氧，温度雪崩般飙到数百度并点燃邻居。热管理与防蔓延设计，就是要在这条正反馈链失控前把热量及时导走、把火墙立起来。"
+      }
+    },
+    "relations": [
+      { "target": "s_thermal_management", "type": "depends_on", "weight": 0.9 },
+      { "target": "battery_electrochemistry", "type": "depends_on", "weight": 0.5 }
+    ]
+  },
+  {
+    "id": "bms_architecture",
+    "name": "BMS系统架构",
+    "category": "储能",
+    "level": "L3",
+    "summary": "以采样、估算、均衡、保护与通信为核心、主从分布式的电池管理系统软硬件架构。",
+    "detail": {
+      "description": "电池管理系统（BMS）是电池组的大脑，典型采用主从分布式架构：从控单元（BMU/AFE）就近采集各电芯电压、温度并执行被动均衡；主控单元（BCU/MCU）汇总数据、运行SOC/SOH估算算法、执行充放电与热管理控制、判定过充过放等保护逻辑，并经CAN总线与PCS、EMS及整车或电站后台通信。高可靠BMS还含独立硬件保护、绝缘检测与功能安全设计，是连接电芯物理本体与系统调度的中枢。",
+      "formulas": [
+        "\\Delta U_{cell} \\le 1\\,mV \\quad(\\text{SOC估算精度要求})",
+        "SOC_{pack} = \\min_i SOC_i\\ (\\text{放电}),\\ \\max_i SOC_i\\ (\\text{充电})",
+        "R_{iso} = \\frac{U_{bus}}{I_{leak}} \\ge 100\\,\\Omega/V"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\Delta U_{cell} \\le 1\\,mV \\quad(\\text{SOC估算精度要求})",
+          "steps": [
+            { "latex": "SOC = U_{oc}^{-1}(U_t)", "note": "SOC估算依赖OCV反查" },
+            { "latex": "\\frac{dU_{oc}}{dSOC}\\ \\text{在平台区极小}", "note": "LFP电池平台区电压几乎不随SOC变化" },
+            { "latex": "\\frac{dU_{oc}}{dSOC}\\approx 5\\,mV/10\\%SOC", "note": "平台区典型斜率" },
+            { "latex": "\\text{欲}\\ \\delta SOC<2\\%\\Rightarrow \\Delta U_{cell}\\le 1\\,mV", "note": "由算法精度反推采样精度" },
+            { "latex": "\\Rightarrow \\text{AFE需14-16bit ADC且温漂受控}", "note": "硬件指标由估算需求决定，系统取min SOC防最弱电芯过放" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🧠",
+        "text": "一个电池包里几百节电芯各报各的电压温度，谁该均衡、谁要断电、整包还剩多少电——全靠BMS这套主从神经网络逐毫伏地盯着。它对采样精度的苛刻，正是被SOC算法那条平坦的电压曲线逼出来的。"
+      }
+    },
+    "relations": [
+      { "target": "s_mcu_architecture", "type": "depends_on", "weight": 0.9 },
+      { "target": "s_signal_sampling", "type": "depends_on", "weight": 0.7 },
+      { "target": "soc_estimation", "type": "depends_on", "weight": 0.6 },
+      { "target": "cell_balancing", "type": "strong_related", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "grid_storage_application",
+    "name": "储能并网应用·削峰调频",
+    "category": "电力系统",
+    "level": "L3",
+    "summary": "储能在电网侧提供削峰填谷、一次调频与新能源消纳等多重灵活性价值。",
+    "detail": {
+      "description": "电池储能在电网中提供多重价值：能量时移（削峰填谷）在低电价或低负荷时充电、高电价或高负荷时放电，平抑负荷曲线；一次调频利用储能毫秒级响应快速补偿系统频率偏差，并以虚拟惯量抑制频率变化率；平滑新能源出力波动、提升可再生能源消纳；以及提供备用容量与无功支撑。储能经PCS接入电网、由EMS依据电价与调度指令优化运行，是构建新型电力系统的关键灵活性资源。",
+      "formulas": [
+        "\\Delta P = -\\frac{1}{R}\\Delta f",
+        "\\text{Profit} = \\sum_t\\left(\\pi_t^{dis}P_t^{dis} - \\frac{\\pi_t^{ch}P_t^{ch}}{\\eta_{rt}}\\right)",
+        "P_{inertia} = -J\\frac{df}{dt}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "\\Delta P = -\\frac{1}{R}\\Delta f",
+          "steps": [
+            { "latex": "\\text{频率反映功率供需}:\\ \\text{缺供}\\Rightarrow f\\downarrow", "note": "电网频率是有功平衡的指针" },
+            { "latex": "\\Delta P = -\\frac{1}{R}\\Delta f", "note": "储能模拟同步机下垂特性，R为调差系数" },
+            { "latex": "f<f_N\\Rightarrow \\Delta P>0", "note": "频率偏低则增发有功支撑频率" },
+            { "latex": "t_{resp} < 100\\,ms", "note": "储能响应远快于火电机组，调频效果显著" },
+            { "latex": "P_{inertia} = -J\\frac{df}{dt}", "note": "配合虚拟惯量抑制频率变化率RoCoF" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "⚡",
+        "text": "傍晚千家万户同时开火做饭，电网频率被拽得往下掉。远处一座储能电站在百毫秒内顶上有功、稳住频率；深夜电价低谷它又默默充电，等着明天的尖峰——这就是电网的充电宝。"
+      }
+    },
+    "relations": [
+      { "target": "pcs", "type": "depends_on", "weight": 0.9 },
+      { "target": "s_power_system_structure", "type": "depends_on", "weight": 0.7 },
+      { "target": "control_theory_basics", "type": "depends_on", "weight": 0.6 }
+    ]
+  },
+  {
+    "id": "bess",
+    "name": "电池储能系统(BESS)",
+    "category": "储能",
+    "level": "L3",
+    "summary": "由电池组、PCS、BMS与EMS集成的完整储能系统，是新型电力系统的核心灵活性资源，亦是贯通器件—变流—控制—系统的第二条金线。",
+    "detail": {
+      "description": "电池储能系统（BESS）是将电能以电化学形式存储并按需释放的完整工程系统，由四大子系统集成：电池组（电芯成组提供能量本体）、储能变流器PCS（双向AC/DC功率接口）、电池管理系统BMS（监测、估算、均衡与保护）、能量管理系统EMS（调度优化与对外通信）。其性能由能量与功率容量、循环效率、寿命与安全性共同决定。BESS广泛应用于电网调峰调频、新能源配储、工商业削峰与微电网，是继永磁同步电机矢量控制之后又一条贯通器件、变流、控制与系统的电气工程金线。",
+      "formulas": [
+        "E_{usable} = C_n V_{nom}\\cdot DoD\\cdot SOH",
+        "\\eta_{rt} = \\eta_{batt}\\cdot\\eta_{pcs}\\cdot\\eta_{aux}",
+        "t = \\frac{E}{P},\\quad C\\text{-rate} = \\frac{I}{C_n}"
+      ],
+      "formulas_steps": [
+        {
+          "formula": "E_{usable} = C_n V_{nom}\\cdot DoD\\cdot SOH",
+          "steps": [
+            { "latex": "E_{rated} = C_n V_{nom}", "note": "额定能量：容量(Ah)乘标称电压(V)得Wh" },
+            { "latex": "\\times DoD", "note": "放电深度限制可用SOC区间（如10%-90%，DoD=80%）以护寿命" },
+            { "latex": "\\times SOH", "note": "老化后按健康状态折减实际可用能量" },
+            { "latex": "\\eta_{rt} = \\eta_{batt}\\eta_{pcs}\\eta_{aux}", "note": "往返效率，典型85%-92%" },
+            { "latex": "t = \\frac{E}{P}", "note": "能量与功率双约束决定时长，定位调峰(长时)或调频(短时)" }
+          ]
+        }
+      ],
+      "scene": {
+        "icon": "🏭",
+        "text": "一排排集装箱整齐排列在变电站旁，白天吞下过剩的光伏、夜里吐出电力顶上尖峰——这就是电网级BESS。拆开看，它把电芯、PCS、BMS、EMS拧成一体，正是这张图谱里第二条从材料一路通到电网的金线。"
+      }
+    },
+    "relations": [
+      { "target": "pcs", "type": "depends_on", "weight": 1 },
+      { "target": "bms_architecture", "type": "depends_on", "weight": 1 },
+      { "target": "soc_estimation", "type": "depends_on", "weight": 0.9 },
+      { "target": "soh_estimation", "type": "depends_on", "weight": 0.8 },
+      { "target": "cell_balancing", "type": "depends_on", "weight": 0.8 },
+      { "target": "battery_thermal", "type": "depends_on", "weight": 0.8 },
+      { "target": "grid_storage_application", "type": "depends_on", "weight": 0.9 },
+      { "target": "s_grid_tied_inverter", "type": "strong_related", "weight": 0.6 }
+    ]
   }
 ]
