@@ -17,7 +17,6 @@ export const useGraphStore = defineStore('graph', () => {
 
   // ===== 路径状态 =====
   const selectedPath = ref(null)
-  const savedPaths = ref([])
 
   // ===== 过滤状态 =====
   const showL1Nodes = ref(true)
@@ -148,7 +147,6 @@ export const useGraphStore = defineStore('graph', () => {
 
   function setSelectedPath(path) {
     selectedPath.value = path
-    savedPaths.value.push(path)
   }
 
   function toggleLevel(level) {
@@ -196,7 +194,7 @@ export const useGraphStore = defineStore('graph', () => {
 
   return {
     nodes, edges, focusNodeId, highlightedPathIds, traceMode,
-    graphInstance, graphReady, selectedPath, savedPaths,
+    graphInstance, graphReady, selectedPath,
     showL1Nodes, showL2Nodes, showL3Nodes,
     activeThread, threadMembership,
     focusNode, visibleNodes, visibleNodeIds, visibleEdges, nodeAdjacency,

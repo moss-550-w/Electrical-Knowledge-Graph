@@ -1,17 +1,23 @@
 <script setup>
-import { ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { useGraphStore } from '@/stores/graphStore'
+import { usePathStore } from '@/stores/pathStore'
 import { useTheme } from '@/composables/useTheme'
 import GraphCanvas from '@/components/GraphCanvas.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import ContextPanel from '@/components/ContextPanel.vue'
 import DetailOverlay from '@/components/DetailOverlay.vue'
 import PathPlanner from '@/components/PathPlanner.vue'
+import SavedPaths from '@/components/SavedPaths.vue'
 import TourGuide from '@/components/TourGuide.vue'
+import { decodePath, rehydratePath } from '@/utils/pathShare'
 
 const router = useRouter()
+const route = useRoute()
 const graphStore = useGraphStore()
+const pathStore = usePathStore()
 const { isLight, toggle: toggleTheme } = useTheme()
 
 const tourVisible = ref(false)
@@ -19,11 +25,28 @@ const drawerVisible = ref(false)
 const detailNodeId = ref('')
 const detailVisible = ref(false)
 const plannerVisible = ref(false)
+const savedPathsVisible = ref(false)
 
 // 节点聚焦时自动打开面板
 watch(() => graphStore.focusNodeId, (id) => {
   drawerVisible.value = !!id
 })
+
+// 分享链接导入：等图谱数据就绪后处理（nodes 有数据才能 rehydrate）
+watch(() => graphStore.nodes.length, (len) => {
+  if (len === 0) return
+  const encoded = route.query.p
+  if (!encoded) return
+  const meta = decodePath(decodeURIComponent(encoded))
+  if (!meta) { ElMessage.warning('分享链接无效'); router.replace({ query: {} }); return }
+  const full = rehydratePath(meta, graphStore.nodes)
+  if (!full) { ElMessage.warning('路径节点不存在于当前图谱'); router.replace({ query: {} }); return }
+  if (!pathStore.exists(meta)) pathStore.savePath(full, meta.n || full.name)
+  graphStore.clearFocus()
+  graphStore.highlightedPathIds = [...meta.i]
+  ElMessage.success(`已导入分享路径：${meta.n || full.name}`)
+  router.replace({ query: {} })
+}, { once: true })
 
 function openDetail(nodeId) {
   detailNodeId.value = nodeId
@@ -102,6 +125,7 @@ function goToReview() {
         <el-button type="primary" size="small" @click="openPlanner">
           学习路径
         </el-button>
+        <el-button size="small" @click="savedPathsVisible = true">我的路径</el-button>
         <el-button
           size="small"
           :type="drawerVisible ? 'primary' : 'default'"
@@ -145,6 +169,8 @@ function goToReview() {
     />
 
     <TourGuide :visible="tourVisible" @close="tourVisible = false" />
+
+    <SavedPaths :visible="savedPathsVisible" @close="savedPathsVisible = false" />
   </div>
 </template>
 

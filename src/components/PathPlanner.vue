@@ -1,13 +1,16 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useGraphStore } from '@/stores/graphStore'
+import { usePathStore } from '@/stores/pathStore'
 import { generatePaths } from '@/utils/pathAlgorithm'
 import { getMaturityConfig } from '@/utils/maturityTags'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 const props = defineProps({ visible: Boolean })
 const emit = defineEmits(['close', 'go-review'])
 
 const graphStore = useGraphStore()
+const pathStore = usePathStore()
 
 const targetId = ref('')
 const paths = ref([])
@@ -62,7 +65,19 @@ async function generate() {
   generated.value = true
 }
 
-function selectPath(p) { graphStore.setSelectedPath(p) }
+async function selectPath(p) {
+  const defaultName = `${targets.value.find((t) => t.id === targetId.value)?.name || ''} · ${p.label}`
+  try {
+    const { value: name } = await ElMessageBox.prompt('为路径命名', '保存路径', {
+      inputValue: defaultName,
+      confirmButtonText: '保存',
+      cancelButtonText: '取消',
+      inputValidator: (v) => (v && v.trim() ? true : '名称不能为空'),
+    })
+    pathStore.savePath(p, name.trim())
+    ElMessage.success(`已保存「${name.trim()}」`)
+  } catch { /* 取消 */ }
+}
 function goToReview(p) { graphStore.setSelectedPath(p); emit('go-review') }
 
 const strategyIcons = { theory: '🔬', application: '🔧', control: '🎛️' }
