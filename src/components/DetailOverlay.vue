@@ -5,6 +5,7 @@ import 'katex/dist/katex.min.css'
 import { useContentStore } from '@/stores/contentStore'
 import { useGraphStore } from '@/stores/graphStore'
 import { getMaturityConfig, getRelationConfig } from '@/utils/maturityTags'
+import AnimPlayer from './AnimPlayer.vue'
 
 const props = defineProps({
   nodeId: { type: String, default: '' },
@@ -213,6 +214,16 @@ const crossFieldNodes = computed(() =>
         <div class="detail-section">
           <h4>概述</h4>
           <p>{{ detail?.description || nodeData?.summary }}</p>
+        </div>
+
+        <div v-if="detail?.anim" class="detail-section">
+          <h4>原理演示</h4>
+          <AnimPlayer
+            v-if="contentVisible"
+            :key="nodeId"
+            :src="detail.anim.src"
+            :caption="detail.anim.caption"
+          />
         </div>
 
         <div v-if="formulasWithSteps.length" class="detail-section">

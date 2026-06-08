@@ -25,6 +25,7 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes('echarts') || id.includes('zrender')) return 'echarts'
           if (id.includes('three')) return 'three'
+          if (id.includes('lottie-web') || id.includes('lottie_web')) return 'lottie'
           // element-plus chunk 不再手动指定，让按需加载自动拆分
         },
       },
