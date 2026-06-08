@@ -54,7 +54,7 @@ export function loadGraphData() {
  * @returns {Object} ECharts option
  */
 export function buildGraphOption(nodes, edges, state = {}) {
-  const { focusNodeId, highlightedPathIds = [], traceMode = false, visitedIds = new Set() } = state
+  const { focusNodeId, highlightedPathIds = [], traceMode = false, visitedIds = new Set(), isMobile = false } = state
   const highlightSet = new Set(highlightedPathIds)
   const highlightActive = highlightSet.size > 0
 
@@ -177,7 +177,8 @@ export function buildGraphOption(nodes, edges, state = {}) {
       textStyle: { color: isLight ? '#303133' : '#e6edf3', fontSize: 13 },
     },
     legend: {
-      show: true,
+      show: !isMobile,
+      type: 'scroll',
       bottom: 10,
       data: categories.map((c) => c.name),
       textStyle: { fontSize: 11, color: isLight ? '#606266' : '#8b949e' },

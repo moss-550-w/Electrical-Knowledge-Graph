@@ -90,7 +90,9 @@ onMounted(() => {
 <style scoped>
 .search-bar {
   position: relative;
-  width: 360px;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 360px;
   z-index: 100;
 }
 

@@ -65,6 +65,8 @@ function initScene() {
   controls.dampingFactor = 0.08
   controls.minDistance = 4
   controls.maxDistance = 50
+  // 触控手势：单指旋转，双指缩放+平移（OrbitControls 已自动置 touchAction:none）
+  controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }
 
   scene.add(new THREE.AmbientLight(0x404060, 2))
   const dir = new THREE.DirectionalLight(0xffffff, 3)
@@ -189,7 +191,7 @@ function onResize() {
         <h2>3D 学习路径复盘</h2>
         <span v-if="pathData" class="path-label">{{ pathData.label }}</span>
       </div>
-      <div class="review-hint">拖拽旋转 · 滚轮缩放 · 右键平移</div>
+      <div class="review-hint">单指/拖拽旋转 · 双指/滚轮缩放</div>
     </div>
 
     <!-- 节点点击后信息面板 -->
@@ -281,5 +283,15 @@ function onResize() {
 .no-data {
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; height: 100%; color: #ccc; gap: 16px;
+}
+
+/* 移动端：顶栏防溢出 */
+@media (max-width: 768px) {
+  .review-topbar { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+  .review-title { gap: 6px; }
+  .review-title h2 { font-size: 14px; }
+  .path-label { font-size: 11px; padding: 2px 8px; }
+  .review-hint { display: none; }
+  .node-info { min-width: 0; width: min(90vw, 280px); padding: 10px 14px; }
 }
 </style>

@@ -4,9 +4,10 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useGraphStore } from '@/stores/graphStore'
 import { usePathStore } from '@/stores/pathStore'
-import { useTheme } from '@/composables/useTheme'
+import { useIsMobile } from '@/composables/useMediaQuery'
 import GraphCanvas from '@/components/GraphCanvas.vue'
 import SearchBar from '@/components/SearchBar.vue'
+import TopbarControls from '@/components/TopbarControls.vue'
 import ContextPanel from '@/components/ContextPanel.vue'
 import DetailOverlay from '@/components/DetailOverlay.vue'
 import PathPlanner from '@/components/PathPlanner.vue'
@@ -18,7 +19,7 @@ const router = useRouter()
 const route = useRoute()
 const graphStore = useGraphStore()
 const pathStore = usePathStore()
-const { isLight, toggle: toggleTheme } = useTheme()
+const isMobile = useIsMobile()
 
 const tourVisible = ref(false)
 const drawerVisible = ref(false)
@@ -26,6 +27,7 @@ const detailNodeId = ref('')
 const detailVisible = ref(false)
 const plannerVisible = ref(false)
 const savedPathsVisible = ref(false)
+const mobileMenuOpen = ref(false)
 
 // 节点聚焦时自动打开面板
 watch(() => graphStore.focusNodeId, (id) => {
@@ -71,74 +73,44 @@ function goToReview() {
   <div class="app-layout">
     <header class="topbar">
       <div class="topbar-left">
-        <span class="logo">⚡ 电气知识图谱</span>
+        <span class="logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">电气知识图谱</span>
+        </span>
       </div>
       <SearchBar />
-      <div class="topbar-right">
-        <el-button-group class="thread-switch">
-          <el-button
-            :type="graphStore.activeThread === 'all' ? 'primary' : 'default'"
-            size="small"
-            @click="graphStore.setThread('all')"
-          >全图</el-button>
-          <el-button
-            :type="graphStore.activeThread === 'motor' ? 'primary' : 'default'"
-            size="small"
-            @click="graphStore.setThread('motor')"
-          >⚙️ 电机控制</el-button>
-          <el-button
-            :type="graphStore.activeThread === 'storage' ? 'success' : 'default'"
-            size="small"
-            @click="graphStore.setThread('storage')"
-          >🔋 储能BMS</el-button>
-          <el-button
-            :type="graphStore.activeThread === 'wpt' ? 'warning' : 'default'"
-            size="small"
-            @click="graphStore.setThread('wpt')"
-          >🔌 无线充电</el-button>
-        </el-button-group>
-        <el-switch
-          v-model="graphStore.traceMode"
-          active-text="溯源模式"
-          inactive-text="普通模式"
-          @change="graphStore.toggleTraceMode()"
-          size="small"
-          class="trace-switch"
-        />
-        <el-button-group class="level-filter">
-          <el-button
-            :type="graphStore.showL3Nodes ? 'warning' : 'default'"
-            size="small"
-            @click="graphStore.toggleLevel('L3')"
-          >L3</el-button>
-          <el-button
-            :type="graphStore.showL2Nodes ? 'primary' : 'default'"
-            size="small"
-            @click="graphStore.toggleLevel('L2')"
-          >L2</el-button>
-          <el-button
-            size="small"
-            @click="graphStore.toggleLevel('L1')"
-            :style="{ color: graphStore.showL1Nodes ? '#909399' : '' }"
-          >L1</el-button>
-        </el-button-group>
-        <el-button type="primary" size="small" @click="openPlanner">
-          学习路径
-        </el-button>
-        <el-button size="small" @click="savedPathsVisible = true">我的路径</el-button>
-        <el-button
-          size="small"
-          :type="drawerVisible ? 'primary' : 'default'"
-          @click="drawerVisible = !drawerVisible"
-        >
-          {{ drawerVisible ? '隐藏面板' : '详情面板' }}
-        </el-button>
-        <el-button size="small" @click="tourVisible = true">新手引导</el-button>
-        <el-button size="small" @click="toggleTheme" class="theme-btn">
-          {{ isLight ? '🌙 深色' : '☀️ 白色' }}
-        </el-button>
-      </div>
+      <!-- 桌面：控件横排 -->
+      <TopbarControls
+        v-if="!isMobile"
+        :panel-open="drawerVisible"
+        @open-planner="openPlanner"
+        @open-saved="savedPathsVisible = true"
+        @open-tour="tourVisible = true"
+        @toggle-panel="drawerVisible = !drawerVisible"
+      />
+      <!-- 移动：汉堡按钮 → 抽屉 -->
+      <button v-else class="hamburger" aria-label="菜单" @click="mobileMenuOpen = true">☰</button>
     </header>
+
+    <!-- 移动端控件抽屉 -->
+    <el-drawer
+      v-if="isMobile"
+      v-model="mobileMenuOpen"
+      direction="rtl"
+      size="300px"
+      title="菜单"
+      class="mobile-menu-drawer"
+    >
+      <TopbarControls
+        stacked
+        :panel-open="drawerVisible"
+        @open-planner="openPlanner"
+        @open-saved="savedPathsVisible = true"
+        @open-tour="tourVisible = true"
+        @toggle-panel="drawerVisible = !drawerVisible"
+        @close="mobileMenuOpen = false"
+      />
+    </el-drawer>
 
     <main class="main-area">
       <GraphCanvas />
@@ -196,27 +168,49 @@ function goToReview() {
   flex-shrink: 0;
 }
 
-.topbar-left { display: flex; align-items: center; }
+.topbar-left { display: flex; align-items: center; flex-shrink: 0; }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 18px;
   font-weight: 700;
-  color: var(--text-primary);
   white-space: nowrap;
+}
+.logo-icon { font-size: 20px; }
+.logo-text {
   background: linear-gradient(90deg, #409EFF, #E6A817);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.topbar-right {
+/* 移动端汉堡按钮 */
+.hamburger {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
+  justify-content: center;
+  width: 40px;
+  height: 36px;
+  font-size: 20px;
+  line-height: 1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s;
 }
+.hamburger:active { background: var(--glow-blue); }
 
-.trace-switch { --el-switch-on-color: #E83333; }
+/* 移动端响应式 */
+@media (max-width: 768px) {
+  .topbar { padding: 10px 12px; gap: 10px; }
+  .logo-text { display: none; }
+  .side-panel { width: 100%; box-shadow: none; }
+}
 
 .main-area {
   flex: 1;

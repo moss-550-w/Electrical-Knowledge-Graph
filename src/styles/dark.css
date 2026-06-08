@@ -35,6 +35,9 @@ html, body, #app {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
     'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   transition: background 0.3s ease, color 0.3s ease;
+  /* 移动端：禁下拉刷新/橡皮筋回弹，去点按高亮闪烁 */
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Element Plus 主题适配（变量驱动，深色/浅色自动切换） */
@@ -47,6 +50,13 @@ html, body, #app {
 .el-dialog__header { border-bottom: 1px solid var(--border) !important; }
 .el-dialog__title { color: var(--text-primary) !important; }
 .el-dialog__headerbtn .el-dialog__close { color: var(--text-secondary) !important; }
+
+/* 抽屉（移动端控件菜单）主题适配 */
+.el-drawer { background: var(--bg-surface) !important; }
+.el-drawer__header { color: var(--text-primary) !important; margin-bottom: 16px; padding: 16px 20px 0; }
+.el-drawer__title { color: var(--text-primary) !important; font-weight: 600; }
+.el-drawer__close-btn .el-icon { color: var(--text-secondary) !important; }
+.el-drawer__body { padding: 0 18px 20px; }
 
 .el-input__wrapper { background: var(--bg-card) !important; border-color: var(--border) !important; box-shadow: none !important; }
 .el-input__wrapper:hover, .el-input__wrapper.is-focus { border-color: var(--accent) !important; }

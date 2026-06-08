@@ -26,6 +26,7 @@
 - **学习路径保存与分享** — 生成的学习路径可命名保存（localStorage 持久化），「我的路径」面板支持加载图谱高亮、3D 复盘、重命名、删除；一键复制分享链接，他人打开链接自动导入路径并高亮
 - **明暗主题切换** — 默认深色星空主题，一键切换浅色模式，偏好 localStorage 持久化
 - **新手引导** — 首次进入分步高亮讲解图谱、搜索、溯源、过滤、路径规划五大核心交互
+- **移动端手势与响应式** — 2D 图谱单指平移、双指捏合缩放（ECharts roam 独占触控，禁浏览器抢手势与下拉刷新），3D 复盘单指旋转、双指缩放；小屏顶栏 13+ 控件收纳进汉堡抽屉，搜索框、弹窗、侧栏、详情浮层全面自适应（768px 断点）
 
 ## 内容规模
 
@@ -72,25 +73,30 @@ npm run preview  # 预览构建产物
 ```
 src/
 ├── components/
-│   ├── GraphCanvas.vue      # 2D 图谱主组件（ECharts）+ 视角持久化
+│   ├── GraphCanvas.vue      # 2D 图谱主组件（ECharts）+ 视角持久化 + 触控手势
+│   ├── TopbarControls.vue   # 顶栏控件（桌面横排 / 移动汉堡抽屉复用）
 │   ├── ContextPanel.vue     # 右侧节点详情面板 + 探索历史时间轴
 │   ├── DetailOverlay.vue    # 全屏详情浮层（KaTeX + 工程场景卡片 + 原理动图 + 推导步骤）
 │   ├── AnimPlayer.vue       # Lottie 原理动图播放器（懒加载 lottie-web + 降级兜底）
 │   ├── PathPlanner.vue      # 多策略路径规划 UI
+│   ├── SavedPaths.vue       # 我的学习路径管理（加载高亮 / 3D 复盘 / 分享 / 重命名 / 删除）
 │   ├── PathReview3D.vue     # Three.js 3D 复盘视图
 │   ├── SearchBar.vue        # 全站搜索框（Ctrl+K 唤起）
 │   └── TourGuide.vue        # 新手分步引导浮层
 ├── views/
-│   └── GraphView.vue        # 图谱主页面（顶栏：主线切换 / 过滤 / 主题 / 引导）
+│   └── GraphView.vue        # 图谱主页面（顶栏：主线切换 / 过滤 / 主题 / 引导 + 移动汉堡抽屉）
 ├── composables/
-│   └── useTheme.js          # 明暗主题切换（localStorage 持久化）
+│   ├── useTheme.js          # 明暗主题切换（localStorage 持久化）
+│   └── useMediaQuery.js     # 响应式断点（useIsMobile，768px 移动适配）
 ├── stores/
 │   ├── graphStore.js        # 图谱状态（焦点节点、高亮路径、溯源模式、当前主线）
 │   ├── contentStore.js      # 知识点详情缓存
-│   └── historyStore.js      # 探索历史与视角快照（localStorage 持久化）
+│   ├── historyStore.js      # 探索历史与视角快照（localStorage 持久化）
+│   └── pathStore.js         # 已保存学习路径（localStorage 持久化）
 ├── utils/
 │   ├── graphBuilder.js      # ECharts option 构建器（含脚印标记）
 │   ├── pathAlgorithm.js     # 三策略路径生成（Dijkstra + 偏置权重）
+│   ├── pathShare.js         # 学习路径编解码与分享 URL 构建
 │   └── maturityTags.js      # L1/L2/L3 颜色与语义配置
 ├── data/
 │   ├── goldThread.json      # 54 个 L3 金线节点（含公式、逐步推导、工程场景、原理动图）
@@ -109,5 +115,5 @@ src/
 - [x] 深色主题与新手引导
 - [x] 节点自制原理动图（Lottie）接入（20 类原型，覆盖 85% 核心节点）
 - [x] 用户自定义路径保存与分享（命名保存 + 我的路径面板 + URL 分享链接）
-- [ ] 移动端手势优化
+- [x] 移动端手势优化（触控手势独占 + 汉堡抽屉 + 全站响应式适配）
 - [ ] 离线 PWA 支持

@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useGraphStore } from '@/stores/graphStore'
 import { usePathStore } from '@/stores/pathStore'
+import { useIsMobile } from '@/composables/useMediaQuery'
 import { buildShareUrl, rehydratePath } from '@/utils/pathShare'
 
 const props = defineProps({ visible: Boolean })
@@ -12,6 +13,7 @@ const emit = defineEmits(['close', 'go-review'])
 const router = useRouter()
 const graphStore = useGraphStore()
 const pathStore = usePathStore()
+const isMobile = useIsMobile()
 
 const strategyIcons = { theory: '🔬', application: '🔧', control: '🎛️', '': '⭐' }
 const strategyColors = { theory: '#409EFF', application: '#67C23A', control: '#E6A817', '': '#909399' }
@@ -88,7 +90,7 @@ async function remove(rec) {
     :model-value="visible"
     @update:model-value="(val) => !val && emit('close')"
     title="我的学习路径"
-    width="640px"
+    :width="isMobile ? '94vw' : '640px'"
     :close-on-click-modal="false"
     @closed="emit('close')"
   >

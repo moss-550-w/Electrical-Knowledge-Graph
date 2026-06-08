@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { useGraphStore } from '@/stores/graphStore'
 import { usePathStore } from '@/stores/pathStore'
+import { useIsMobile } from '@/composables/useMediaQuery'
 import { generatePaths } from '@/utils/pathAlgorithm'
 import { getMaturityConfig } from '@/utils/maturityTags'
 import { ElMessageBox, ElMessage } from 'element-plus'
@@ -11,6 +12,7 @@ const emit = defineEmits(['close', 'go-review'])
 
 const graphStore = useGraphStore()
 const pathStore = usePathStore()
+const isMobile = useIsMobile()
 
 const targetId = ref('')
 const paths = ref([])
@@ -89,14 +91,14 @@ const strategyColors = { theory: '#409EFF', application: '#67C23A', control: '#E
     :model-value="visible"
     @update:model-value="(val) => !val && emit('close')"
     title="多策略学习路径规划"
-    width="900px"
+    :width="isMobile ? '94vw' : '900px'"
     :close-on-click-modal="false"
     @closed="emit('close')"
   >
     <div class="planner-body">
       <div class="target-select">
         <label>选择学习目标：</label>
-        <el-select v-model="targetId" placeholder="请选择目标知识点" size="large" style="width: 360px">
+        <el-select v-model="targetId" placeholder="请选择目标知识点" size="large" :style="{ width: isMobile ? '100%' : '360px' }">
           <el-option
             v-for="t in targets" :key="t.id"
             :label="`${t.name}（${t.category}）`" :value="t.id"

@@ -3,10 +3,12 @@ import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import { useGraphStore } from '@/stores/graphStore'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useIsMobile } from '@/composables/useMediaQuery'
 import { buildGraphOption, loadGraphToStore } from '@/utils/graphBuilder'
 
 const graphStore = useGraphStore()
 const historyStore = useHistoryStore()
+const isMobile = useIsMobile()
 const chartRef = ref(null)
 const glowRef = ref(null)
 let chartInstance = null
@@ -99,6 +101,7 @@ function renderChart() {
       highlightedPathIds: graphStore.highlightedPathIds,
       traceMode: graphStore.traceMode,
       visitedIds: historyStore.visitedIds,
+      isMobile: isMobile.value,
     }
   )
   chartInstance.setOption(option, true)
@@ -249,6 +252,9 @@ watch(
   () => renderChart()
 )
 
+// 跨移动断点重渲染（图例显隐随窗口旋转/缩放生效）
+watch(isMobile, () => renderChart())
+
 function handleResize() {
   chartInstance?.resize()
   if (glowRef.value) {
@@ -272,6 +278,10 @@ function handleResize() {
   width: 100%;
   height: 100%;
   position: relative;
+  /* 让 ECharts roam 独占触控手势：单指平移、双指捏合缩放；长按不选中 */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .graph-canvas {
   width: 100%;

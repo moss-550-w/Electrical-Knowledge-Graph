@@ -470,4 +470,18 @@ const crossFieldNodes = computed(() =>
 .steps-expand-enter-active { transition: opacity 0.25s ease; }
 .steps-expand-leave-active { transition: opacity 0.15s ease; }
 .steps-expand-enter-from, .steps-expand-leave-to { opacity: 0; }
+
+/* 移动端：收紧内边距与字号 */
+@media (max-width: 768px) {
+  .detail-content { padding: 0 12px; }
+  .detail-section { margin-bottom: 20px; }
+  .detail-section h4 { font-size: 15px; }
+  .detail-section p { font-size: 14px; line-height: 1.8; }
+  .scene-card { padding: 12px 14px; gap: 10px; }
+  .scene-icon { font-size: 24px; }
+  .scene-text { font-size: 13px; line-height: 1.7; }
+  .formula-block { padding: 12px 14px; }
+  .related-grid { grid-template-columns: 1fr 1fr; }
+  .cross-grid { grid-template-columns: 1fr; }
+}
 </style>
