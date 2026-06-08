@@ -251,6 +251,11 @@
       "scene": {
         "icon": "🔋",
         "text": "新能源汽车的电池包输出直流，而驱动电机需要三相交流。逆变器就是中间的翻译官——6 只 IGBT 按精确节拍通断，把直流变成可调频调幅的交流。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "switching_pulse",
+        "caption": "六只开关管按节拍通断，把直流斩成一系列方波脉冲，合成可调频调幅的三相交流。"
       }
     },
     "relations": [
@@ -326,6 +331,11 @@
       "scene": {
         "icon": "🚗",
         "text": "你踩下电动汽车油门的瞬间，这颗器件每秒切换 2 万次，承受 600V 高压和数百安培电流，同时将损耗控制在毫秒级散热范围内——它是现代电力电子的肌肉。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "switching_pulse",
+        "caption": "栅极信号驱动开关管在导通/关断间高速切换，输出方波电压——开关损耗与开关频率的权衡是功率器件的核心。"
       }
     },
     "relations": [
@@ -415,6 +425,11 @@
       "scene": {
         "icon": "🛡️",
         "text": "IGBT 的栅极只需 15V 就能控制 600V/400A 的主回路。但若驱动信号稍有抖动，轻则效率下降，重则桥臂直通引发瞬间短路。驱动电路是功率器件的神经中枢。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "switching_pulse",
+        "caption": "驱动电路把控制逻辑放大为驱动开关管的栅极脉冲，精确的死区与边沿决定开关效率与桥臂安全。"
       }
     },
     "relations": [
@@ -504,6 +519,11 @@
       "scene": {
         "icon": "🎛️",
         "text": "电流采样电路将电机相电流（数百安培）压缩为 ±3V 小信号，再送入 ADC。运放的零漂和共模抑制比直接决定电流环的测量精度，进而影响整个 FOC 的动态性能。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "pwm_compare",
+        "caption": "比较器把输入与参考阈值逐点比较，输出在高低电平间翻转——是 PWM 生成与过流保护的判决核心。"
       }
     },
     "relations": [
@@ -588,6 +608,11 @@
       "scene": {
         "icon": "🔊",
         "text": "音响功放用 PWM 将音频信号调制到高频开关波，经低通滤波还原出模拟声音。电机控制中 PWM 完成同样的使命：用高频通断编码出目标电压波形。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "pwm_compare",
+        "caption": "三角载波与调制波（正弦）逐点比较，交点决定开关时刻——这就是 PWM 把模拟指令编码为数字脉宽的原理。"
       }
     },
     "relations": [
@@ -680,6 +705,11 @@
       "scene": {
         "icon": "🌞",
         "text": "光伏逆变器将太阳能电池板的直流电（200~800V）转换为 220V/50Hz 交流并入电网，整个过程依赖电力电子变换的基本原理——升降压、整流、逆变全部在此汇聚。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "switching_pulse",
+        "caption": "电力电子的本质是开关：器件在通/断两态间高频切换，用占空比编码出目标电压波形。"
       }
     },
     "relations": [
@@ -772,6 +802,11 @@
       "scene": {
         "icon": "🤖",
         "text": "工厂里的工业机器人关节需要在 5ms 内响应位置指令，误差小于 0.01°。这背后的控制器设计，完全建立在 PMSM 数学模型的基础上——没有准确的模型，控制算法就是无本之木。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rotating_field",
+        "caption": "定子电流合成的旋转磁场矢量匀速回转，正是 PMSM 数学模型中 dq 旋转坐标系所跟踪的对象。"
       }
     },
     "relations": [
@@ -953,6 +988,11 @@
       "scene": {
         "icon": "📐",
         "text": "三相电机有三根相线，而控制算法只想处理两个量。Clarke 变换做了一件优雅的事：用两个正交分量完整描述三相系统，信息零损失，计算量减少三分之一。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rotating_field",
+        "caption": "三相轴上的电流被合成为单一空间矢量，Clarke 变换正是把三相投影到两相 αβ 平面、信息零损失。"
       }
     },
     "relations": [
@@ -1027,6 +1067,11 @@
       "scene": {
         "icon": "🧭",
         "text": "想象你站在旋转的转子上观察定子电流——原本交变的正弦量在你眼中变成了直流。Park 变换就是这个换参考系的操作，是 FOC 能用 PI 控制器实现高性能的数学基础。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "dq_rotation",
+        "caption": "Park 变换把静止 αβ 分量旋转到随转子同步的 dq 坐标系（红/蓝轴），交变量在此变为直流，便于 PI 调节。"
       }
     },
     "relations": [
@@ -1102,6 +1147,11 @@
       "scene": {
         "icon": "🌀",
         "text": "三相逆变器理论上有 8 种开关状态，SVPWM 将它们映射为平面上的 6 个基本电压矢量，通过时间加权合成任意目标矢量——这是直流母线电压利用率提升 15.5% 的秘密。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rotating_field",
+        "caption": "三相量被统一为一个在复平面匀速旋转的空间电压矢量，这是 SVPWM 与矢量控制共同的几何语言。"
       }
     },
     "relations": [
@@ -1195,6 +1245,11 @@
       "scene": {
         "icon": "⚡",
         "text": "电动汽车急加速时，电流环在 100μs 内把实际电流拉到目标值，响应速度比人眨眼快 1000 倍。电流环是整个 FOC 闭环的最内层，也是决定系统动态上限的瓶颈。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "feedback_loop",
+        "caption": "电流环在百微秒内把实际电流拉到指令值，是 FOC 最内层、决定系统动态上限的闭环。"
       }
     },
     "relations": [
@@ -1266,6 +1321,11 @@
       "scene": {
         "icon": "🏎️",
         "text": "巡航定速系统保持车速在 120km/h，遇上坡自动增大转矩。速度环正是这个定速巡航的控制核心，它将速度误差转化为转矩指令，级联驱动内层电流环。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "feedback_loop",
+        "caption": "速度环将转速误差转化为转矩指令，级联驱动内层电流环，构成电机的速度闭环。"
       }
     },
     "relations": [
@@ -1329,6 +1389,11 @@
       "scene": {
         "icon": "🎯",
         "text": "工厂恒温箱维持 200°C 精确到 ±0.5°C，全靠一个 PI 控制器。这个上世纪 40 年代发明的算法，至今仍是 90% 以上工业控制回路的主力——简单、鲁棒、可整定。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "feedback_loop",
+        "caption": "阶跃指令下输出快速上升、略有超调后稳定到目标——PI 的比例项提供速度、积分项消除稳态误差。"
       }
     },
     "relations": [
@@ -1413,6 +1478,11 @@
       "scene": {
         "icon": "🏭",
         "text": "工厂里的水泵、风机、压缩机，超过 70% 由异步电机驱动。理解交流电机的工作原理，是设计任何电机驱动系统的起点——也是理解为何需要变频器的前提。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rotating_field",
+        "caption": "三相绕组通入对称电流，合成磁场矢量（蓝箭头）以同步速旋转——这是所有交流电机产生转矩的统一原理。"
       }
     },
     "relations": [
@@ -1607,6 +1677,11 @@
       "scene": {
         "icon": "💡",
         "text": "1831 年，法拉第用一块磁铁和一个线圈点亮了人类文明的灯。今天，发电机、变压器、电机里的感应电动势，都是同一条定律的工程实例——世界上 99% 的电能由此而来。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "magnetic_coupling",
+        "caption": "线圈中磁通脉动，在邻近线圈感应出电动势——法拉第定律 ℰ=-dΦ/dt 是变压器、电机、无线充电的共同根基。"
       }
     },
     "relations": [
@@ -1709,6 +1784,11 @@
       "scene": {
         "icon": "📡",
         "text": "麦克斯韦方程组不仅预言了电磁波的存在，更统一了电、磁、光。你手机里的 Wi-Fi 信号、雷达探测、变压器工作原理——四个方程，描述了整个电磁世界。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "em_wave",
+        "caption": "变化的电场激发磁场、变化的磁场激发电场，相互滋生向前传播——这正是麦克斯韦方程组预言的电磁波。"
       }
     },
     "relations": [
@@ -1793,6 +1873,11 @@
       "scene": {
         "icon": "🎵",
         "text": "音乐 App 的均衡器把声音分成低音、中音、高音分别调节；电机控制中分析 PWM 谐波对电机温升的影响——两者背后的数学工具完全相同：傅里叶分析。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "fourier_harmonics",
+        "caption": "基波叠加 3、5、7 次谐波，波形逐步逼近方波——傅里叶分析把任意周期信号分解为正弦谐波之和。"
       }
     },
     "relations": [
@@ -1956,6 +2041,11 @@
       "scene": {
         "icon": "🔌",
         "text": "电力工程师用一个复数 V=220∠30° 完整描述一个正弦电压——幅值、频率、相位全在里面。相量法让繁琐的微分方程变成简单的代数运算，是电路分析的核心工具。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rotating_field",
+        "caption": "旋转矢量（相量）匀速回转，其在实轴的投影即正弦量——相量法把正弦稳态的微分方程化为复数代数。"
       }
     },
     "relations": [
@@ -2124,6 +2214,11 @@
       "scene": {
         "icon": "🏭",
         "text": "工厂里一台 500kW 电机正在运转，三相电源的瞬时功率之和始终恒定——这就是三相系统优于单相的本质：无功率脉动，设备振动小，线路利用率高。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "three_phase_sine",
+        "caption": "三相电压互差 120° 依次达到峰值，任意时刻三相瞬时值之和恒为零——这是三相系统功率平稳的根源。"
       }
     },
     "relations": [
@@ -2287,6 +2382,11 @@
       "scene": {
         "icon": "🔧",
         "text": "变压器的铁芯截面积、线圈匝数、气隙大小——这些参数如何决定变压器能传输多大功率、温升多少？磁路分析给出了定量设计的工具，是所有电磁装置设计的基础。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "flux_loop",
+        "caption": "磁通沿铁芯回路循环，如电流沿电路——磁路的磁动势、磁阻与磁通对应电路的电压、电阻与电流。"
       }
     },
     "relations": [
@@ -2371,6 +2471,11 @@
       "scene": {
         "icon": "✈️",
         "text": "飞机自动驾驶在气流扰动中保持航线稳定；工厂机械臂在负载变化时保持轨迹精度。这些抗扰能力都来自反馈控制——控制理论告诉你如何量化和设计这种能力。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "feedback_loop",
+        "caption": "反馈把输出误差送回输入持续修正，使系统快速、无静差地跟踪目标——这是自动控制的核心思想。"
       }
     },
     "relations": [
@@ -2455,6 +2560,11 @@
       "scene": {
         "icon": "🔌",
         "text": "智能手机主板上密布数千条走线和元件，工程师如何保证每个芯片的供电电压精确、信号不串扰？一切始于基尔霍夫定律——它是分析任何电路的最基本工具。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rc_curve",
+        "caption": "电容经电阻充电，电压按指数趋于稳态——RC 一阶响应是理解所有电路动态过程的基石。"
       }
     },
     "relations": [
@@ -2702,6 +2812,11 @@
       "scene": {
         "icon": "💾",
         "text": "DSP 芯片每隔 50μs 执行一次 FOC 电流环计算，计数器精确产生 PWM 时序，ADC 采样结果存入寄存器——所有这些都依赖数字电路的触发器、计数器、编解码器协同工作。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "pwm_compare",
+        "caption": "数字电路在高/低两个电平间切换，时钟与逻辑门的脉冲时序是 PWM、采样与控制器的硬件基础。"
       }
     },
     "relations": [
@@ -2856,22 +2971,50 @@
         {
           "formula": "E = E^0 - \\frac{RT}{nF}\\ln Q",
           "steps": [
-            { "latex": "E = E^0 - \\frac{RT}{nF}\\ln Q", "note": "能斯特方程：非标准态下的电极电位" },
-            { "latex": "E^0:\\text{标准电极电位},\\ R:\\text{气体常数},\\ T:\\text{温度},\\ n:\\text{转移电子数},\\ F:\\text{法拉第常数}", "note": "各参数物理意义" },
-            { "latex": "Q = \\frac{a_{red}}{a_{ox}}", "note": "反应商，由氧化/还原态活度比决定，随SOC变化" },
-            { "latex": "25^\\circ C:\\ \\frac{RT}{F}\\approx 25.7\\,mV", "note": "常温热电压，决定电位随活度变化的尺度" },
-            { "latex": "U_{oc}(SOC) = \\varphi_{+} - \\varphi_{-}", "note": "端开路电压即正负极Nernst电位之差，构成OCV-SOC曲线" }
+            {
+              "latex": "E = E^0 - \\frac{RT}{nF}\\ln Q",
+              "note": "能斯特方程：非标准态下的电极电位"
+            },
+            {
+              "latex": "E^0:\\text{标准电极电位},\\ R:\\text{气体常数},\\ T:\\text{温度},\\ n:\\text{转移电子数},\\ F:\\text{法拉第常数}",
+              "note": "各参数物理意义"
+            },
+            {
+              "latex": "Q = \\frac{a_{red}}{a_{ox}}",
+              "note": "反应商，由氧化/还原态活度比决定，随SOC变化"
+            },
+            {
+              "latex": "25^\\circ C:\\ \\frac{RT}{F}\\approx 25.7\\,mV",
+              "note": "常温热电压，决定电位随活度变化的尺度"
+            },
+            {
+              "latex": "U_{oc}(SOC) = \\varphi_{+} - \\varphi_{-}",
+              "note": "端开路电压即正负极Nernst电位之差，构成OCV-SOC曲线"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🔬",
         "text": "一块手机电池能反复充放上千次，靠的正是锂离子在正负极晶格间稳定地来回穿梭。能斯特方程则把这种微观的离子浓度变化，翻译成万用表上读到的那几伏电压。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "ion_shuttle",
+        "caption": "充放电时锂离子在正负极间往返穿梭、嵌入脱出，把化学能与电能相互转换——这是锂电池储能的微观本质。"
       }
     },
     "relations": [
-      { "target": "solid_state_physics", "type": "depends_on", "weight": 0.8 },
-      { "target": "semiconductor_physics", "type": "depends_on", "weight": 0.4 }
+      {
+        "target": "solid_state_physics",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "semiconductor_physics",
+        "type": "depends_on",
+        "weight": 0.4
+      }
     ]
   },
   {
@@ -2891,33 +3034,80 @@
         {
           "formula": "U_t = U_{oc}(SOC) - I R_0 - U_1",
           "steps": [
-            { "latex": "U_t = U_{oc}(SOC) - I R_0 - U_1", "note": "沿等效电路KVL求和得端电压" },
-            { "latex": "U_{oc}(SOC)", "note": "开路电压源，由OCV-SOC曲线插值得到" },
-            { "latex": "I R_0", "note": "欧姆内阻瞬时压降，随电流阶跃立即跳变" },
-            { "latex": "U_1", "note": "RC环节极化电压，反映动态弛豫过程" },
-            { "latex": "I>0\\Rightarrow U_t<U_{oc}\\ (\\text{放电});\\ I<0\\Rightarrow U_t>U_{oc}\\ (\\text{充电})", "note": "符号约定" }
+            {
+              "latex": "U_t = U_{oc}(SOC) - I R_0 - U_1",
+              "note": "沿等效电路KVL求和得端电压"
+            },
+            {
+              "latex": "U_{oc}(SOC)",
+              "note": "开路电压源，由OCV-SOC曲线插值得到"
+            },
+            {
+              "latex": "I R_0",
+              "note": "欧姆内阻瞬时压降，随电流阶跃立即跳变"
+            },
+            {
+              "latex": "U_1",
+              "note": "RC环节极化电压，反映动态弛豫过程"
+            },
+            {
+              "latex": "I>0\\Rightarrow U_t<U_{oc}\\ (\\text{放电});\\ I<0\\Rightarrow U_t>U_{oc}\\ (\\text{充电})",
+              "note": "符号约定"
+            }
           ]
         },
         {
           "formula": "\\dot{U}_1 = -\\frac{1}{R_1 C_1}U_1 + \\frac{1}{C_1}I",
           "steps": [
-            { "latex": "I = C_1\\dot{U}_1 + \\frac{U_1}{R_1}", "note": "RC并联节点电流：电容电流＋电阻电流" },
-            { "latex": "C_1\\dot{U}_1 = I - \\frac{U_1}{R_1}", "note": "移项" },
-            { "latex": "\\dot{U}_1 = -\\frac{1}{R_1 C_1}U_1 + \\frac{1}{C_1}I", "note": "一阶线性ODE" },
-            { "latex": "U_1(t) = I R_1\\left(1 - e^{-t/\\tau_1}\\right)", "note": "恒流阶跃响应" },
-            { "latex": "\\tau_1 = R_1 C_1", "note": "时间常数，表征极化电压的建立/消退快慢" }
+            {
+              "latex": "I = C_1\\dot{U}_1 + \\frac{U_1}{R_1}",
+              "note": "RC并联节点电流：电容电流＋电阻电流"
+            },
+            {
+              "latex": "C_1\\dot{U}_1 = I - \\frac{U_1}{R_1}",
+              "note": "移项"
+            },
+            {
+              "latex": "\\dot{U}_1 = -\\frac{1}{R_1 C_1}U_1 + \\frac{1}{C_1}I",
+              "note": "一阶线性ODE"
+            },
+            {
+              "latex": "U_1(t) = I R_1\\left(1 - e^{-t/\\tau_1}\\right)",
+              "note": "恒流阶跃响应"
+            },
+            {
+              "latex": "\\tau_1 = R_1 C_1",
+              "note": "时间常数，表征极化电压的建立/消退快慢"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🔋",
         "text": "当你给电动车快充时插枪瞬间电压猛地一跳——那是欧姆内阻R0；随后电压缓缓爬升——那是RC环节在慢慢极化。BMS里跑的SOC算法，正是基于这张几欧姆几法拉的小电路图在实时推演电量。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rc_curve",
+        "caption": "插枪瞬间电压跳变（内阻 R0），随后缓升（RC 极化）——电池等效电路用这条充电曲线实时推演电量。"
       }
     },
     "relations": [
-      { "target": "battery_electrochemistry", "type": "depends_on", "weight": 0.9 },
-      { "target": "circuit_theory", "type": "depends_on", "weight": 0.8 },
-      { "target": "s_differential_equations", "type": "depends_on", "weight": 0.7 }
+      {
+        "target": "battery_electrochemistry",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "circuit_theory",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "s_differential_equations",
+        "type": "depends_on",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -2937,23 +3127,55 @@
         {
           "formula": "SOC(t) = SOC_0 - \\frac{1}{C_n}\\int_0^t \\eta\\, i(\\tau)\\, d\\tau",
           "steps": [
-            { "latex": "SOC = \\frac{Q_{remain}}{C_n}", "note": "定义：剩余电量比额定容量C_n" },
-            { "latex": "dQ = -\\eta\\, i\\, dt", "note": "放电i>0时电量减少，η为库仑效率" },
-            { "latex": "SOC(t) = SOC_0 - \\frac{1}{C_n}\\int_0^t \\eta\\, i\\, d\\tau", "note": "两边除以C_n并积分" },
-            { "latex": "SOC_0 = U_{oc}^{-1}(U_t)\\big|_{i=0}", "note": "初值由静置OCV反查确定" },
-            { "latex": "\\text{误差源}:\\ \\text{电流零漂},\\ C_n\\text{老化},\\ \\eta(T)", "note": "开环误差累积，需观测器闭环校正" }
+            {
+              "latex": "SOC = \\frac{Q_{remain}}{C_n}",
+              "note": "定义：剩余电量比额定容量C_n"
+            },
+            {
+              "latex": "dQ = -\\eta\\, i\\, dt",
+              "note": "放电i>0时电量减少，η为库仑效率"
+            },
+            {
+              "latex": "SOC(t) = SOC_0 - \\frac{1}{C_n}\\int_0^t \\eta\\, i\\, d\\tau",
+              "note": "两边除以C_n并积分"
+            },
+            {
+              "latex": "SOC_0 = U_{oc}^{-1}(U_t)\\big|_{i=0}",
+              "note": "初值由静置OCV反查确定"
+            },
+            {
+              "latex": "\\text{误差源}:\\ \\text{电流零漂},\\ C_n\\text{老化},\\ \\eta(T)",
+              "note": "开环误差累积，需观测器闭环校正"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "⛽",
         "text": "手机右上角那个电量百分比，就是SOC。它不像油表有浮子可量，电池里看不见摸不着——只能靠对每一毫安的电流积分加上电压校正，把剩余电量一点点推算出来。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "soc_gauge",
+        "caption": "电量条随充放电升降——SOC 看不见摸不着，只能靠电流积分加电压校正一点点推算剩余电量。"
       }
     },
     "relations": [
-      { "target": "lithium_battery_model", "type": "depends_on", "weight": 0.9 },
-      { "target": "s_signal_sampling", "type": "depends_on", "weight": 0.6 },
-      { "target": "s_observer", "type": "maps_to", "weight": 0.6 }
+      {
+        "target": "lithium_battery_model",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "s_signal_sampling",
+        "type": "depends_on",
+        "weight": 0.6
+      },
+      {
+        "target": "s_observer",
+        "type": "maps_to",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -2973,23 +3195,55 @@
         {
           "formula": "K_k = P_k^- H^T\\left(HP_k^- H^T + R\\right)^{-1}",
           "steps": [
-            { "latex": "P_k^- = AP_{k-1}A^T + Q", "note": "预测误差协方差，Q为过程噪声，表征模型不确定度" },
-            { "latex": "\\tilde{y}_k = z_k - H\\hat{x}_k^-", "note": "新息（残差）：实测与预测输出之差" },
-            { "latex": "S_k = HP_k^- H^T + R", "note": "新息协方差，R为测量噪声协方差" },
-            { "latex": "K_k = P_k^- H^T S_k^{-1}", "note": "卡尔曼增益：正比于模型不确定度、反比于测量噪声" },
-            { "latex": "R\\uparrow\\Rightarrow K\\downarrow\\ (\\text{信模型});\\ Q\\uparrow\\Rightarrow K\\uparrow\\ (\\text{信测量})", "note": "增益在两种不确定度间自动权衡" }
+            {
+              "latex": "P_k^- = AP_{k-1}A^T + Q",
+              "note": "预测误差协方差，Q为过程噪声，表征模型不确定度"
+            },
+            {
+              "latex": "\\tilde{y}_k = z_k - H\\hat{x}_k^-",
+              "note": "新息（残差）：实测与预测输出之差"
+            },
+            {
+              "latex": "S_k = HP_k^- H^T + R",
+              "note": "新息协方差，R为测量噪声协方差"
+            },
+            {
+              "latex": "K_k = P_k^- H^T S_k^{-1}",
+              "note": "卡尔曼增益：正比于模型不确定度、反比于测量噪声"
+            },
+            {
+              "latex": "R\\uparrow\\Rightarrow K\\downarrow\\ (\\text{信模型});\\ Q\\uparrow\\Rightarrow K\\uparrow\\ (\\text{信测量})",
+              "note": "增益在两种不确定度间自动权衡"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🛰️",
         "text": "GPS信号会跳、电池电流会有噪声，可手机导航的小蓝点却走得很稳——卡尔曼滤波在背后不停地把不靠谱的测量和靠谱的物理模型加权融合，每一步都给出当前最优的猜测。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "kalman_estimate",
+        "caption": "灰色抖动是带噪测量，橙线是滤波估计——卡尔曼把不可靠测量与物理模型加权融合，给出每步最优估计。"
       }
     },
     "relations": [
-      { "target": "s_state_space", "type": "depends_on", "weight": 0.9 },
-      { "target": "matrix_calculus", "type": "depends_on", "weight": 0.9 },
-      { "target": "s_probability", "type": "depends_on", "weight": 0.8 }
+      {
+        "target": "s_state_space",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "matrix_calculus",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "s_probability",
+        "type": "depends_on",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -3009,23 +3263,55 @@
         {
           "formula": "A_k = \\left.\\frac{\\partial f}{\\partial x}\\right|_{\\hat{x}},\\quad H_k = \\left.\\frac{\\partial U_t}{\\partial x}\\right|_{\\hat{x}}",
           "steps": [
-            { "latex": "x = [\\,SOC,\\ U_1\\,]^T,\\ \\text{输入}\\ i,\\ \\text{观测}\\ U_t", "note": "选SOC与极化电压为状态" },
-            { "latex": "SOC_k = SOC_{k-1} - \\frac{\\eta\\,\\Delta t}{C_n} i_k", "note": "状态方程之一：离散安时积分" },
-            { "latex": "U_{1,k} = e^{-\\Delta t/\\tau} U_{1,k-1} + R_1\\left(1-e^{-\\Delta t/\\tau}\\right) i_k", "note": "RC环节离散化" },
-            { "latex": "H_k = \\left[\\frac{dU_{oc}}{dSOC},\\ -1\\right],\\quad A_k = \\mathrm{diag}\\!\\left(1,\\ e^{-\\Delta t/\\tau}\\right)", "note": "对非线性输出求雅可比" },
-            { "latex": "\\frac{dU_{oc}}{dSOC}>0\\Rightarrow SOC\\ \\text{可观测}", "note": "OCV斜率提供观测灵敏度，平台区斜率小则估算难度大" }
+            {
+              "latex": "x = [\\,SOC,\\ U_1\\,]^T,\\ \\text{输入}\\ i,\\ \\text{观测}\\ U_t",
+              "note": "选SOC与极化电压为状态"
+            },
+            {
+              "latex": "SOC_k = SOC_{k-1} - \\frac{\\eta\\,\\Delta t}{C_n} i_k",
+              "note": "状态方程之一：离散安时积分"
+            },
+            {
+              "latex": "U_{1,k} = e^{-\\Delta t/\\tau} U_{1,k-1} + R_1\\left(1-e^{-\\Delta t/\\tau}\\right) i_k",
+              "note": "RC环节离散化"
+            },
+            {
+              "latex": "H_k = \\left[\\frac{dU_{oc}}{dSOC},\\ -1\\right],\\quad A_k = \\mathrm{diag}\\!\\left(1,\\ e^{-\\Delta t/\\tau}\\right)",
+              "note": "对非线性输出求雅可比"
+            },
+            {
+              "latex": "\\frac{dU_{oc}}{dSOC}>0\\Rightarrow SOC\\ \\text{可观测}",
+              "note": "OCV斜率提供观测灵敏度，平台区斜率小则估算难度大"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "📈",
         "text": "电池真实世界里电压随电量是条弯弯的曲线，普通卡尔曼只会走直线。EKF的办法很务实：在当前工作点把曲线掰直一小段，照着直线算，下一步再重新掰——于是非线性的SOC也能被稳稳跟住。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "kalman_estimate",
+        "caption": "电池电压-电量是非线性曲线，EKF 在工作点把它线性化逐步跟踪，从含噪测量中稳稳估出 SOC。"
       }
     },
     "relations": [
-      { "target": "kalman_filter", "type": "depends_on", "weight": 1 },
-      { "target": "soc_estimation", "type": "depends_on", "weight": 0.9 },
-      { "target": "lithium_battery_model", "type": "depends_on", "weight": 0.8 }
+      {
+        "target": "kalman_filter",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "soc_estimation",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "lithium_battery_model",
+        "type": "depends_on",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -3045,23 +3331,55 @@
         {
           "formula": "C_{now} = C_{rated}\\left(1 - k\\sqrt{N}\\right)",
           "steps": [
-            { "latex": "SOH_C = \\frac{C_{now}}{C_{rated}}", "note": "容量保持率定义" },
-            { "latex": "\\text{衰减主因}:\\ \\text{活性锂损失}+\\text{SEI增厚}+\\text{材料脱落}", "note": "不可逆副反应消耗可循环锂" },
-            { "latex": "C_{now} = C_{rated}\\left(1 - k\\sqrt{N}\\right)", "note": "经验模型：容量随循环数N常呈根号衰减" },
-            { "latex": "SOH_C \\le 80\\% \\Rightarrow \\text{EOL}", "note": "通常降至80%视为寿命终点" },
-            { "latex": "C_n \\leftarrow C_{now}", "note": "用实时容量更新安时积分分母，闭环提升SOC精度" }
+            {
+              "latex": "SOH_C = \\frac{C_{now}}{C_{rated}}",
+              "note": "容量保持率定义"
+            },
+            {
+              "latex": "\\text{衰减主因}:\\ \\text{活性锂损失}+\\text{SEI增厚}+\\text{材料脱落}",
+              "note": "不可逆副反应消耗可循环锂"
+            },
+            {
+              "latex": "C_{now} = C_{rated}\\left(1 - k\\sqrt{N}\\right)",
+              "note": "经验模型：容量随循环数N常呈根号衰减"
+            },
+            {
+              "latex": "SOH_C \\le 80\\% \\Rightarrow \\text{EOL}",
+              "note": "通常降至80%视为寿命终点"
+            },
+            {
+              "latex": "C_n \\leftarrow C_{now}",
+              "note": "用实时容量更新安时积分分母，闭环提升SOC精度"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🩺",
         "text": "用了两年的手机电池一天要充好几回，这就是SOH下降——容量缩水、内阻变大。BMS像体检医生，长期跟踪这两项指标，判断电池还能服役多久、何时该退役做梯次利用。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "soc_gauge",
+        "caption": "随循环老化，可用容量上限逐步缩水——SOH 长期跟踪容量衰减与内阻增长，判断电池剩余寿命。"
       }
     },
     "relations": [
-      { "target": "lithium_battery_model", "type": "depends_on", "weight": 0.8 },
-      { "target": "soc_estimation", "type": "depends_on", "weight": 0.6 },
-      { "target": "ekf_soc", "type": "strong_related", "weight": 0.5 }
+      {
+        "target": "lithium_battery_model",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "soc_estimation",
+        "type": "depends_on",
+        "weight": 0.6
+      },
+      {
+        "target": "ekf_soc",
+        "type": "strong_related",
+        "weight": 0.5
+      }
     ]
   },
   {
@@ -3081,24 +3399,60 @@
         {
           "formula": "\\frac{V_{bus}}{V_{batt}} = \\frac{1}{1-D} \\quad(\\text{Boost/放电})",
           "steps": [
-            { "latex": "\\text{放电模式}:\\ \\text{电池经电感储能后向高压母线升压}", "note": "能量自低压侧流向高压侧" },
-            { "latex": "\\text{导通}(DT_s):\\ \\Delta i_L^{+} = \\frac{V_{batt}}{L}DT_s", "note": "电感两端为V_batt，电流上升" },
-            { "latex": "\\text{关断}((1-D)T_s):\\ \\Delta i_L^{-} = \\frac{V_{bus}-V_{batt}}{L}(1-D)T_s", "note": "电感向母线放电，电流下降" },
-            { "latex": "V_{batt}DT_s = (V_{bus}-V_{batt})(1-D)T_s", "note": "稳态伏秒平衡" },
-            { "latex": "\\frac{V_{bus}}{V_{batt}} = \\frac{1}{1-D}", "note": "整理得升压比，占空比D调节功率与方向" }
+            {
+              "latex": "\\text{放电模式}:\\ \\text{电池经电感储能后向高压母线升压}",
+              "note": "能量自低压侧流向高压侧"
+            },
+            {
+              "latex": "\\text{导通}(DT_s):\\ \\Delta i_L^{+} = \\frac{V_{batt}}{L}DT_s",
+              "note": "电感两端为V_batt，电流上升"
+            },
+            {
+              "latex": "\\text{关断}((1-D)T_s):\\ \\Delta i_L^{-} = \\frac{V_{bus}-V_{batt}}{L}(1-D)T_s",
+              "note": "电感向母线放电，电流下降"
+            },
+            {
+              "latex": "V_{batt}DT_s = (V_{bus}-V_{batt})(1-D)T_s",
+              "note": "稳态伏秒平衡"
+            },
+            {
+              "latex": "\\frac{V_{bus}}{V_{batt}} = \\frac{1}{1-D}",
+              "note": "整理得升压比，占空比D调节功率与方向"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🔁",
         "text": "电动车踩刹车时电机变发电机，电流要反着灌回电池——靠的就是这只能正能反的双向DC-DC。同一套开关管，白天升压放电、夜里降压充电，方向全由占空比一念之间切换。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "energy_flow",
+        "caption": "能量在两端往复——双向 DC-DC 同一套开关管按占空比切换，实现升压放电与降压充电的双向流动。"
       }
     },
     "relations": [
-      { "target": "s_buck_converter", "type": "depends_on", "weight": 0.8 },
-      { "target": "s_boost_converter", "type": "depends_on", "weight": 0.8 },
-      { "target": "igbt_mosfet", "type": "depends_on", "weight": 0.7 },
-      { "target": "power_electronics_basics", "type": "depends_on", "weight": 0.7 }
+      {
+        "target": "s_buck_converter",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "s_boost_converter",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "igbt_mosfet",
+        "type": "depends_on",
+        "weight": 0.7
+      },
+      {
+        "target": "power_electronics_basics",
+        "type": "depends_on",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -3118,23 +3472,55 @@
         {
           "formula": "P_{bleed} = \\frac{U_{cell}^2}{R_{bleed}}",
           "steps": [
-            { "latex": "\\text{目标}:\\ \\Delta SOC = SOC_{max}-SOC_{min}\\to 0", "note": "使各电芯荷电收敛一致" },
-            { "latex": "i_b = \\frac{U_{cell}}{R_{bleed}}", "note": "被动法对高电芯并联泄放电阻产生泄放电流" },
-            { "latex": "P_{bleed} = \\frac{U_{cell}^2}{R_{bleed}}", "note": "泄放功率全部转为热，需配套热设计" },
-            { "latex": "\\Delta Q = (SOC_{high}-SOC_{target})C_n,\\quad t = \\frac{\\Delta Q}{i_b}", "note": "均衡所需电荷与耗时" },
-            { "latex": "\\text{主动法}:\\ \\text{DC-DC转移},\\ \\eta\\ \\text{高、发热小}", "note": "适合大容量系统，能量在电芯间搬运而非耗散" }
+            {
+              "latex": "\\text{目标}:\\ \\Delta SOC = SOC_{max}-SOC_{min}\\to 0",
+              "note": "使各电芯荷电收敛一致"
+            },
+            {
+              "latex": "i_b = \\frac{U_{cell}}{R_{bleed}}",
+              "note": "被动法对高电芯并联泄放电阻产生泄放电流"
+            },
+            {
+              "latex": "P_{bleed} = \\frac{U_{cell}^2}{R_{bleed}}",
+              "note": "泄放功率全部转为热，需配套热设计"
+            },
+            {
+              "latex": "\\Delta Q = (SOC_{high}-SOC_{target})C_n,\\quad t = \\frac{\\Delta Q}{i_b}",
+              "note": "均衡所需电荷与耗时"
+            },
+            {
+              "latex": "\\text{主动法}:\\ \\text{DC-DC转移},\\ \\eta\\ \\text{高、发热小}",
+              "note": "适合大容量系统，能量在电芯间搬运而非耗散"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "⚖️",
         "text": "一组几百节电芯就像一队齐步走的士兵，谁掉队整队就得等谁。均衡电路要么把跑太快的拽住（被动放电），要么把能量从快的匀给慢的（主动转移），让大家始终步调一致。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "cell_balance",
+        "caption": "几节电量不齐的电芯像掉队的队列，均衡电路把跑太快的拽住或把能量匀给慢的，让全组步调一致。"
       }
     },
     "relations": [
-      { "target": "bidirectional_dcdc", "type": "depends_on", "weight": 0.7 },
-      { "target": "s_buck_converter", "type": "depends_on", "weight": 0.6 },
-      { "target": "power_electronics_basics", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "bidirectional_dcdc",
+        "type": "depends_on",
+        "weight": 0.7
+      },
+      {
+        "target": "s_buck_converter",
+        "type": "depends_on",
+        "weight": 0.6
+      },
+      {
+        "target": "power_electronics_basics",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3154,25 +3540,65 @@
         {
           "formula": "P = \\tfrac{3}{2}(u_d i_d + u_q i_q),\\quad Q = \\tfrac{3}{2}(u_q i_d - u_d i_q)",
           "steps": [
-            { "latex": "\\text{电网电压定向}:\\ u_q = 0,\\ u_d = |U_s|", "note": "dq轴对齐电网电压矢量" },
-            { "latex": "P = \\tfrac{3}{2}u_d i_d", "note": "有功仅由d轴电流决定" },
-            { "latex": "Q = -\\tfrac{3}{2}u_d i_q", "note": "无功仅由q轴电流决定，实现P/Q解耦" },
-            { "latex": "i_d>0\\ \\text{放电送网},\\ i_d<0\\ \\text{充电}", "note": "充放电方向由d轴电流符号切换" },
-            { "latex": "u_d = u_d^* - \\omega L i_q,\\ u_q = u_q^* + \\omega L i_d", "note": "前馈解耦抵消dq交叉耦合，电流环独立设计" }
+            {
+              "latex": "\\text{电网电压定向}:\\ u_q = 0,\\ u_d = |U_s|",
+              "note": "dq轴对齐电网电压矢量"
+            },
+            {
+              "latex": "P = \\tfrac{3}{2}u_d i_d",
+              "note": "有功仅由d轴电流决定"
+            },
+            {
+              "latex": "Q = -\\tfrac{3}{2}u_d i_q",
+              "note": "无功仅由q轴电流决定，实现P/Q解耦"
+            },
+            {
+              "latex": "i_d>0\\ \\text{放电送网},\\ i_d<0\\ \\text{充电}",
+              "note": "充放电方向由d轴电流符号切换"
+            },
+            {
+              "latex": "u_d = u_d^* - \\omega L i_q,\\ u_q = u_q^* + \\omega L i_d",
+              "note": "前馈解耦抵消dq交叉耦合，电流环独立设计"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🔌",
         "text": "一座电网侧储能电站要在毫秒间从充电切到放电、从送有功切到补无功——这只大功率PCS就是它与电网握手的那只手，用的正是和电动车电机控制如出一辙的dq解耦与SVPWM。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "energy_flow",
+        "caption": "PCS 在电池与电网间双向搬运功率，毫秒间从充电切到放电、从有功切到无功，是储能并网的功率接口。"
       }
     },
     "relations": [
-      { "target": "bidirectional_dcdc", "type": "depends_on", "weight": 1 },
-      { "target": "three_phase_inverter", "type": "depends_on", "weight": 0.9 },
-      { "target": "svpwm", "type": "depends_on", "weight": 0.8 },
-      { "target": "current_loop", "type": "depends_on", "weight": 0.8 },
-      { "target": "pi_controller", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "bidirectional_dcdc",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "three_phase_inverter",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "svpwm",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "current_loop",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "pi_controller",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3192,23 +3618,55 @@
         {
           "formula": "\\text{CV}:\\ U_t = U_{cv},\\ i = \\frac{U_{cv} - U_{oc}(SOC)}{R_0}\\downarrow",
           "steps": [
-            { "latex": "\\text{CC段}:\\ i = I_{const},\\ U_t = U_{oc}(SOC)+IR_0+U_1\\ \\uparrow", "note": "恒流充电，端压随SOC升高" },
-            { "latex": "U_t \\to U_{cv}", "note": "触及截止电压（LFP约3.65V、NCM约4.2V）即切换" },
-            { "latex": "\\text{CV段}:\\ U_t = U_{cv}\\ \\text{钳位}", "note": "恒压充电" },
-            { "latex": "i = \\frac{U_{cv}-U_{oc}(SOC)}{R_0}\\ \\downarrow", "note": "随OCV上升与极化消退，电流自然衰减" },
-            { "latex": "i \\le I_{cutoff}\\Rightarrow \\text{充满}", "note": "截止电流判满，避免长时恒压析锂、护寿命" }
+            {
+              "latex": "\\text{CC段}:\\ i = I_{const},\\ U_t = U_{oc}(SOC)+IR_0+U_1\\ \\uparrow",
+              "note": "恒流充电，端压随SOC升高"
+            },
+            {
+              "latex": "U_t \\to U_{cv}",
+              "note": "触及截止电压（LFP约3.65V、NCM约4.2V）即切换"
+            },
+            {
+              "latex": "\\text{CV段}:\\ U_t = U_{cv}\\ \\text{钳位}",
+              "note": "恒压充电"
+            },
+            {
+              "latex": "i = \\frac{U_{cv}-U_{oc}(SOC)}{R_0}\\ \\downarrow",
+              "note": "随OCV上升与极化消退，电流自然衰减"
+            },
+            {
+              "latex": "i \\le I_{cutoff}\\Rightarrow \\text{充满}",
+              "note": "截止电流判满，避免长时恒压析锂、护寿命"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🔋",
         "text": "手机从0冲到80%飞快、最后20%却磨磨蹭蹭——这正是CC-CV：前半程恒流猛灌求速度，后半程恒压细灌防过充。慢下来的那段，是充电器在替电池的寿命踩刹车。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "cccv_curve",
+        "caption": "前段恒流（电流平、电压升）猛灌求速度，后段恒压（电压平、电流降）细灌防过充——这就是 CC-CV。"
       }
     },
     "relations": [
-      { "target": "lithium_battery_model", "type": "depends_on", "weight": 0.8 },
-      { "target": "pi_controller", "type": "depends_on", "weight": 0.7 },
-      { "target": "bidirectional_dcdc", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "lithium_battery_model",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "pi_controller",
+        "type": "depends_on",
+        "weight": 0.7
+      },
+      {
+        "target": "bidirectional_dcdc",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3228,11 +3686,26 @@
         {
           "formula": "m c_p\\frac{dT}{dt} = \\dot{Q}_{gen} - h A (T - T_{amb})",
           "steps": [
-            { "latex": "\\dot{Q}_{gen} = I^2 R_0 - I T\\frac{\\partial U_{oc}}{\\partial T}", "note": "Bernardi产热：不可逆焦耳热＋可逆熵热" },
-            { "latex": "\\dot{Q}_{diss} = h A (T - T_{amb})", "note": "牛顿冷却定律描述对流散热" },
-            { "latex": "m c_p\\frac{dT}{dt} = \\dot{Q}_{gen} - \\dot{Q}_{diss}", "note": "集总参数热容方程" },
-            { "latex": "\\frac{dT}{dt}=0\\Rightarrow T = T_{amb} + \\frac{\\dot{Q}_{gen}}{hA}", "note": "稳态平衡温度" },
-            { "latex": "\\dot{Q}_{gen}(T)\\ \\text{随T正反馈} > \\dot{Q}_{diss}(T)", "note": "产热超过散热能力则温升不可逆，触发热失控" }
+            {
+              "latex": "\\dot{Q}_{gen} = I^2 R_0 - I T\\frac{\\partial U_{oc}}{\\partial T}",
+              "note": "Bernardi产热：不可逆焦耳热＋可逆熵热"
+            },
+            {
+              "latex": "\\dot{Q}_{diss} = h A (T - T_{amb})",
+              "note": "牛顿冷却定律描述对流散热"
+            },
+            {
+              "latex": "m c_p\\frac{dT}{dt} = \\dot{Q}_{gen} - \\dot{Q}_{diss}",
+              "note": "集总参数热容方程"
+            },
+            {
+              "latex": "\\frac{dT}{dt}=0\\Rightarrow T = T_{amb} + \\frac{\\dot{Q}_{gen}}{hA}",
+              "note": "稳态平衡温度"
+            },
+            {
+              "latex": "\\dot{Q}_{gen}(T)\\ \\text{随T正反馈} > \\dot{Q}_{diss}(T)",
+              "note": "产热超过散热能力则温升不可逆，触发热失控"
+            }
           ]
         }
       ],
@@ -3242,8 +3715,16 @@
       }
     },
     "relations": [
-      { "target": "s_thermal_management", "type": "depends_on", "weight": 0.9 },
-      { "target": "battery_electrochemistry", "type": "depends_on", "weight": 0.5 }
+      {
+        "target": "s_thermal_management",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "battery_electrochemistry",
+        "type": "depends_on",
+        "weight": 0.5
+      }
     ]
   },
   {
@@ -3263,24 +3744,60 @@
         {
           "formula": "\\Delta U_{cell} \\le 1\\,mV \\quad(\\text{SOC估算精度要求})",
           "steps": [
-            { "latex": "SOC = U_{oc}^{-1}(U_t)", "note": "SOC估算依赖OCV反查" },
-            { "latex": "\\frac{dU_{oc}}{dSOC}\\ \\text{在平台区极小}", "note": "LFP电池平台区电压几乎不随SOC变化" },
-            { "latex": "\\frac{dU_{oc}}{dSOC}\\approx 5\\,mV/10\\%SOC", "note": "平台区典型斜率" },
-            { "latex": "\\text{欲}\\ \\delta SOC<2\\%\\Rightarrow \\Delta U_{cell}\\le 1\\,mV", "note": "由算法精度反推采样精度" },
-            { "latex": "\\Rightarrow \\text{AFE需14-16bit ADC且温漂受控}", "note": "硬件指标由估算需求决定，系统取min SOC防最弱电芯过放" }
+            {
+              "latex": "SOC = U_{oc}^{-1}(U_t)",
+              "note": "SOC估算依赖OCV反查"
+            },
+            {
+              "latex": "\\frac{dU_{oc}}{dSOC}\\ \\text{在平台区极小}",
+              "note": "LFP电池平台区电压几乎不随SOC变化"
+            },
+            {
+              "latex": "\\frac{dU_{oc}}{dSOC}\\approx 5\\,mV/10\\%SOC",
+              "note": "平台区典型斜率"
+            },
+            {
+              "latex": "\\text{欲}\\ \\delta SOC<2\\%\\Rightarrow \\Delta U_{cell}\\le 1\\,mV",
+              "note": "由算法精度反推采样精度"
+            },
+            {
+              "latex": "\\Rightarrow \\text{AFE需14-16bit ADC且温漂受控}",
+              "note": "硬件指标由估算需求决定，系统取min SOC防最弱电芯过放"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🧠",
         "text": "一个电池包里几百节电芯各报各的电压温度，谁该均衡、谁要断电、整包还剩多少电——全靠BMS这套主从神经网络逐毫伏地盯着。它对采样精度的苛刻，正是被SOC算法那条平坦的电压曲线逼出来的。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "soc_gauge",
+        "caption": "BMS 逐毫伏盯着每节电芯的电压温度，实时决定均衡、断电与剩余电量，是电池系统的神经中枢。"
       }
     },
     "relations": [
-      { "target": "s_mcu_architecture", "type": "depends_on", "weight": 0.9 },
-      { "target": "s_signal_sampling", "type": "depends_on", "weight": 0.7 },
-      { "target": "soc_estimation", "type": "depends_on", "weight": 0.6 },
-      { "target": "cell_balancing", "type": "strong_related", "weight": 0.6 }
+      {
+        "target": "s_mcu_architecture",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "s_signal_sampling",
+        "type": "depends_on",
+        "weight": 0.7
+      },
+      {
+        "target": "soc_estimation",
+        "type": "depends_on",
+        "weight": 0.6
+      },
+      {
+        "target": "cell_balancing",
+        "type": "strong_related",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3300,23 +3817,55 @@
         {
           "formula": "\\Delta P = -\\frac{1}{R}\\Delta f",
           "steps": [
-            { "latex": "\\text{频率反映功率供需}:\\ \\text{缺供}\\Rightarrow f\\downarrow", "note": "电网频率是有功平衡的指针" },
-            { "latex": "\\Delta P = -\\frac{1}{R}\\Delta f", "note": "储能模拟同步机下垂特性，R为调差系数" },
-            { "latex": "f<f_N\\Rightarrow \\Delta P>0", "note": "频率偏低则增发有功支撑频率" },
-            { "latex": "t_{resp} < 100\\,ms", "note": "储能响应远快于火电机组，调频效果显著" },
-            { "latex": "P_{inertia} = -J\\frac{df}{dt}", "note": "配合虚拟惯量抑制频率变化率RoCoF" }
+            {
+              "latex": "\\text{频率反映功率供需}:\\ \\text{缺供}\\Rightarrow f\\downarrow",
+              "note": "电网频率是有功平衡的指针"
+            },
+            {
+              "latex": "\\Delta P = -\\frac{1}{R}\\Delta f",
+              "note": "储能模拟同步机下垂特性，R为调差系数"
+            },
+            {
+              "latex": "f<f_N\\Rightarrow \\Delta P>0",
+              "note": "频率偏低则增发有功支撑频率"
+            },
+            {
+              "latex": "t_{resp} < 100\\,ms",
+              "note": "储能响应远快于火电机组，调频效果显著"
+            },
+            {
+              "latex": "P_{inertia} = -J\\frac{df}{dt}",
+              "note": "配合虚拟惯量抑制频率变化率RoCoF"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "⚡",
         "text": "傍晚千家万户同时开火做饭，电网频率被拽得往下掉。远处一座储能电站在百毫秒内顶上有功、稳住频率；深夜电价低谷它又默默充电，等着明天的尖峰——这就是电网的充电宝。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "energy_flow",
+        "caption": "低谷充电、尖峰放电——储能电站像电网的充电宝，能量在电池与电网间按调度往复流动，削峰填谷。"
       }
     },
     "relations": [
-      { "target": "pcs", "type": "depends_on", "weight": 0.9 },
-      { "target": "s_power_system_structure", "type": "depends_on", "weight": 0.7 },
-      { "target": "control_theory_basics", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "pcs",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "s_power_system_structure",
+        "type": "depends_on",
+        "weight": 0.7
+      },
+      {
+        "target": "control_theory_basics",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3336,11 +3885,26 @@
         {
           "formula": "E_{usable} = C_n V_{nom}\\cdot DoD\\cdot SOH",
           "steps": [
-            { "latex": "E_{rated} = C_n V_{nom}", "note": "额定能量：容量(Ah)乘标称电压(V)得Wh" },
-            { "latex": "\\times DoD", "note": "放电深度限制可用SOC区间（如10%-90%，DoD=80%）以护寿命" },
-            { "latex": "\\times SOH", "note": "老化后按健康状态折减实际可用能量" },
-            { "latex": "\\eta_{rt} = \\eta_{batt}\\eta_{pcs}\\eta_{aux}", "note": "往返效率，典型85%-92%" },
-            { "latex": "t = \\frac{E}{P}", "note": "能量与功率双约束决定时长，定位调峰(长时)或调频(短时)" }
+            {
+              "latex": "E_{rated} = C_n V_{nom}",
+              "note": "额定能量：容量(Ah)乘标称电压(V)得Wh"
+            },
+            {
+              "latex": "\\times DoD",
+              "note": "放电深度限制可用SOC区间（如10%-90%，DoD=80%）以护寿命"
+            },
+            {
+              "latex": "\\times SOH",
+              "note": "老化后按健康状态折减实际可用能量"
+            },
+            {
+              "latex": "\\eta_{rt} = \\eta_{batt}\\eta_{pcs}\\eta_{aux}",
+              "note": "往返效率，典型85%-92%"
+            },
+            {
+              "latex": "t = \\frac{E}{P}",
+              "note": "能量与功率双约束决定时长，定位调峰(长时)或调频(短时)"
+            }
           ]
         }
       ],
@@ -3355,14 +3919,46 @@
       }
     },
     "relations": [
-      { "target": "pcs", "type": "depends_on", "weight": 1 },
-      { "target": "bms_architecture", "type": "depends_on", "weight": 1 },
-      { "target": "soc_estimation", "type": "depends_on", "weight": 0.9 },
-      { "target": "soh_estimation", "type": "depends_on", "weight": 0.8 },
-      { "target": "cell_balancing", "type": "depends_on", "weight": 0.8 },
-      { "target": "battery_thermal", "type": "depends_on", "weight": 0.8 },
-      { "target": "grid_storage_application", "type": "depends_on", "weight": 0.9 },
-      { "target": "s_grid_tied_inverter", "type": "strong_related", "weight": 0.6 }
+      {
+        "target": "pcs",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "bms_architecture",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "soc_estimation",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "soh_estimation",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "cell_balancing",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "battery_thermal",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "grid_storage_application",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "s_grid_tied_inverter",
+        "type": "strong_related",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3382,19 +3978,43 @@
         {
           "formula": "k = \\frac{M}{\\sqrt{L_1 L_2}}, \\quad 0<k<1",
           "steps": [
-            { "latex": "M = k\\sqrt{L_1 L_2}\\ \\text{——互感由两线圈自感与耦合系数共同决定}", "note": "M 描述一侧电流在另一侧建立磁链的能力" },
-            { "latex": "\\Phi_{21} = M i_1 \\Rightarrow \\mathcal{E}_2 = -M\\frac{di_1}{dt}", "note": "本质是法拉第定律在双线圈上的体现" },
-            { "latex": "k = \\frac{M}{\\sqrt{L_1 L_2}}", "note": "归一化耦合强度，气隙越大、错位越多 k 越小" },
-            { "latex": "\\text{紧耦合变压器}\\ k\\to0.95;\\ \\text{EV WPT 松耦合}\\ k\\approx0.1\\text{–}0.3", "note": "松耦合正是 WPT 必须谐振补偿的根本原因" }
+            {
+              "latex": "M = k\\sqrt{L_1 L_2}\\ \\text{——互感由两线圈自感与耦合系数共同决定}",
+              "note": "M 描述一侧电流在另一侧建立磁链的能力"
+            },
+            {
+              "latex": "\\Phi_{21} = M i_1 \\Rightarrow \\mathcal{E}_2 = -M\\frac{di_1}{dt}",
+              "note": "本质是法拉第定律在双线圈上的体现"
+            },
+            {
+              "latex": "k = \\frac{M}{\\sqrt{L_1 L_2}}",
+              "note": "归一化耦合强度，气隙越大、错位越多 k 越小"
+            },
+            {
+              "latex": "\\text{紧耦合变压器}\\ k\\to0.95;\\ \\text{EV WPT 松耦合}\\ k\\approx0.1\\text{–}0.3",
+              "note": "松耦合正是 WPT 必须谐振补偿的根本原因"
+            }
           ]
         },
         {
           "formula": "P_{out} = \\frac{8}{\\pi^2}\\cdot\\frac{V_{in}V_{out}}{\\omega_0 M}\\quad(\\text{SS},\\ \\omega=\\omega_0)",
           "steps": [
-            { "latex": "\\text{方波逆变基波幅值}\\ V_1=\\frac{4}{\\pi}V_{in}", "note": "原副边整流同理各贡献 4/π 系数" },
-            { "latex": "\\text{SS 谐振时两侧电抗被补偿，功率经互感 M 传递}", "note": "谐振点回路呈纯阻性" },
-            { "latex": "P = \\frac{V_1 V_2}{\\omega_0 M}", "note": "传输功率反比于 ω₀M" },
-            { "latex": "P_{out}=\\frac{8}{\\pi^2}\\frac{V_{in}V_{out}}{\\omega_0 M}", "note": "工程上靠调原边直流电压与移相控制功率" }
+            {
+              "latex": "\\text{方波逆变基波幅值}\\ V_1=\\frac{4}{\\pi}V_{in}",
+              "note": "原副边整流同理各贡献 4/π 系数"
+            },
+            {
+              "latex": "\\text{SS 谐振时两侧电抗被补偿，功率经互感 M 传递}",
+              "note": "谐振点回路呈纯阻性"
+            },
+            {
+              "latex": "P = \\frac{V_1 V_2}{\\omega_0 M}",
+              "note": "传输功率反比于 ω₀M"
+            },
+            {
+              "latex": "P_{out}=\\frac{8}{\\pi^2}\\frac{V_{in}V_{out}}{\\omega_0 M}",
+              "note": "工程上靠调原边直流电压与移相控制功率"
+            }
           ]
         }
       ],
@@ -3409,13 +4029,41 @@
       }
     },
     "relations": [
-      { "target": "wpt_inductive_coupling", "type": "depends_on", "weight": 1 },
-      { "target": "wpt_resonant_compensation", "type": "depends_on", "weight": 1 },
-      { "target": "wpt_hf_inverter", "type": "depends_on", "weight": 1 },
-      { "target": "wpt_efficiency_kq", "type": "depends_on", "weight": 0.9 },
-      { "target": "wpt_secondary_rectifier", "type": "depends_on", "weight": 0.8 },
-      { "target": "battery_charging", "type": "strong_related", "weight": 0.6 },
-      { "target": "s_qi_standard", "type": "strong_related", "weight": 0.5 }
+      {
+        "target": "wpt_inductive_coupling",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "wpt_resonant_compensation",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "wpt_hf_inverter",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "wpt_efficiency_kq",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "wpt_secondary_rectifier",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "battery_charging",
+        "type": "strong_related",
+        "weight": 0.6
+      },
+      {
+        "target": "s_qi_standard",
+        "type": "strong_related",
+        "weight": 0.5
+      }
     ]
   },
   {
@@ -3434,20 +4082,47 @@
         {
           "formula": "\\begin{cases} u_1 = R_1 i_1 + L_1\\frac{di_1}{dt} + M\\frac{di_2}{dt} \\\\ u_2 = R_2 i_2 + L_2\\frac{di_2}{dt} + M\\frac{di_1}{dt} \\end{cases}",
           "steps": [
-            { "latex": "\\text{单线圈：}\\ u=Ri+L\\frac{di}{dt}", "note": "电阻压降加自感电动势" },
-            { "latex": "\\text{引入耦合：对方电流变化经互感感应}\\ M\\frac{di}{dt}", "note": "源于 ℰ=-dΦ/dt，磁链 Φ 含互感分量 Mi" },
-            { "latex": "u_1=R_1 i_1+L_1\\frac{di_1}{dt}+M\\frac{di_2}{dt}", "note": "原边方程，含副边反射作用" },
-            { "latex": "u_2=R_2 i_2+L_2\\frac{di_2}{dt}+M\\frac{di_1}{dt}", "note": "副边方程，原边电流是能量来源" },
-            { "latex": "\\text{相量化：}\\ U_1=(R_1+j\\omega L_1)I_1+j\\omega M I_2", "note": "为谐振补偿分析铺路，M 项即耦合通道" }
+            {
+              "latex": "\\text{单线圈：}\\ u=Ri+L\\frac{di}{dt}",
+              "note": "电阻压降加自感电动势"
+            },
+            {
+              "latex": "\\text{引入耦合：对方电流变化经互感感应}\\ M\\frac{di}{dt}",
+              "note": "源于 ℰ=-dΦ/dt，磁链 Φ 含互感分量 Mi"
+            },
+            {
+              "latex": "u_1=R_1 i_1+L_1\\frac{di_1}{dt}+M\\frac{di_2}{dt}",
+              "note": "原边方程，含副边反射作用"
+            },
+            {
+              "latex": "u_2=R_2 i_2+L_2\\frac{di_2}{dt}+M\\frac{di_1}{dt}",
+              "note": "副边方程，原边电流是能量来源"
+            },
+            {
+              "latex": "\\text{相量化：}\\ U_1=(R_1+j\\omega L_1)I_1+j\\omega M I_2",
+              "note": "为谐振补偿分析铺路，M 项即耦合通道"
+            }
           ]
         },
         {
           "formula": "Q_i = \\frac{\\omega_0 L_i}{R_i}",
           "steps": [
-            { "latex": "Q=2\\pi\\cdot\\frac{\\text{每周期储能}}{\\text{每周期耗能}}", "note": "品质因数衡量谐振回路的纯净度" },
-            { "latex": "\\text{电感储能}\\ \\tfrac12 L I^2,\\ \\text{电阻每周期耗能}\\ I^2 R/f", "note": "代入定义并化简" },
-            { "latex": "Q_i=\\frac{\\omega_0 L_i}{R_i}", "note": "WPT 线圈 Q 常达 100–300，利兹线降 R 提 Q" },
-            { "latex": "kQ=k\\sqrt{Q_1 Q_2}\\ \\text{是衡量最大效率的关键无量纲量}", "note": "引出传输效率节点" }
+            {
+              "latex": "Q=2\\pi\\cdot\\frac{\\text{每周期储能}}{\\text{每周期耗能}}",
+              "note": "品质因数衡量谐振回路的纯净度"
+            },
+            {
+              "latex": "\\text{电感储能}\\ \\tfrac12 L I^2,\\ \\text{电阻每周期耗能}\\ I^2 R/f",
+              "note": "代入定义并化简"
+            },
+            {
+              "latex": "Q_i=\\frac{\\omega_0 L_i}{R_i}",
+              "note": "WPT 线圈 Q 常达 100–300，利兹线降 R 提 Q"
+            },
+            {
+              "latex": "kQ=k\\sqrt{Q_1 Q_2}\\ \\text{是衡量最大效率的关键无量纲量}",
+              "note": "引出传输效率节点"
+            }
           ]
         }
       ],
@@ -3462,11 +4137,31 @@
       }
     },
     "relations": [
-      { "target": "faraday_law", "type": "depends_on", "weight": 1 },
-      { "target": "magnetic_circuit", "type": "depends_on", "weight": 0.8 },
-      { "target": "s_magnetostatics", "type": "depends_on", "weight": 0.6 },
-      { "target": "complex_numbers", "type": "depends_on", "weight": 0.7 },
-      { "target": "s_transformer", "type": "strong_related", "weight": 0.8 }
+      {
+        "target": "faraday_law",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "magnetic_circuit",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "s_magnetostatics",
+        "type": "depends_on",
+        "weight": 0.6
+      },
+      {
+        "target": "complex_numbers",
+        "type": "depends_on",
+        "weight": 0.7
+      },
+      {
+        "target": "s_transformer",
+        "type": "strong_related",
+        "weight": 0.8
+      }
     ]
   },
   {
@@ -3485,33 +4180,81 @@
         {
           "formula": "C_1 = \\frac{1}{\\omega_0^2 L_1}, \\quad C_2 = \\frac{1}{\\omega_0^2 L_2}\\quad(\\text{SS})",
           "steps": [
-            { "latex": "\\text{串联回路阻抗}\\ Z=R+j\\left(\\omega L-\\frac{1}{\\omega C}\\right)", "note": "电感为正电抗，电容为负电抗" },
-            { "latex": "\\text{谐振}\\Leftrightarrow\\text{虚部为零：}\\ \\omega_0 L=\\frac{1}{\\omega_0 C}", "note": "感抗与容抗大小相等、相互抵消" },
-            { "latex": "\\Rightarrow C=\\frac{1}{\\omega_0^2 L}", "note": "SS 拓扑原副边各自独立谐振" },
-            { "latex": "C_1=\\frac{1}{\\omega_0^2 L_1},\\ C_2=\\frac{1}{\\omega_0^2 L_2}", "note": "SS 补偿电容与 M 无关，对气隙变化鲁棒" },
-            { "latex": "\\omega_0=2\\pi\\times85\\,\\text{kHz}\\ \\text{固定}", "note": "对齐 SAE J2954 频带，C 由线圈自感唯一确定" }
+            {
+              "latex": "\\text{串联回路阻抗}\\ Z=R+j\\left(\\omega L-\\frac{1}{\\omega C}\\right)",
+              "note": "电感为正电抗，电容为负电抗"
+            },
+            {
+              "latex": "\\text{谐振}\\Leftrightarrow\\text{虚部为零：}\\ \\omega_0 L=\\frac{1}{\\omega_0 C}",
+              "note": "感抗与容抗大小相等、相互抵消"
+            },
+            {
+              "latex": "\\Rightarrow C=\\frac{1}{\\omega_0^2 L}",
+              "note": "SS 拓扑原副边各自独立谐振"
+            },
+            {
+              "latex": "C_1=\\frac{1}{\\omega_0^2 L_1},\\ C_2=\\frac{1}{\\omega_0^2 L_2}",
+              "note": "SS 补偿电容与 M 无关，对气隙变化鲁棒"
+            },
+            {
+              "latex": "\\omega_0=2\\pi\\times85\\,\\text{kHz}\\ \\text{固定}",
+              "note": "对齐 SAE J2954 频带，C 由线圈自感唯一确定"
+            }
           ]
         },
         {
           "formula": "Z_{in} = \\frac{\\omega_0^2 M^2}{R_{eq}}\\quad(\\text{SS 谐振})",
           "steps": [
-            { "latex": "\\text{副边谐振}\\Rightarrow\\text{副边回路仅余等效负载}\\ R_{eq}", "note": "R_eq 为整流器加电池折算的等效交流电阻" },
-            { "latex": "\\text{反射阻抗}\\ Z_r=\\frac{(\\omega_0 M)^2}{R_{eq}}", "note": "副边负载经互感反射回原边" },
-            { "latex": "\\text{原边谐振}\\Rightarrow\\text{自身电抗抵消，仅剩}\\ R_1+Z_r", "note": "忽略 R₁ 时输入呈纯阻，单位功率因数" },
-            { "latex": "Z_{in}\\approx\\frac{\\omega_0^2 M^2}{R_{eq}}", "note": "M 减小则输入阻抗减小，原边电流增大需限流保护" }
+            {
+              "latex": "\\text{副边谐振}\\Rightarrow\\text{副边回路仅余等效负载}\\ R_{eq}",
+              "note": "R_eq 为整流器加电池折算的等效交流电阻"
+            },
+            {
+              "latex": "\\text{反射阻抗}\\ Z_r=\\frac{(\\omega_0 M)^2}{R_{eq}}",
+              "note": "副边负载经互感反射回原边"
+            },
+            {
+              "latex": "\\text{原边谐振}\\Rightarrow\\text{自身电抗抵消，仅剩}\\ R_1+Z_r",
+              "note": "忽略 R₁ 时输入呈纯阻，单位功率因数"
+            },
+            {
+              "latex": "Z_{in}\\approx\\frac{\\omega_0^2 M^2}{R_{eq}}",
+              "note": "M 减小则输入阻抗减小，原边电流增大需限流保护"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "⚖️",
         "text": "松耦合线圈像一根漏气的水管，九成无功在原地空转。工程师在两端各串一只电容，精确调到 85kHz 谐振——感性与容性瞬间握手言和，逆变器从此只需推动真正流向汽车的有功电流，功率因数逼近 1。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "resonance_lc",
+        "caption": "能量在电感与电容间交替振荡——谐振补偿让松耦合线圈在 85kHz 谐振，抵消漏感无功、实现近单位功率因数。"
       }
     },
     "relations": [
-      { "target": "s_resonant_circuit", "type": "depends_on", "weight": 1 },
-      { "target": "wpt_inductive_coupling", "type": "depends_on", "weight": 1 },
-      { "target": "complex_numbers", "type": "depends_on", "weight": 0.8 },
-      { "target": "circuit_theory", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "s_resonant_circuit",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "wpt_inductive_coupling",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "complex_numbers",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "circuit_theory",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3531,33 +4274,82 @@
         {
           "formula": "v(t) = \\frac{4V_{dc}}{\\pi}\\sum_{n=1,3,5\\cdots}\\frac{1}{n}\\sin(n\\omega_0 t)",
           "steps": [
-            { "latex": "\\text{全桥输出}\\ \\pm V_{dc}\\ \\text{的奇对称方波}", "note": "占空比 50%，无偶次谐波" },
-            { "latex": "\\text{傅里叶展开：}\\ v(t)=\\sum b_n\\sin(n\\omega_0 t)", "note": "方波等于基波加奇次谐波" },
-            { "latex": "b_n=\\frac{4V_{dc}}{n\\pi}\\ (n=1,3,5\\cdots)", "note": "谐波幅值随 n 反比衰减" },
-            { "latex": "\\text{基波}\\ V_1=\\frac{4V_{dc}}{\\pi}\\approx1.27 V_{dc}", "note": "高 Q 回路仅响应基波，谐波被滤除" }
+            {
+              "latex": "\\text{全桥输出}\\ \\pm V_{dc}\\ \\text{的奇对称方波}",
+              "note": "占空比 50%，无偶次谐波"
+            },
+            {
+              "latex": "\\text{傅里叶展开：}\\ v(t)=\\sum b_n\\sin(n\\omega_0 t)",
+              "note": "方波等于基波加奇次谐波"
+            },
+            {
+              "latex": "b_n=\\frac{4V_{dc}}{n\\pi}\\ (n=1,3,5\\cdots)",
+              "note": "谐波幅值随 n 反比衰减"
+            },
+            {
+              "latex": "\\text{基波}\\ V_1=\\frac{4V_{dc}}{\\pi}\\approx1.27 V_{dc}",
+              "note": "高 Q 回路仅响应基波，谐波被滤除"
+            }
           ]
         },
         {
           "formula": "V_1 = \\frac{4V_{dc}}{\\pi}\\sin\\left(\\frac{\\pi D}{2}\\right)",
           "steps": [
-            { "latex": "\\text{移相：两桥臂错开相位}\\ \\delta,\\ \\text{有效占空}\\ D=1-\\delta/\\pi", "note": "输出变准方波，正负电平间插入零电平" },
-            { "latex": "\\text{对准方波重做傅里叶积分}", "note": "基波系数随 D 变化" },
-            { "latex": "V_1=\\frac{4V_{dc}}{\\pi}\\sin\\left(\\frac{\\pi D}{2}\\right)", "note": "D=1（全方波）时回到 4V_dc/π" },
-            { "latex": "\\text{调}\\ D\\ \\text{即调基波幅值，进而调功率}", "note": "频率锁定 85kHz，功率靠移相而非调频" }
+            {
+              "latex": "\\text{移相：两桥臂错开相位}\\ \\delta,\\ \\text{有效占空}\\ D=1-\\delta/\\pi",
+              "note": "输出变准方波，正负电平间插入零电平"
+            },
+            {
+              "latex": "\\text{对准方波重做傅里叶积分}",
+              "note": "基波系数随 D 变化"
+            },
+            {
+              "latex": "V_1=\\frac{4V_{dc}}{\\pi}\\sin\\left(\\frac{\\pi D}{2}\\right)",
+              "note": "D=1（全方波）时回到 4V_dc/π"
+            },
+            {
+              "latex": "\\text{调}\\ D\\ \\text{即调基波幅值，进而调功率}",
+              "note": "频率锁定 85kHz，功率靠移相而非调频"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "⚡",
         "text": "四只碳化硅管子每秒开关 8 万次，把 600V 直流剁成凌厉的高频方波。诀窍在死区那几十纳秒：让电流先于电压抢跑，管子两端电压归零的刹那才导通——零电压开关，让这台 kW 级逆变器在如此高频下依旧凉得发指。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "switching_pulse",
+        "caption": "原边全桥把直流斩成 85kHz 高频方波激励谐振网络，软开关（ZVS）让高频切换依旧低损。"
       }
     },
     "relations": [
-      { "target": "s_dc_dc_full_bridge", "type": "depends_on", "weight": 1 },
-      { "target": "igbt_mosfet", "type": "depends_on", "weight": 0.9 },
-      { "target": "gate_drive", "type": "depends_on", "weight": 0.8 },
-      { "target": "s_resonant_circuit", "type": "depends_on", "weight": 0.8 },
-      { "target": "power_electronics_basics", "type": "depends_on", "weight": 0.6 }
+      {
+        "target": "s_dc_dc_full_bridge",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "igbt_mosfet",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "gate_drive",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "s_resonant_circuit",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "power_electronics_basics",
+        "type": "depends_on",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3576,33 +4368,81 @@
         {
           "formula": "\\eta_{max} = \\frac{(kQ)^2}{\\left(1+\\sqrt{1+(kQ)^2}\\right)^2},\\quad Q=\\sqrt{Q_1 Q_2}",
           "steps": [
-            { "latex": "\\eta=\\frac{P_{R_L}}{P_{R_L}+P_{R_1}+P_{R_2}}", "note": "传能与线圈铜损磁损的竞争" },
-            { "latex": "\\text{以反射阻抗代入，对负载求极值}\\ \\frac{\\partial\\eta}{\\partial R_L}=0", "note": "存在唯一最优等效负载" },
-            { "latex": "\\text{结果仅含无量纲量}\\ kQ=k\\sqrt{Q_1 Q_2}", "note": "k 与 Q 的全部影响凝聚为一个数" },
-            { "latex": "\\eta_{max}=\\frac{(kQ)^2}{(1+\\sqrt{1+(kQ)^2})^2}", "note": "kQ=10 时 η≈82%；kQ=30 时 η≈94%" },
-            { "latex": "\\text{设计目标：最大化}\\ kQ", "note": "提 Q（利兹线/铁氧体）、提 k（线圈形状/减气隙）" }
+            {
+              "latex": "\\eta=\\frac{P_{R_L}}{P_{R_L}+P_{R_1}+P_{R_2}}",
+              "note": "传能与线圈铜损磁损的竞争"
+            },
+            {
+              "latex": "\\text{以反射阻抗代入，对负载求极值}\\ \\frac{\\partial\\eta}{\\partial R_L}=0",
+              "note": "存在唯一最优等效负载"
+            },
+            {
+              "latex": "\\text{结果仅含无量纲量}\\ kQ=k\\sqrt{Q_1 Q_2}",
+              "note": "k 与 Q 的全部影响凝聚为一个数"
+            },
+            {
+              "latex": "\\eta_{max}=\\frac{(kQ)^2}{(1+\\sqrt{1+(kQ)^2})^2}",
+              "note": "kQ=10 时 η≈82%；kQ=30 时 η≈94%"
+            },
+            {
+              "latex": "\\text{设计目标：最大化}\\ kQ",
+              "note": "提 Q（利兹线/铁氧体）、提 k（线圈形状/减气隙）"
+            }
           ]
         },
         {
           "formula": "\\omega_{\\pm} = \\frac{\\omega_0}{\\sqrt{1\\pm k}}",
           "steps": [
-            { "latex": "\\text{双谐振耦合系统特征方程含}\\ (1-k^2)\\ \\text{项}", "note": "两回路经 M 耦合形成二自由度系统" },
-            { "latex": "\\text{求解本征频率}\\ \\Rightarrow\\ \\omega_\\pm=\\frac{\\omega_0}{\\sqrt{1\\pm k}}", "note": "类比两弹簧耦合的正交模式" },
-            { "latex": "k>k_{crit}=\\frac{1}{\\sqrt{Q_1 Q_2}}\\Rightarrow\\text{谐振峰分裂}", "note": "过耦合区，85kHz 处增益凹陷" },
-            { "latex": "\\text{对策：频率跟踪锁定}\\ \\omega_-\\ \\text{或调原边电压}", "note": "EV 大气隙多为欠耦合，分裂主要出现在近距对位" }
+            {
+              "latex": "\\text{双谐振耦合系统特征方程含}\\ (1-k^2)\\ \\text{项}",
+              "note": "两回路经 M 耦合形成二自由度系统"
+            },
+            {
+              "latex": "\\text{求解本征频率}\\ \\Rightarrow\\ \\omega_\\pm=\\frac{\\omega_0}{\\sqrt{1\\pm k}}",
+              "note": "类比两弹簧耦合的正交模式"
+            },
+            {
+              "latex": "k>k_{crit}=\\frac{1}{\\sqrt{Q_1 Q_2}}\\Rightarrow\\text{谐振峰分裂}",
+              "note": "过耦合区，85kHz 处增益凹陷"
+            },
+            {
+              "latex": "\\text{对策：频率跟踪锁定}\\ \\omega_-\\ \\text{或调原边电压}",
+              "note": "EV 大气隙多为欠耦合，分裂主要出现在近距对位"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "📈",
         "text": "为什么有的无线充电又快又凉，有的又慢又烫？答案藏在一个数里：kQ。它把线圈绕多少匝、用不用利兹线、气隙留多大，全部压缩成一个优值。kQ 过 30，九成四的电稳稳过桥；贴得太近又会乐极生悲，一个谐振峰裂成两个。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rc_curve",
+        "caption": "传输效率随 kQ 积单调上升并趋于饱和——提升耦合系数 k 与线圈品质因数 Q 是无线传能高效的唯一路径。"
       }
     },
     "relations": [
-      { "target": "wpt_inductive_coupling", "type": "depends_on", "weight": 1 },
-      { "target": "s_resonant_circuit", "type": "depends_on", "weight": 0.9 },
-      { "target": "wpt_resonant_compensation", "type": "strong_related", "weight": 0.8 },
-      { "target": "s_eddy_current", "type": "strong_related", "weight": 0.6 }
+      {
+        "target": "wpt_inductive_coupling",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "s_resonant_circuit",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "wpt_resonant_compensation",
+        "type": "strong_related",
+        "weight": 0.8
+      },
+      {
+        "target": "s_eddy_current",
+        "type": "strong_related",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -3621,34 +4461,86 @@
         {
           "formula": "R_{eq} = \\frac{8}{\\pi^2}R_L\\quad(\\text{全桥整流})",
           "steps": [
-            { "latex": "\\text{谐振时副边电压电流同相：}\\ v=V_m\\sin\\omega t,\\ i=I_m\\sin\\omega t", "note": "副边呈阻性" },
-            { "latex": "\\text{全桥整流输出}\\ V_{dc}=\\frac{2}{\\pi}V_m,\\ I_{dc}=\\frac{2}{\\pi}I_m", "note": "正弦全波均值系数 2/π" },
-            { "latex": "\\text{功率守恒}\\ \\tfrac12 V_m I_m=V_{dc}I_{dc}", "note": "交流有功等于直流功率（理想无损）" },
-            { "latex": "R_{eq}=\\frac{V_m}{I_m}=\\frac{8}{\\pi^2}R_L", "note": "非线性整流负载线性化为等效交流电阻" },
-            { "latex": "R_{eq}\\propto R_L\\ \\text{随充电阶段变化}", "note": "CV 末期 R_L 增大则 R_eq 增大" }
+            {
+              "latex": "\\text{谐振时副边电压电流同相：}\\ v=V_m\\sin\\omega t,\\ i=I_m\\sin\\omega t",
+              "note": "副边呈阻性"
+            },
+            {
+              "latex": "\\text{全桥整流输出}\\ V_{dc}=\\frac{2}{\\pi}V_m,\\ I_{dc}=\\frac{2}{\\pi}I_m",
+              "note": "正弦全波均值系数 2/π"
+            },
+            {
+              "latex": "\\text{功率守恒}\\ \\tfrac12 V_m I_m=V_{dc}I_{dc}",
+              "note": "交流有功等于直流功率（理想无损）"
+            },
+            {
+              "latex": "R_{eq}=\\frac{V_m}{I_m}=\\frac{8}{\\pi^2}R_L",
+              "note": "非线性整流负载线性化为等效交流电阻"
+            },
+            {
+              "latex": "R_{eq}\\propto R_L\\ \\text{随充电阶段变化}",
+              "note": "CV 末期 R_L 增大则 R_eq 增大"
+            }
           ]
         },
         {
           "formula": "Z_{ref} = \\frac{(\\omega_0 M)^2}{R_2 + R_{eq}}",
           "steps": [
-            { "latex": "\\text{副边总阻}\\ Z_2=R_2+R_{eq}\\ \\text{（谐振抵消电抗后）}", "note": "R₂ 为副边线圈寄生电阻" },
-            { "latex": "\\text{反射阻抗}\\ Z_{ref}=\\frac{(\\omega_0 M)^2}{Z_2}", "note": "互感耦合的阻抗变换本质" },
-            { "latex": "Z_{ref}=\\frac{(\\omega_0 M)^2}{R_2+R_{eq}}", "note": "这是原边逆变器实际驱动的负载" },
-            { "latex": "R_{eq}\\downarrow\\Rightarrow Z_{ref}\\uparrow\\Rightarrow\\text{原边电流}\\downarrow", "note": "解释了为何原副边须协同调功" }
+            {
+              "latex": "\\text{副边总阻}\\ Z_2=R_2+R_{eq}\\ \\text{（谐振抵消电抗后）}",
+              "note": "R₂ 为副边线圈寄生电阻"
+            },
+            {
+              "latex": "\\text{反射阻抗}\\ Z_{ref}=\\frac{(\\omega_0 M)^2}{Z_2}",
+              "note": "互感耦合的阻抗变换本质"
+            },
+            {
+              "latex": "Z_{ref}=\\frac{(\\omega_0 M)^2}{R_2+R_{eq}}",
+              "note": "这是原边逆变器实际驱动的负载"
+            },
+            {
+              "latex": "R_{eq}\\downarrow\\Rightarrow Z_{ref}\\uparrow\\Rightarrow\\text{原边电流}\\downarrow",
+              "note": "解释了为何原副边须协同调功"
+            }
           ]
         }
       ],
       "scene": {
         "icon": "🔋",
         "text": "高频交流跨过空气抵达车底，还得落地成电池能喝的直流。四只同步整流管接力把 85kHz 交流抚平成平稳直流。而分析师的妙招是：把整块电池连同整流器，在原边眼里简化成一只会随充电进度悄悄变化的等效电阻。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "rectifier_wave",
+        "caption": "上方高频交流经整流翻折为下方单向凸包——副边整流把隔空传来的交流抚平为给电池充电的直流。"
       }
     },
     "relations": [
-      { "target": "s_rectifier", "type": "depends_on", "weight": 1 },
-      { "target": "wpt_resonant_compensation", "type": "depends_on", "weight": 0.8 },
-      { "target": "igbt_mosfet", "type": "depends_on", "weight": 0.6 },
-      { "target": "circuit_theory", "type": "depends_on", "weight": 0.5 },
-      { "target": "battery_charging", "type": "strong_related", "weight": 0.7 }
+      {
+        "target": "s_rectifier",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "wpt_resonant_compensation",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "igbt_mosfet",
+        "type": "depends_on",
+        "weight": 0.6
+      },
+      {
+        "target": "circuit_theory",
+        "type": "depends_on",
+        "weight": 0.5
+      },
+      {
+        "target": "battery_charging",
+        "type": "strong_related",
+        "weight": 0.7
+      }
     ]
   }
 ]
