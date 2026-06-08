@@ -4,6 +4,9 @@ node_modules/
 # 构建产物
 dist/
 
+# PWA 开发产物（vite-plugin-pwa）
+dev-dist/
+
 # Vite 缓存
 .vite/
 

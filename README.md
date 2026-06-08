@@ -27,6 +27,7 @@
 - **明暗主题切换** — 默认深色星空主题，一键切换浅色模式，偏好 localStorage 持久化
 - **新手引导** — 首次进入分步高亮讲解图谱、搜索、溯源、过滤、路径规划五大核心交互
 - **移动端手势与响应式** — 2D 图谱单指平移、双指捏合缩放（ECharts roam 独占触控，禁浏览器抢手势与下拉刷新），3D 复盘单指旋转、双指缩放；小屏顶栏 13+ 控件收纳进汉堡抽屉，搜索框、弹窗、侧栏、详情浮层全面自适应（768px 断点）
+- **离线 PWA** — 可安装到主屏/桌面，Service Worker（Workbox）预缓存全部应用资源（图谱数据、Lottie 动图、KaTeX 与字体、echarts/three），断网后图谱、L3 详情、3D 复盘完整可用；版本自动更新、首次缓存完成提示「已可离线使用」
 
 ## 内容规模
 
@@ -57,6 +58,7 @@
 | 状态管理 | Pinia 2 |
 | UI 组件 | Element Plus（`unplugin-vue-components` 按需引入） |
 | 路由 | Vue Router 4（Hash 模式） |
+| 离线 PWA | vite-plugin-pwa（Workbox `generateSW`，全量预缓存 + 自动更新） |
 | 部署 | 纯静态站点（GitHub Pages / Vercel） |
 
 ## 快速开始
@@ -106,6 +108,10 @@ src/
 ├── styles/
 │   └── dark.css             # 深色星空主题样式
 └── router/index.js          # / 图谱主页，/review 3D 复盘
+
+public/
+└── pwa-icon.svg             # PWA 安装图标（⚡ 渐变，any + maskable）
+vite.config.js               # 含 vite-plugin-pwa（manifest + Workbox 预缓存）
 ```
 
 ## 路线图
@@ -116,4 +122,4 @@ src/
 - [x] 节点自制原理动图（Lottie）接入（20 类原型，覆盖 85% 核心节点）
 - [x] 用户自定义路径保存与分享（命名保存 + 我的路径面板 + URL 分享链接）
 - [x] 移动端手势优化（触控手势独占 + 汉堡抽屉 + 全站响应式适配）
-- [ ] 离线 PWA 支持
+- [x] 离线 PWA 支持（可安装 + Workbox 全量预缓存 + 自动更新）
