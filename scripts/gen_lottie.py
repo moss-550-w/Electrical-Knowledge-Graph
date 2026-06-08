@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 原理动图生成器
-- 程序化生成 15 个参数化 Lottie 动画原型 -> src/data/lottie/*.json
+- 程序化生成 17 个参数化 Lottie 动画原型 -> src/data/lottie/*.json
 - 按 MAPPING 向 src/data/goldThread.json 注入 detail.anim 字段（保留已有的不覆盖）
 - 自检：JSON 合法性、src 命中、覆盖率
 """
@@ -341,6 +341,43 @@ def make_ion_shuttle():
         ions.append(layer(i + 1, "ion%d" % i, [sh], ks, op))
     return anim("ion_shuttle", ions + [plL, plR], op)
 
+def make_mppt_climb():
+    op = 120
+    # P-V 功率曲线（钟形，峰在 t≈0.6）
+    def pv(t):
+        val = math.exp(-((t - 0.6) * 3.0) ** 2)
+        return 190 - val * 128
+    verts = fn_verts(pv, 52, 320, 80)
+    ax = axes_layer(4, op)
+    curve = curve_layer(3, verts, ORANGE, 3, op, name="pv")
+    # 工作点：先沿曲线爬升到峰，再在峰顶做 P&O 小幅扰动
+    climb = []
+    for k in range(33):
+        t = 0.6 * k / 32
+        climb.append((52 + 268 * t, pv(t)))
+    for k in range(1, 16):
+        t = 0.6 + 0.05 * math.sin(k / 15 * 2 * math.pi * 2)
+        climb.append((52 + 268 * t, pv(t)))
+    dot = follow_dot_layer(1, climb, GREEN, op, r=9, samples=28)
+    return anim("mppt_climb", [dot, curve, ax], op)
+
+def make_pll_lock():
+    op = 130
+    # 电网参考正弦（灰，固定）：宽 280px 放 2 周期 → 140px/周期
+    grid = sine_verts(40, 320, 120, 52, 2.0)
+    gl = curve_layer(3, grid, GRAY, 2, op, o=65, name="grid")
+    # VCO 输出（蓝）：更宽曲线同空间周期，整层水平平移由相位差归零（锁相）
+    vco = sine_verts(-90, 450, 120, 52, 540 / 140.0)
+    off = 70
+    ks = {"o": st(100), "r": st(0),
+          "p": kf([(0, [CX + off, CY, 0]),
+                   (int(op * 0.65), [CX, CY, 0]),
+                   (op, [CX, CY, 0])]),
+          "a": st([CX, CY, 0]), "s": st([100, 100, 100])}
+    vl = layer(1, "vco", [group("c", [path(vco), stroke(BLUE, 2.5), tr()])], ks, op)
+    axis = curve_layer(4, [(40, 120), (320, 120)], GRAY, 1, op, o=40, name="axis")
+    return anim("pll_lock", [vl, gl, axis], op)
+
 ARCHETYPES = {
     "switching_pulse": make_switching_pulse,
     "pwm_compare": make_pwm_compare,
@@ -357,6 +394,8 @@ ARCHETYPES = {
     "em_wave": make_em_wave,
     "flux_loop": make_flux_loop,
     "ion_shuttle": make_ion_shuttle,
+    "mppt_climb": make_mppt_climb,
+    "pll_lock": make_pll_lock,
 }
 
 # =================== 节点 -> (原型, caption) 映射 ===================
@@ -402,6 +441,9 @@ MAPPING = {
     "maxwell_equations": ("em_wave", "变化的电场激发磁场、变化的磁场激发电场，相互滋生向前传播——这正是麦克斯韦方程组预言的电磁波。"),
     "magnetic_circuit": ("flux_loop", "磁通沿铁芯回路循环，如电流沿电路——磁路的磁动势、磁阻与磁通对应电路的电压、电阻与电流。"),
     "battery_electrochemistry": ("ion_shuttle", "充放电时锂离子在正负极间往返穿梭、嵌入脱出，把化学能与电能相互转换——这是锂电池储能的微观本质。"),
+    # 光伏并网主线
+    "mppt": ("mppt_climb", "工作点沿 P-V 功率曲线向上攀爬，逼近顶端最大功率点后在其附近小幅扰动——MPPT 像爬山者反复试探，始终榨取当前光照下的最大发电功率。"),
+    "pll": ("pll_lock", "逆变器输出正弦（蓝）从与电网（灰）错相起步，逐步平移直至完全重合——锁相环把相位误差驱至零，使并网电流与电网电压严格同步。"),
 }
 
 def main():

@@ -4586,13 +4586,41 @@
       }
     },
     "relations": [
-      { "target": "pv_array_model", "type": "depends_on", "weight": 1 },
-      { "target": "mppt", "type": "depends_on", "weight": 1 },
-      { "target": "grid_inverter_control", "type": "depends_on", "weight": 1 },
-      { "target": "pll", "type": "depends_on", "weight": 0.9 },
-      { "target": "islanding_detection", "type": "depends_on", "weight": 0.8 },
-      { "target": "s_grid_tied_inverter", "type": "strong_related", "weight": 0.7 },
-      { "target": "s_power_system_structure", "type": "strong_related", "weight": 0.6 }
+      {
+        "target": "pv_array_model",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "mppt",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "grid_inverter_control",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "pll",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "islanding_detection",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "s_grid_tied_inverter",
+        "type": "strong_related",
+        "weight": 0.7
+      },
+      {
+        "target": "s_power_system_structure",
+        "type": "strong_related",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -4615,9 +4643,21 @@
       }
     },
     "relations": [
-      { "target": "semiconductor_physics", "type": "depends_on", "weight": 0.9 },
-      { "target": "circuit_theory", "type": "depends_on", "weight": 0.6 },
-      { "target": "solid_state_physics", "type": "depends_on", "weight": 0.5 }
+      {
+        "target": "semiconductor_physics",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "circuit_theory",
+        "type": "depends_on",
+        "weight": 0.6
+      },
+      {
+        "target": "solid_state_physics",
+        "type": "depends_on",
+        "weight": 0.5
+      }
     ]
   },
   {
@@ -4637,12 +4677,29 @@
       "scene": {
         "icon": "📈",
         "text": "云朵飘过遮住一半阳光，逆变器里的 MPPT 算法立刻像爬山者一样重新摸索功率峰顶——每秒数十次试探占空比，确保哪怕光照剧变也总在榨取当下能发的最大功率。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "mppt_climb",
+        "caption": "工作点沿 P-V 功率曲线向上攀爬，逼近顶端最大功率点后在其附近小幅扰动——MPPT 像爬山者反复试探，始终榨取当前光照下的最大发电功率。"
       }
     },
     "relations": [
-      { "target": "pv_array_model", "type": "depends_on", "weight": 1 },
-      { "target": "s_boost_converter", "type": "depends_on", "weight": 0.9 },
-      { "target": "control_theory_basics", "type": "depends_on", "weight": 0.7 }
+      {
+        "target": "pv_array_model",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "s_boost_converter",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "control_theory_basics",
+        "type": "depends_on",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -4665,11 +4722,31 @@
       }
     },
     "relations": [
-      { "target": "three_phase_inverter", "type": "depends_on", "weight": 1 },
-      { "target": "pi_controller", "type": "depends_on", "weight": 0.8 },
-      { "target": "pll", "type": "depends_on", "weight": 0.9 },
-      { "target": "dq_transform", "type": "depends_on", "weight": 0.7 },
-      { "target": "s_grid_tied_inverter", "type": "strong_related", "weight": 0.7 }
+      {
+        "target": "three_phase_inverter",
+        "type": "depends_on",
+        "weight": 1
+      },
+      {
+        "target": "pi_controller",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "pll",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "dq_transform",
+        "type": "depends_on",
+        "weight": 0.7
+      },
+      {
+        "target": "s_grid_tied_inverter",
+        "type": "strong_related",
+        "weight": 0.7
+      }
     ]
   },
   {
@@ -4689,13 +4766,34 @@
       "scene": {
         "icon": "🎯",
         "text": "电网的相位每秒变化 50 圈，逆变器要并上去就必须先「跟上拍子」——锁相环把 q 轴电压死死压到零，让自己的相位严丝合缝咬住电网，差半度都可能引发冲击电流。"
+      },
+      "anim": {
+        "type": "lottie",
+        "src": "pll_lock",
+        "caption": "逆变器输出正弦（蓝）从与电网（灰）错相起步，逐步平移直至完全重合——锁相环把相位误差驱至零，使并网电流与电网电压严格同步。"
       }
     },
     "relations": [
-      { "target": "control_theory_basics", "type": "depends_on", "weight": 0.9 },
-      { "target": "three_phase_ac", "type": "depends_on", "weight": 0.8 },
-      { "target": "park_transform", "type": "depends_on", "weight": 0.6 },
-      { "target": "pi_controller", "type": "strong_related", "weight": 0.6 }
+      {
+        "target": "control_theory_basics",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "three_phase_ac",
+        "type": "depends_on",
+        "weight": 0.8
+      },
+      {
+        "target": "park_transform",
+        "type": "depends_on",
+        "weight": 0.6
+      },
+      {
+        "target": "pi_controller",
+        "type": "strong_related",
+        "weight": 0.6
+      }
     ]
   },
   {
@@ -4717,9 +4815,21 @@
       }
     },
     "relations": [
-      { "target": "grid_inverter_control", "type": "depends_on", "weight": 0.9 },
-      { "target": "s_power_system_structure", "type": "depends_on", "weight": 0.5 },
-      { "target": "pll", "type": "strong_related", "weight": 0.6 }
+      {
+        "target": "grid_inverter_control",
+        "type": "depends_on",
+        "weight": 0.9
+      },
+      {
+        "target": "s_power_system_structure",
+        "type": "depends_on",
+        "weight": 0.5
+      },
+      {
+        "target": "pll",
+        "type": "strong_related",
+        "weight": 0.6
+      }
     ]
   }
 ]
