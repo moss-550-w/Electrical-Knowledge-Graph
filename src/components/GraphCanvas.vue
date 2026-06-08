@@ -1,10 +1,15 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { GraphChart } from 'echarts/charts'
+import { TooltipComponent, LegendComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
 import { useGraphStore } from '@/stores/graphStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useIsMobile } from '@/composables/useMediaQuery'
 import { buildGraphOption, loadGraphToStore } from '@/utils/graphBuilder'
+
+echarts.use([GraphChart, TooltipComponent, LegendComponent, CanvasRenderer])
 
 const graphStore = useGraphStore()
 const historyStore = useHistoryStore()

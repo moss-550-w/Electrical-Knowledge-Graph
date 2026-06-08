@@ -503,13 +503,13 @@ function disposeScene() {
           <el-button size="small" type="primary" @click="startTour">▶ 沿路径学习</el-button>
         </template>
         <template v-else>
-          <button class="tour-btn" title="上一步" @click="tourPrev">⏮</button>
-          <button class="tour-btn" :title="tourPlaying ? '暂停' : '播放'" @click="toggleTourPlay">
+          <button class="tour-btn" title="上一步" aria-label="上一步" @click="tourPrev">⏮</button>
+          <button class="tour-btn" :title="tourPlaying ? '暂停' : '播放'" :aria-label="tourPlaying ? '暂停' : '播放'" @click="toggleTourPlay">
             {{ tourPlaying ? '⏸' : '▶' }}
           </button>
-          <button class="tour-btn" title="下一步" @click="tourNext">⏭</button>
+          <button class="tour-btn" title="下一步" aria-label="下一步" @click="tourNext">⏭</button>
           <span class="tour-step">{{ tourIndex + 1 }}/{{ tourTotal }}</span>
-          <button class="tour-btn exit" title="退出漫游" @click="exitTour">✕</button>
+          <button class="tour-btn exit" title="退出漫游" aria-label="退出漫游" @click="exitTour">✕</button>
         </template>
       </div>
     </div>
