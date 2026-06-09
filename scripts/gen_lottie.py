@@ -16,6 +16,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 LOTTIE_DIR = os.path.join(ROOT, "src", "data", "lottie")
 GOLD_JSON = os.path.join(ROOT, "src", "data", "goldThread.json")
+DETAILS_DIR = os.path.join(ROOT, "src", "data", "details")
 
 W, H, FR = 360, 240, 30
 CX, CY = 180, 120
@@ -458,6 +459,58 @@ def make_pv_power_flow():
     pkt = follow_dot_layer(1, pts, GOLD, op, r=9, samples=30)
     return anim("pv_power_flow", [pkt, sun] + boxes + [bus], op)
 
+def make_boost_convert():
+    op = 120
+    base_y = 196
+    base = curve_layer(5, [(44, base_y), (320, base_y)], GRAY, 1.2, op, o=55, name="base")
+    # 输入电压 Vin（低，蓝色虚拟参考线）
+    vin_y = base_y - 38
+    vin = curve_layer(4, [(48, vin_y), (150, vin_y)], BLUE, 2, op, o=70, name="vin")
+    # 输出电压 Vout（高于 Vin，橙色，体现升压）
+    vout_y = base_y - 104
+    vout = curve_layer(3, [(170, vout_y), (320, vout_y)], ORANGE, 3, op, name="vout")
+    # 电感电流：开关导通时线性斜升(储能)、关断时斜降(向输出续流) —— 锯齿三角
+    seg = (310 - 50) / 4.0
+    iL = [(50, base_y - 18)]
+    for p in range(4):
+        a = 50 + p * seg
+        iL += [(a, base_y - 18), (a + seg * 0.55, base_y - 64), (a + seg, base_y - 18)]
+    iLc = curve_layer(2, iL, GREEN, 2.5, op, name="iL")
+    scan = scan_layer(1, 50, 310, 120, half=84, op=op, color=ORANGE)
+    return anim("boost_convert", [scan, iLc, vout, vin, base], op)
+
+def make_inverter_dc_ac():
+    op = 120
+    # 左侧直流母线（两条平行直流轨）
+    dcp = curve_layer(6, [(40, 92), (120, 92)], RED, 2.5, op, o=85, name="dcp")
+    dcn = curve_layer(5, [(40, 148), (120, 148)], BLUE, 2.5, op, o=85, name="dcn")
+    # 中部开关方波（斩波）
+    sw = curve_layer(4, square_verts(124, 188, 96, 144, 3), GRAY, 1.8, op, o=70, name="sw")
+    # 右侧合成三相正弦注入电网
+    a = curve_layer(3, sine_verts(196, 326, 120, 30, 1.5, phase=0), RED, 2.2, op, name="a")
+    b = curve_layer(2, sine_verts(196, 326, 120, 30, 1.5, phase=2 * math.pi / 3), GREEN, 2.2, op, name="b")
+    c = curve_layer(1, sine_verts(196, 326, 120, 30, 1.5, phase=4 * math.pi / 3), BLUE, 2.2, op, name="c")
+    return anim("inverter_dc_ac", [a, b, c, sw, dcp, dcn], op)
+
+def make_power_grid_flow():
+    op = 130
+    yline = 120
+    xs = [56, 130, 200, 272, 330]
+    cols = [RED, ORANGE, GRAY, ORANGE, GREEN]
+    names = ["gen", "up", "line", "down", "load"]
+    # 变压器级（up/down）画成上下叠放双框，发电/负荷/线路单框
+    bus = curve_layer(8, [(56, yline), (330, yline)], GRAY, 2, op, o=50, name="bus")
+    boxes = []
+    for i, (x, c) in enumerate(zip(xs, cols)):
+        h = 46 if names[i] in ("up", "down") else 36
+        boxes.append(layer(7 - i, "box_%s" % names[i],
+                     [group("b", [rect(x, yline, 40, h, 5), fill(c, 13), stroke(c, 2.2), tr()])],
+                     None, op))
+    # 电能沿五级潮流：发电→升压→输电→降压→用电
+    pts = [(56 + (330 - 56) * k / 40.0, yline) for k in range(41)]
+    pkt = follow_dot_layer(1, pts, GOLD, op, r=8, samples=30)
+    return anim("power_grid_flow", [pkt] + boxes + [bus], op)
+
 ARCHETYPES = {
     "switching_pulse": make_switching_pulse,
     "pwm_compare": make_pwm_compare,
@@ -480,6 +533,9 @@ ARCHETYPES = {
     "grid_dq_inject": make_grid_dq_inject,
     "islanding_trip": make_islanding_trip,
     "pv_power_flow": make_pv_power_flow,
+    "boost_convert": make_boost_convert,
+    "inverter_dc_ac": make_inverter_dc_ac,
+    "power_grid_flow": make_power_grid_flow,
 }
 
 # =================== 节点 -> (原型, caption) 映射 ===================
@@ -534,6 +590,16 @@ MAPPING = {
     "pv_grid_system": ("pv_power_flow", "金色能量包从太阳照射的光伏阵列出发，依次流经 Boost 升压(MPPT)、并网逆变器、注入电网——一条贯通光电转换、功率变换与并网控制的完整能量链路。"),
 }
 
+# =================== 骨架节点 -> (原型, caption) 映射 ===================
+# 骨架详情存放于 src/data/details/{id}.json（整文件即 detail 对象），anim 注入其顶层
+SKELETON_ANIM = {
+    # 光伏并网主线途经的骨架节点
+    "s_boost_converter": ("boost_convert", "开关导通时电感电流线性斜升储能（绿锯齿），关断时经二极管向输出续流——输出电压 Vout（橙）被抬升至高于输入 Vin（蓝），这就是 Boost 升压的核心：用电感储能换取更高电压。"),
+    "s_grid_tied_inverter": ("inverter_dc_ac", "左侧直流母线（红/蓝轨）经中部开关管高频斩波，在右侧合成三相互差 120° 的正弦电流注入电网——并网逆变器把直流'编织'成与电网同步的交流。"),
+    "s_power_system_structure": ("power_grid_flow", "电能像金色水流自左向右贯穿五级：发电→升压变压器→高压输电→降压变压器→用户用电——一升一降之间，电网以最小损耗把电力送达千家万户。"),
+    "s_transformer": ("magnetic_coupling", "原边线圈磁通脉动，经铁芯耦合在副边感应出电动势——变压器靠互感实现电压变换与电气隔离，原副边无直接电连接。"),
+}
+
 def main():
     os.makedirs(LOTTIE_DIR, exist_ok=True)
     # 1) 生成原型文件
@@ -559,6 +625,21 @@ def main():
         json.dump(gold, f, ensure_ascii=False, indent=2)
     print("注入 anim:", injected, "个")
 
+    # 2.5) 注入骨架节点 anim（独立 detail 文件，anim 加在顶层）
+    skel_injected = 0
+    for nid, (src, cap) in SKELETON_ANIM.items():
+        fp = os.path.join(DETAILS_DIR, nid + ".json")
+        if not os.path.exists(fp):
+            print("  [WARN] 骨架详情缺失:", nid)
+            continue
+        d = json.load(open(fp, encoding="utf-8"))
+        if "anim" not in d:
+            d["anim"] = {"type": "lottie", "src": src, "caption": cap}
+            with open(fp, "w", encoding="utf-8") as f:
+                json.dump(d, f, ensure_ascii=False, indent=2)
+            skel_injected += 1
+    print("注入骨架 anim:", skel_injected, "个")
+
     # 3) 自检
     gold = json.load(open(GOLD_JSON, encoding="utf-8"))
     files = {os.path.splitext(f)[0] for f in os.listdir(LOTTIE_DIR) if f.endswith(".json")}
@@ -567,11 +648,25 @@ def main():
     for f in files:
         json.load(open(os.path.join(LOTTIE_DIR, f + ".json"), encoding="utf-8"))  # 合法性
     cov = len(has) / len(gold) * 100
+    # 骨架 anim 自检：注入的 src 必须命中素材文件
+    skel_has, skel_miss = [], []
+    for nid in SKELETON_ANIM:
+        fp = os.path.join(DETAILS_DIR, nid + ".json")
+        if not os.path.exists(fp):
+            continue
+        d = json.load(open(fp, encoding="utf-8"))
+        a = d.get("anim")
+        if a:
+            skel_has.append(nid)
+            if a["src"] not in files:
+                skel_miss.append(nid)
     print("=" * 40)
-    print("总节点 %d | 带动图 %d | 覆盖率 %.1f%%" % (len(gold), len(has), cov))
+    print("金线节点 %d | 带动图 %d | 覆盖率 %.1f%%" % (len(gold), len(has), cov))
+    print("骨架带动图 %d 个：%s" % (len(skel_has), ", ".join(skel_has)))
     print("素材文件 %d 个" % len(files))
-    print("悬挂 src:", miss if miss else "无")
-    assert not miss, "存在未命中素材的 src"
+    print("悬挂 src:", (miss + skel_miss) if (miss or skel_miss) else "无")
+    assert not miss, "存在未命中素材的金线 src"
+    assert not skel_miss, "存在未命中素材的骨架 src"
     assert cov > 70, "覆盖率未达 70%%"
     print("自检通过 [OK]")
 
