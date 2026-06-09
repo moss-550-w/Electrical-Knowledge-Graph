@@ -378,6 +378,86 @@ def make_pll_lock():
     axis = curve_layer(4, [(40, 120), (320, 120)], GRAY, 1, op, o=40, name="axis")
     return anim("pll_lock", [vl, gl, axis], op)
 
+def make_pv_iv_curve():
+    op = 120
+    # 光伏 I-V 特性：低压段近似恒流(Isc)，越过膝点后电流陡降至开路电压(Voc)
+    def iv(t):
+        I = 1.0 / (1.0 + math.exp(22.0 * (t - 0.74)))
+        return 190 - I * 120
+    verts = fn_verts(iv, 60, 320, 80)
+    t_mpp = 0.68
+    x_mpp = 60 + 260 * t_mpp
+    y_mpp = iv(t_mpp)
+    ax = axes_layer(5, op)
+    # 最大功率矩形 V_mpp×I_mpp（淡入）
+    recth = [(60, 190), (x_mpp, 190), (x_mpp, y_mpp), (60, y_mpp)]
+    rectL = layer(4, "mpparea", [group("r", [path(recth, True), fill(GREEN, 16), tr()])],
+                  {"o": kf([(0, 0), (40, 100), (op, 100)])}, op)
+    curve = curve_layer(3, verts, ORANGE, 3, op, name="iv")
+    mpp = label_dot(2, x_mpp, y_mpp, GREEN, r=8, op=op)
+    # 工作点沿 I-V 曲线扫掠（Isc→Voc）
+    dot = follow_dot_layer(1, verts, BLUE, op, r=7, samples=26)
+    return anim("pv_iv_curve", [dot, mpp, curve, rectL, ax], op)
+
+def make_grid_dq_inject():
+    op = 120
+    base_y = 196
+    base = curve_layer(6, [(60, base_y), (320, base_y)], GRAY, 1.2, op, o=60, name="base")
+    # id 有功电流：阶跃上升、略超调后稳定（PI 整定）
+    id_bar = bar_layer(3, 150, 150, 46, 150, GREEN,
+                       [(0, 12), (45, 92), (70, 100), (90, 94), (op, 94)], op, o=85)
+    # iq 无功电流：恒为零（单位功率因数、有功无功解耦）
+    iq_bar = bar_layer(2, 232, 150, 46, 150, BLUE,
+                       [(0, 8), (op, 8)], op, o=70)
+    # id* 指令参考线
+    ref_y = base_y - 150 * 0.94
+    ref = curve_layer(1, [(118, ref_y), (182, ref_y)], GREEN, 1.6, op, o=85, name="idref")
+    return anim("grid_dq_inject", [ref, iq_bar, id_bar, base], op)
+
+def make_islanding_trip():
+    op = 140
+    ymid = 120
+    # 允许电压窗口（红色阈值带）+ 零轴
+    bandU = curve_layer(6, [(40, ymid - 70), (320, ymid - 70)], RED, 1.2, op, o=35, name="bandU")
+    bandL = curve_layer(5, [(40, ymid + 70), (320, ymid + 70)], RED, 1.2, op, o=35, name="bandL")
+    axis = curve_layer(7, [(40, ymid), (320, ymid)], GRAY, 1, op, o=40, name="axis")
+    # 电网参考（灰）：电网失电后淡出
+    grid = sine_verts(40, 320, ymid, 50, 3.0)
+    gl = layer(4, "grid", [group("c", [path(grid), stroke(GRAY, 2), tr()])],
+               {"o": kf([(0, 65), (int(op * 0.5), 65), (int(op * 0.62), 0), (op, 0)])}, op)
+    # 逆变器输出（蓝）：先同步，失电后电压塌缩→越限→跳闸（淡出）
+    out = sine_verts(40, 320, ymid, 50, 3.0)
+    ks = {"o": kf([(0, 100), (int(op * 0.8), 100), (int(op * 0.9), 0), (op, 0)]),
+          "r": st(0), "p": st([CX, CY, 0]), "a": st([CX, CY, 0]),
+          "s": kf([(0, [100, 100, 100]), (int(op * 0.5), [100, 100, 100]),
+                   (int(op * 0.78), [100, 18, 100]), (op, [100, 0, 100])])}
+    ol = layer(2, "out", [group("c", [path(out), stroke(BLUE, 2.5), tr()])], ks, op)
+    # 跳闸指示（红点）：失电后亮起
+    trip = layer(1, "trip", [group("d", [ellipse(296, 56, 26), fill(RED), tr()])],
+                 {"o": kf([(0, 0), (int(op * 0.72), 0), (int(op * 0.82), 100), (op, 100)]),
+                  "r": st(0), "p": st([CX, CY, 0]), "a": st([CX, CY, 0]), "s": st([100, 100, 100])}, op)
+    return anim("islanding_trip", [trip, ol, gl, bandU, bandL, axis], op)
+
+def make_pv_power_flow():
+    op = 130
+    yline = 120
+    xs = [70, 150, 230, 305]
+    cols = [ORANGE, BLUE, PURPLE, GREEN]
+    names = ["pv", "boost", "inv", "grid"]
+    bus = curve_layer(7, [(70, yline), (305, yline)], GRAY, 2, op, o=55, name="bus")
+    # 四级方框：PV→Boost→逆变器→电网
+    boxes = []
+    for i, (x, c) in enumerate(zip(xs, cols)):
+        boxes.append(layer(6 - i, "box_%s" % names[i],
+                     [group("b", [rect(x, yline, 46, 40, 6), fill(c, 14), stroke(c, 2.4), tr()])],
+                     None, op))
+    # 太阳（金色）置于 PV 上方
+    sun = layer(2, "sun", [group("s", [ellipse(70, 56, 26), fill(GOLD, 90), tr()])], None, op)
+    # 能量包沿母线 PV→Grid 流动
+    pts = [(70 + (305 - 70) * k / 40.0, yline) for k in range(41)]
+    pkt = follow_dot_layer(1, pts, GOLD, op, r=9, samples=30)
+    return anim("pv_power_flow", [pkt, sun] + boxes + [bus], op)
+
 ARCHETYPES = {
     "switching_pulse": make_switching_pulse,
     "pwm_compare": make_pwm_compare,
@@ -396,6 +476,10 @@ ARCHETYPES = {
     "ion_shuttle": make_ion_shuttle,
     "mppt_climb": make_mppt_climb,
     "pll_lock": make_pll_lock,
+    "pv_iv_curve": make_pv_iv_curve,
+    "grid_dq_inject": make_grid_dq_inject,
+    "islanding_trip": make_islanding_trip,
+    "pv_power_flow": make_pv_power_flow,
 }
 
 # =================== 节点 -> (原型, caption) 映射 ===================
@@ -444,6 +528,10 @@ MAPPING = {
     # 光伏并网主线
     "mppt": ("mppt_climb", "工作点沿 P-V 功率曲线向上攀爬，逼近顶端最大功率点后在其附近小幅扰动——MPPT 像爬山者反复试探，始终榨取当前光照下的最大发电功率。"),
     "pll": ("pll_lock", "逆变器输出正弦（蓝）从与电网（灰）错相起步，逐步平移直至完全重合——锁相环把相位误差驱至零，使并网电流与电网电压严格同步。"),
+    "pv_array_model": ("pv_iv_curve", "工作点沿光伏 I-V 曲线从短路电流(Isc)扫向开路电压(Voc)：低压段近似恒流，越过膝点后电流陡降，绿色矩形 Vmpp×Impp 面积最大处即最大功率点。"),
+    "grid_inverter_control": ("grid_dq_inject", "dq 电流环把并网电流解耦为两路：有功分量 id（绿）阶跃整定、略超调后稳定；无功分量 iq（蓝）始终压在零——实现单位功率因数、有功无功互不干扰的并网注入。"),
+    "islanding_detection": ("islanding_trip", "电网（灰）正常时逆变器输出（蓝）与之同步；一旦电网失电，本地电压塌缩越过红色保护阈值，孤岛检测在两秒内触发跳闸（红灯）切断逆变器，保护检修人员安全。"),
+    "pv_grid_system": ("pv_power_flow", "金色能量包从太阳照射的光伏阵列出发，依次流经 Boost 升压(MPPT)、并网逆变器、注入电网——一条贯通光电转换、功率变换与并网控制的完整能量链路。"),
 }
 
 def main():
