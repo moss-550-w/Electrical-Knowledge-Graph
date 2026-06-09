@@ -61,15 +61,18 @@
 | UI 组件 | Element Plus（`unplugin-vue-components` 按需引入） |
 | 路由 | Vue Router 4（Hash 模式） |
 | 离线 PWA | vite-plugin-pwa（Workbox `generateSW`，全量预缓存 + 自动更新） |
+| 测试 | Vitest 4（node 环境纯函数单测 + 真实数据完整性断言，47 用例） |
 | 部署 | 纯静态站点（GitHub Pages / Vercel） |
 
 ## 快速开始
 
 ```bash
 npm install
-npm run dev      # 开发模式
-npm run build    # 生产构建
-npm run preview  # 预览构建产物
+npm run dev        # 开发模式
+npm run build      # 生产构建
+npm run preview    # 预览构建产物
+npm test           # 运行测试（vitest run）
+npm run test:watch # 监听模式
 ```
 
 ## 目录结构
@@ -107,17 +110,25 @@ src/
 │   ├── goldThread.json      # 60 个 L3 金线节点（含公式、逐步推导、工程场景、原理动图）
 │   ├── skeletonGraph.json   # 45 个 L2 骨架节点（全部已升级达标）
 │   ├── details/             # 45 个骨架节点详情文件（L2 半完备：概述 + 公式 + 场景，4 个含原理动图）
-│   ├── threads.js           # 三金线主线配置与 depends_on 闭包计算
+│   ├── threads.js           # 四金线主线配置与 depends_on 闭包计算
 │   └── lottie/              # 29 个自制原理动图 Lottie 素材（由 scripts/gen_lottie.py 生成）
 ├── styles/
 │   └── dark.css             # 深色星空主题样式
 └── router/index.js          # / 图谱主页，/review 3D 复盘
 
+tests/
+├── fixtures/
+│   └── miniGraph.js         # 手写迷你知识图（与真实数据解耦的精确断言基准）
+├── unit/                    # 纯函数单测：pathAlgorithm / threads / pathLayout3D / pathShare / maturityTags
+└── data/
+    └── integrity.test.js    # 真实 JSON 完整性断言（id 唯一 / level 合法 / 无悬空边）
+
 public/
 └── pwa-icon.svg             # PWA 安装图标（⚡ 渐变，any + maskable）
 scripts/
-└── gen_lottie.py            # 原理动图生成器（程序化生成 Lottie 原型 + 向节点注入 anim 字段）
-vite.config.js               # 含 vite-plugin-pwa（manifest + Workbox 预缓存）
+├── gen_lottie.py            # 原理动图生成器（程序化生成 Lottie 原型 + 向节点注入 anim 字段）
+└── check_latex.py           # KaTeX 公式合法性校验工具
+vite.config.js               # 含 vite-plugin-pwa（manifest + Workbox 预缓存）+ vitest test 配置
 ```
 
 ## 路线图
@@ -130,3 +141,4 @@ vite.config.js               # 含 vite-plugin-pwa（manifest + Workbox 预缓�
 - [x] 用户自定义路径保存与分享（命名保存 + 我的路径面板 + URL 分享链接）
 - [x] 移动端手势优化（触控手势独占 + 汉堡抽屉 + 全站响应式适配）
 - [x] 离线 PWA 支持（可安装 + Workbox 全量预缓存 + 自动更新）
+- [x] 自动化测试体系（Vitest 47 用例：核心算法纯函数单测 + 真实数据完整性回归）
