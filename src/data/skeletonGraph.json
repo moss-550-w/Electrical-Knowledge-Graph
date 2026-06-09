@@ -24,7 +24,7 @@
   { "id": "s_eddy_current", "name": "涡流效应", "category": "电磁学", "level": "L2", "summary": "时变磁场在导体中感应出涡流，导致损耗（铁芯发热）和集肤效应（高频电流趋向导体表面），是电机铁芯采用叠片结构的原因。", "relations": [{ "target": "faraday_law", "type": "depends_on", "weight": 0.8 }] },
   { "id": "s_relay_contactor", "name": "继电器与接触器", "category": "电磁学", "level": "L1", "summary": "利用电磁铁原理实现电路的远程通断控制。继电器用于信号级切换，接触器用于动力级大电流通断。", "relations": [{ "target": "magnetic_circuit", "type": "depends_on", "weight": 0.7 }] },
 
-  { "id": "s_power_system_structure", "name": "电力系统结构", "category": "电力系统", "level": "L1", "summary": "发电→输电→变电→配电→用电的五级结构构成现代电力系统的基本架构，是理解电网运行和新能源并网的宏观框架。", "relations": [{ "target": "three_phase_ac", "type": "depends_on", "weight": 0.7 }, { "target": "s_transformer", "type": "depends_on", "weight": 0.7 }] },
+  { "id": "s_power_system_structure", "name": "电力系统结构", "category": "电力系统", "level": "L2", "summary": "发电→输电→变电→配电→用电的五级结构构成现代电力系统的基本架构，是理解电网运行和新能源并网的宏观框架。", "relations": [{ "target": "three_phase_ac", "type": "depends_on", "weight": 0.7 }, { "target": "s_transformer", "type": "depends_on", "weight": 0.7 }] },
   { "id": "s_grid_tied_inverter", "name": "并网逆变器", "category": "电力系统", "level": "L2", "summary": "并网逆变器将光伏/储能等直流源转换为与电网同步的交流电，需满足频率/电压/相位锁相和孤岛检测等并网标准。", "relations": [{ "target": "three_phase_inverter", "type": "depends_on", "weight": 0.8 }, { "target": "control_theory_basics", "type": "depends_on", "weight": 0.7 }] },
   { "id": "s_hvdc", "name": "高压直流输电", "category": "电力系统", "level": "L1", "summary": "HVDC通过整流-直流-逆变实现长距离大容量输电，避免了交流输电的电容充电电流和稳定性问题。", "relations": [{ "target": "s_rectifier", "type": "depends_on", "weight": 0.7 }] },
 
