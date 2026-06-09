@@ -61,8 +61,8 @@ describe('generatePaths 边界', () => {
   })
 
   it('含旁路叶子的连通图：能生成抵达 target 的非空路径', () => {
-    // a 是基础叶子，b 依赖 a，旁路 c 也依赖 a 但非 target → a 成为有效起点候选，
-    // 可经 a→b 抵达 target=b。
+    // 叶子候选 = 无 depends_on 出边者 = {b, c}；从旁路叶子 c 经双向邻接
+    // c→a→b 可抵达 target=b，于是路径非空。
     const nodes = [
       { id: 'a', name: 'A', level: 'L1', category: '数学' },
       { id: 'b', name: 'B', level: 'L3', category: '电机控制' },
